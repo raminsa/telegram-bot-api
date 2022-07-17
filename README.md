@@ -17,7 +17,7 @@ To learn how to use it, please see our [examples](https://github.com/Raminsa/Tel
 
 <a name="installation"></a>
 ## Installation
-`go get -u github.com/Raminsa/Telegram_API`.
+`go get github.com/Raminsa/Telegram_API`.
 
 <a name="documentation"></a>
 ## Documentation
