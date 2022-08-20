@@ -235,6 +235,7 @@ type SendPhoto struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Photo                    RequestFileData // required
+	CustomFileName              string
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -271,6 +272,7 @@ func (s SendPhoto) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "photo",
 		Data: s.Photo,
+		FileName: s.CustomFileName,
 	}}
 
 	return files
@@ -285,6 +287,7 @@ type SendAudio struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Audio                    RequestFileData // required
+	CustomFileName              string
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -328,6 +331,7 @@ func (s SendAudio) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "audio",
 		Data: s.Audio,
+		FileName: s.CustomFileName,
 	}}
 
 	if s.Thumb != nil {
@@ -410,6 +414,7 @@ type SendVideo struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Video                    RequestFileData // required
+	CustomFileName              string
 	Duration                 int
 	Weight                   int
 	Height                   int
@@ -455,6 +460,7 @@ func (s SendVideo) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "video",
 		Data: s.Video,
+		FileName: s.CustomFileName,
 	}}
 	if s.Thumb != nil {
 		files = append(files, RequestFile{
@@ -592,6 +598,7 @@ type SendVideoNote struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	VideoNote                RequestFileData // required.
+	CustomFileName              string
 	Duration                 int
 	Length                   int
 	Thumb                    RequestFileData
@@ -624,6 +631,7 @@ func (s SendVideoNote) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "video_note",
 		Data: s.VideoNote,
+		FileName: s.CustomFileName,
 	}}
 	if s.Thumb != nil {
 		files = append(files, RequestFile{
