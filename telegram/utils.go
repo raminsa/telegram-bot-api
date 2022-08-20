@@ -4,8 +4,8 @@ import (
 	"io"
 	"strings"
 
-	"github.com/Raminsa/Telegram_API/config"
-	"github.com/Raminsa/Telegram_API/types"
+	"github.com/raminsa/telegram-bot-api/config"
+	"github.com/raminsa/telegram-bot-api/types"
 )
 
 // ModeMarkdown return markdown mode

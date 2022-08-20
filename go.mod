@@ -1,3 +1,3 @@
-module github.com/Raminsa/Telegram_API
+module github.com/raminsa/telegram-bot-api
 
 go 1.18

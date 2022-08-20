@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Raminsa/Telegram_API/client"
-	"github.com/Raminsa/Telegram_API/config"
-	"github.com/Raminsa/Telegram_API/types"
+	"github.com/raminsa/telegram-bot-api/client"
+	"github.com/raminsa/telegram-bot-api/config"
+	"github.com/raminsa/telegram-bot-api/types"
 )
 
 type Api struct {
@@ -102,7 +102,7 @@ func HandleUpdate(r *http.Request) (*types.Update, error) {
 	return &update, nil
 }
 
-//HandleUpdateError response writer error to requested server
+// HandleUpdateError response writer error to requested server
 func HandleUpdateError(w http.ResponseWriter, err error) {
 	errMsg, _ := json.Marshal(map[string]string{"error": err.Error()})
 	w.WriteHeader(http.StatusBadRequest)

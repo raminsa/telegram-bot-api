@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Raminsa/Telegram_API/config"
-	"github.com/Raminsa/Telegram_API/types"
+	"github.com/raminsa/telegram-bot-api/config"
+	"github.com/raminsa/telegram-bot-api/types"
 )
 
 // SetSecretToken parse secret token for very webhook request

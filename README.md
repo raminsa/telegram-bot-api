@@ -6,7 +6,7 @@ If you've got any questions about bots or would like to report an issue with you
 
 Please note that only global Bot API issues that affect all bots are suitable for this repository.
 
-To learn how to use it, please see our [examples](https://github.com/Raminsa/Telegram_API/tree/main/examples).
+To learn how to use it, please see our [examples](https://github.com/raminsa/telegram-bot-api/tree/main/examples).
 
 ## Table of Contents
 - [Installation](#installation)
@@ -17,7 +17,7 @@ To learn how to use it, please see our [examples](https://github.com/Raminsa/Tel
 
 <a name="installation"></a>
 ## Installation
-`go get github.com/Raminsa/Telegram_API`.
+`go get github.com/raminsa/telegram-bot-api`.
 
 <a name="documentation"></a>
 ## Documentation
@@ -41,7 +41,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -80,7 +80,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -113,7 +113,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -152,7 +152,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -187,7 +187,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {

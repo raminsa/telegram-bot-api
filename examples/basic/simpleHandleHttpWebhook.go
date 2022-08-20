@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
