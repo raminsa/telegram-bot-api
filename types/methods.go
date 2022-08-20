@@ -235,7 +235,7 @@ type SendPhoto struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Photo                    RequestFileData // required
-	CustomFileName              string
+	CustomFileName           string
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -287,7 +287,7 @@ type SendAudio struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Audio                    RequestFileData // required
-	CustomFileName              string
+	CustomFileName           string
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -414,7 +414,7 @@ type SendVideo struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	Video                    RequestFileData // required
-	CustomFileName              string
+	CustomFileName           string
 	Duration                 int
 	Weight                   int
 	Height                   int
@@ -598,7 +598,7 @@ type SendVideoNote struct {
 	ChatIDStr                string          // required. use for user|channel as string
 	Username                 string          // required. use for channel
 	VideoNote                RequestFileData // required.
-	CustomFileName              string
+	CustomFileName           string
 	Duration                 int
 	Length                   int
 	Thumb                    RequestFileData
