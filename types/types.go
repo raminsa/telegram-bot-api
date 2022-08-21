@@ -360,8 +360,6 @@ type File struct {
 	FilePath     string `json:"file_path,omitempty"` // Optional. File path. Use https://api.telegram.org/file/bot<token>/<file_path> to get the file.
 }
 
-
-
 // WebAppInfo Describes a Web App.
 type WebAppInfo struct {
 	URL string `json:"url"` // An HTTPS URL of a Web App to be opened with additional data as specified in Initializing Web Apps
@@ -369,17 +367,17 @@ type WebAppInfo struct {
 
 // ReplyKeyboardMarkup Represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 type ReplyKeyboardMarkup struct {
-	Keyboard              [][]KeyboardButton `json:"keyboard"`                          // Array of button rows, each represented by an Array of KeyboardButton objects
-	ResizeKeyboard        bool               `json:"resize_keyboard,omitempty"`         // Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
-	OneTimeKeyboard       bool               `json:"one_time_keyboard,omitempty"`       // Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
-	InputFieldPlaceholder string             `json:"input_field_placeholder,omitempty"` // Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
-	Selective             bool               `json:"selective,omitempty"`               // Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.  Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.
+	Keyboard              [][]*KeyboardButton `json:"keyboard"`                          // Array of button rows, each represented by an Array of KeyboardButton objects
+	ResizeKeyboard        bool                `json:"resize_keyboard,omitempty"`         // Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
+	OneTimeKeyboard       bool                `json:"one_time_keyboard,omitempty"`       // Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
+	InputFieldPlaceholder string              `json:"input_field_placeholder,omitempty"` // Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
+	Selective             bool                `json:"selective,omitempty"`               // Optional. Use this parameter if you want to show the keyboard to specific users only. Targets: 1) users that are @mentioned in the text of the Message object; 2) if the bot's message is a reply (has reply_to_message_id), sender of the original message.  Example: A user requests to change the bot's language, bot replies to the request with a keyboard to select the new language. Other users in the group don't see the keyboard.
 }
 
 // KeyboardButton Represents one button of the reply keyboard. For simple text buttons String can be used instead of this object to specify text of the button. Optional fields web_app, request_contact, request_location, and request_poll are mutually exclusive.
-//Note: request_contact and request_location options will only work in Telegram versions released after 9 April, 2016. Older clients will display unsupported message.
-//Note: request_poll option will only work in Telegram versions released after 23 January, 2020. Older clients will display unsupported message.
-//Note: web_app option will only work in Telegram versions released after 16 April, 2022. Older clients will display unsupported message.
+// Note: request_contact and request_location options will only work in Telegram versions released after 9 April, 2016. Older clients will display unsupported message.
+// Note: request_poll option will only work in Telegram versions released after 23 January, 2020. Older clients will display unsupported message.
+// Note: web_app option will only work in Telegram versions released after 16 April, 2022. Older clients will display unsupported message.
 type KeyboardButton struct {
 	Text            string                 `json:"text"`                       // Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
 	RequestContact  bool                   `json:"request_contact,omitempty"`  // Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
@@ -402,7 +400,7 @@ type ReplyKeyboardRemove struct {
 // InlineKeyboardMarkup Represents an inline keyboard that appears right next to the message it belongs to.
 // Note: This will only work in Telegram versions released after 9 April, 2016. Older clients will display unsupported message.
 type InlineKeyboardMarkup struct {
-	InlineKeyboard [][]InlineKeyboardButton `json:"inline_keyboard"` // Array of button rows, each represented by an Array of InlineKeyboardButton objects
+	InlineKeyboard [][]*InlineKeyboardButton `json:"inline_keyboard"` // Array of button rows, each represented by an Array of InlineKeyboardButton objects
 }
 
 // InlineKeyboardButton Represents one button of an inline keyboard. You must use exactly one of the optional fields.
@@ -440,9 +438,10 @@ type CallbackQuery struct {
 
 // ForceReply Upon receiving a message with this object, Telegram clients will display a reply interface to the user (act as if the user has selected the bot's message and tapped 'Reply'). This can be extremely useful if you want to create user-friendly step-by-step interfaces without having to sacrifice privacy mode.
 // Example: A poll bot for groups runs in privacy mode (only receives commands, replies to its messages and mentions). There could be two ways to create a new poll:
-// 		Explain the user how to send a command with parameters (e.g. /newpoll question answer1 answer2). May be appealing for hardcore users but lacks modern day polish.
-// 		Guide the user through a step-by-step process. 'Please send me your question', 'Cool, now let's add the first answer option', 'Great. Keep adding answer options, then send /done when you're ready'.
-// 		The last option is definitely more attractive. And if you use ForceReply in your bot's questions, it will receive the user's answers even if it only receives replies, commands and mentions - without any extra work for the user.
+//
+//	Explain the user how to send a command with parameters (e.g. /newpoll question answer1 answer2). May be appealing for hardcore users but lacks modern day polish.
+//	Guide the user through a step-by-step process. 'Please send me your question', 'Cool, now let's add the first answer option', 'Great. Keep adding answer options, then send /done when you're ready'.
+//	The last option is definitely more attractive. And if you use ForceReply in your bot's questions, it will receive the user's answers even if it only receives replies, commands and mentions - without any extra work for the user.
 type ForceReply struct {
 	ForceReply            bool   `json:"force_reply"`                       // Shows reply interface to the user, as if they manually selected the bot's message and tapped 'Reply'
 	InputFieldPlaceholder string `json:"input_field_placeholder,omitempty"` // Optional. The placeholder to be shown in the input field when the reply is active; 1-64 characters
@@ -683,7 +682,7 @@ type ResponseParameters struct {
 	RetryAfter      int   `json:"retry_after,omitempty"` // Optional. In case of exceeding flood control, the number of seconds left to wait before the request can be repeated
 }
 
-//InputMedia Represents the content of a media message to be sent. It should be one of
+// InputMedia Represents the content of a media message to be sent. It should be one of
 type InputMedia struct {
 	InputMediaAnimation InputMediaAnimation
 	InputMediaDocument  InputMediaDocument

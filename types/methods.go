@@ -1896,7 +1896,7 @@ func (s *AnswerCallbackQuery) EndPoint() string {
 
 // SetMyCommands Change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success.
 type SetMyCommands struct {
-	Commands     []BotCommand // required
+	Commands     []*BotCommand // required
 	Scope        *BotCommandScope
 	LanguageCode string
 }
@@ -1968,7 +1968,7 @@ type SetChatMenuButton struct {
 	ChatIDStr string // required. use for chat|channel as string
 	Username  string // required. use for chat|channel
 
-	MenuButton MenuButton
+	MenuButton *MenuButton
 }
 
 func (s *SetChatMenuButton) Params() (Params, error) {
@@ -2599,12 +2599,12 @@ func (s *SendInvoice) EndPoint() string {
 
 // CreateInvoiceLink Create a link for an invoice. Returns the created invoice link as String on success.
 type CreateInvoiceLink struct {
-	Title                     string         // required
-	Description               string         // required
-	Payload                   string         // required
-	ProviderToken             string         // required
-	Currency                  string         // required
-	Prices                    []LabeledPrice // required
+	Title                     string          // required
+	Description               string          // required
+	Payload                   string          // required
+	ProviderToken             string          // required
+	Currency                  string          // required
+	Prices                    []*LabeledPrice // required
 	MaxTipAmount              int
 	SuggestedTipAmounts       []int
 	ProviderData              string

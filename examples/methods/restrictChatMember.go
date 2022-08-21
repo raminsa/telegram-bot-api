@@ -20,7 +20,7 @@ func main() {
 	permissions.CanChangeInfo = false
 	permissions.CanSendMessages = true
 
-	msg.Permissions = &permissions
+	msg.Permissions = permissions
 
 	_, err = tg.RestrictChatMember(msg)
 	if err != nil {
