@@ -8,6 +8,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 func (fb FileBytes) NeedsUpload() bool {
@@ -86,91 +87,6 @@ func (fa FileAttach) UploadData() (string, io.Reader, error) {
 
 func (fa FileAttach) SendData() string {
 	return string(fa)
-}
-
-// Error message string.
-func (e Error) Error() string {
-	return e.Message
-}
-
-// IsPrivate returns if the Chat is a private conversation.
-func (c Chat) IsPrivate() bool {
-	return c.Type == "private"
-}
-
-// IsGroup returns if the Chat is a group.
-func (c Chat) IsGroup() bool {
-	return c.Type == "group"
-}
-
-// IsSuperGroup returns if the Chat is a supergroup.
-func (c Chat) IsSuperGroup() bool {
-	return c.Type == "supergroup"
-}
-
-// IsChannel returns if the Chat is a channel.
-func (c Chat) IsChannel() bool {
-	return c.Type == "channel"
-}
-
-// IsCommand returns true if message starts with a "bot_command" entity.
-func (m *Message) IsCommand() bool {
-	if m.Entities == nil || len(m.Entities) == 0 {
-		return false
-	}
-
-	entity := m.Entities[0]
-	return entity.Offset == 0 && entity.IsCommand()
-}
-
-// IsMention returns true if the type of the message entity is "mention" (@username).
-func (e MessageEntity) IsMention() bool {
-	return e.Type == "mention"
-}
-
-// IsHashtag returns true if the type of the message entity is "hashtag".
-func (e MessageEntity) IsHashtag() bool {
-	return e.Type == "hashtag"
-}
-
-// IsCommand returns true if the type of the message entity is "bot_command".
-func (e MessageEntity) IsCommand() bool {
-	return e.Type == "bot_command"
-}
-
-// IsURL returns true if the type of the message entity is "url".
-func (e MessageEntity) IsURL() bool {
-	return e.Type == "url"
-}
-
-// IsEmail returns true if the type of the message entity is "email".
-func (e MessageEntity) IsEmail() bool {
-	return e.Type == "email"
-}
-
-// IsBold returns true if the type of the message entity is "bold" (bold text).
-func (e MessageEntity) IsBold() bool {
-	return e.Type == "bold"
-}
-
-// IsItalic returns true if the type of the message entity is "italic" (italic text).
-func (e MessageEntity) IsItalic() bool {
-	return e.Type == "italic"
-}
-
-// IsCode returns true if the type of the message entity is "code" (monoWidth string).
-func (e MessageEntity) IsCode() bool {
-	return e.Type == "code"
-}
-
-// IsPre returns true if the type of the message entity is "pre" (monoWidth block).
-func (e MessageEntity) IsPre() bool {
-	return e.Type == "pre"
-}
-
-// IsTextLink returns true if the type of the message entity is "text_link" (clickable text URL).
-func (e MessageEntity) IsTextLink() bool {
-	return e.Type == "text_link"
 }
 
 // AddNonEmpty adds a value if it not an empty string.
@@ -263,4 +179,178 @@ func (p Params) AddFirstValid(key string, args ...interface{}) error {
 	}
 
 	return nil
+}
+
+// Error message string.
+func (e *Error) Error() string {
+	return e.Message
+}
+
+// SentFrom returns the user who sent an update. Can be nil, if Telegram did not provide information about the user in the update object.
+func (u *Update) SentFrom() *User {
+	switch {
+	case u.Message != nil:
+		return &u.Message.From
+	case u.EditedMessage != nil:
+		return &u.EditedMessage.From
+	case u.InlineQuery != nil:
+		return &u.InlineQuery.From
+	case u.ChosenInlineResult != nil:
+		return &u.ChosenInlineResult.From
+	case u.CallbackQuery != nil:
+		return &u.CallbackQuery.From
+	case u.ShippingQuery != nil:
+		return &u.ShippingQuery.From
+	case u.PreCheckoutQuery != nil:
+		return &u.PreCheckoutQuery.From
+	default:
+		return nil
+	}
+}
+
+// CallbackData returns the callback query data, if it exists.
+func (u *Update) CallbackData() string {
+	if u.CallbackQuery != nil {
+		return u.CallbackQuery.Data
+	}
+	return ""
+}
+
+// FromChat returns the chat where an update occurred.
+func (u *Update) FromChat() *Chat {
+	switch {
+	case u.Message != nil:
+		return &u.Message.Chat
+	case u.EditedMessage != nil:
+		return &u.EditedMessage.Chat
+	case u.ChannelPost != nil:
+		return &u.ChannelPost.Chat
+	case u.EditedChannelPost != nil:
+		return &u.EditedChannelPost.Chat
+	case u.CallbackQuery != nil:
+		return &u.CallbackQuery.Message.Chat
+	default:
+		return nil
+	}
+}
+
+// String displays a simple text version of a user. It is normally a user's username, but falls back to a first/last, name as available.
+func (u *User) String() string {
+	if u == nil {
+		return ""
+	}
+	if u.UserName != "" {
+		return u.UserName
+	}
+
+	name := u.FirstName
+	if u.LastName != "" {
+		name += " " + u.LastName
+	}
+
+	return name
+}
+
+// IsPrivate returns if the Chat is a private conversation.
+func (c *Chat) IsPrivate() bool {
+	return c.Type == "private"
+}
+
+// IsGroup returns if the Chat is a group.
+func (c *Chat) IsGroup() bool {
+	return c.Type == "group"
+}
+
+// IsSuperGroup returns if the Chat is a supergroup.
+func (c *Chat) IsSuperGroup() bool {
+	return c.Type == "supergroup"
+}
+
+// IsChannel returns if the Chat is a channel.
+func (c *Chat) IsChannel() bool {
+	return c.Type == "channel"
+}
+
+// IsCommand returns true if message starts with a "bot_command" entity.
+func (m *Message) IsCommand() bool {
+	if m.Entities == nil || len(m.Entities) == 0 {
+		return false
+	}
+
+	entity := m.Entities[0]
+	return entity.Offset == 0 && entity.IsCommand()
+}
+
+// Command checks if the message was a command and if it was, returns the command. If the Message was not a command, it returns an empty string.
+// If the command contains the at name syntax, it is removed. Use CommandWithAt() if you do not want that.
+func (m *Message) Command() string {
+	command := m.CommandWithAt()
+
+	if i := strings.Index(command, "@"); i != -1 {
+		command = command[:i]
+	}
+
+	return command
+}
+
+// CommandWithAt checks if the message was a command and if it was, returns the command. If the Message was not a command, it returns an empty string.
+// If the command contains the at name syntax, it is not removed. Use Command() if you want that.
+func (m *Message) CommandWithAt() string {
+	if !m.IsCommand() {
+		return ""
+	}
+
+	// IsCommand() checks that the message begins with a bot_command entity
+	entity := m.Entities[0]
+	return m.Text[1:entity.Length]
+}
+
+// IsMention returns true if the type of the message entity is "mention" (@username).
+func (e *MessageEntity) IsMention() bool {
+	return e.Type == "mention"
+}
+
+// IsHashtag returns true if the type of the message entity is "hashtag".
+func (e *MessageEntity) IsHashtag() bool {
+	return e.Type == "hashtag"
+}
+
+// IsCommand returns true if the type of the message entity is "bot_command".
+func (e *MessageEntity) IsCommand() bool {
+	return e.Type == "bot_command"
+}
+
+// IsURL returns true if the type of the message entity is "url".
+func (e *MessageEntity) IsURL() bool {
+	return e.Type == "url"
+}
+
+// IsEmail returns true if the type of the message entity is "email".
+func (e *MessageEntity) IsEmail() bool {
+	return e.Type == "email"
+}
+
+// IsBold returns true if the type of the message entity is "bold" (bold text).
+func (e *MessageEntity) IsBold() bool {
+	return e.Type == "bold"
+}
+
+// IsItalic returns true if the type of the message entity is "italic" (italic text).
+func (e *MessageEntity) IsItalic() bool {
+	return e.Type == "italic"
+}
+
+// IsCode returns true if the type of the message entity is "code" (monoWidth string).
+func (e *MessageEntity) IsCode() bool {
+	return e.Type == "code"
+}
+
+// IsPre returns true if the type of the message entity is "pre" (monoWidth block).
+func (e *MessageEntity) IsPre() bool {
+	return e.Type == "pre"
+}
+
+// IsTextLink returns true if the type of the message entity is "text_link" (clickable text URL).
+func (e *MessageEntity) IsTextLink() bool {
+	return e.Type == "text_link"
 }

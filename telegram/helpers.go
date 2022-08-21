@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -19,7 +19,7 @@ import (
 
 // SetSecretToken parse secret token for very webhook request
 func (t *Api) SetSecretToken(secretToken string) {
-	telegram.Bot.SecretToken = secretToken
+	Core.Bot.SecretToken = secretToken
 }
 
 func (t *Api) WriteDebugLog(msg string) {
@@ -37,7 +37,7 @@ func (t *Api) GetLoggerFile() string {
 
 // WriteLoggerFile write debug to file
 func (t *Api) WriteLoggerFile(fileName string) error {
-	return ioutil.WriteFile(fileName, t.Bot.Log.Bytes(), 0644)
+	return os.WriteFile(fileName, t.Bot.Log.Bytes(), 0666)
 }
 
 // MakeRequest makes a request to a specific endpoint with our token.
@@ -254,7 +254,7 @@ func (t *Api) decodeAPIResponse(responseBody io.Reader, resp *types.APIResponse)
 		return nil, err
 	}
 
-	data, err := ioutil.ReadAll(responseBody)
+	data, err := io.ReadAll(responseBody)
 	if err != nil {
 		return nil, err
 	}

@@ -16,7 +16,7 @@ func main() {
 	client.DisableSSLVerify = true
 	client.ForceAttemptHTTP2 = true
 
-	tg, err := telegram.NewWithCustomClient("BotToken", &client)
+	tg, err := telegram.NewWithCustomClient("BotToken", client)
 	if err != nil {
 		log.Fatal(err)
 	}

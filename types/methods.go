@@ -22,7 +22,7 @@ type GetUpdates struct {
 	AllowedUpdates []string
 }
 
-func (s GetUpdates) Params() (Params, error) {
+func (s *GetUpdates) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params.AddNonZero("offset", s.Offset)
@@ -32,7 +32,7 @@ func (s GetUpdates) Params() (Params, error) {
 
 	return params, err
 }
-func (GetUpdates) EndPoint() string {
+func (*GetUpdates) EndPoint() string {
 	return config.EndpointGetUpdates
 }
 
@@ -55,7 +55,7 @@ type SetWebhook struct {
 	DropPendingUpdates bool            // Optional. Pass True to drop all pending updates
 }
 
-func (s SetWebhook) Params() (Params, error) {
+func (s *SetWebhook) Params() (Params, error) {
 	params := make(Params, 5)
 
 	if s.URL != nil {
@@ -71,7 +71,7 @@ func (s SetWebhook) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetWebhook) Files() []RequestFile {
+func (s *SetWebhook) Files() []RequestFile {
 	if s.Certificate != nil {
 		return []RequestFile{{
 			Name: "certificate",
@@ -81,7 +81,7 @@ func (s SetWebhook) Files() []RequestFile {
 
 	return nil
 }
-func (s SetWebhook) EndPoint() string {
+func (s *SetWebhook) EndPoint() string {
 	return config.EndpointSetWebhook
 }
 
@@ -90,14 +90,14 @@ type DeleteWebhook struct {
 	DropPendingUpdates bool // Optional. Pass True to drop all pending updates
 }
 
-func (s DeleteWebhook) Params() (Params, error) {
+func (s *DeleteWebhook) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddBool("drop_pending_updates", s.DropPendingUpdates)
 
 	return params, nil
 }
-func (s DeleteWebhook) EndPoint() string {
+func (s *DeleteWebhook) EndPoint() string {
 	return config.EndpointDeleteWebhook
 }
 
@@ -117,7 +117,7 @@ type SendMessage struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendMessage) Params() (Params, error) {
+func (s *SendMessage) Params() (Params, error) {
 	params := make(Params, 10)
 
 	params.AddAt(s.Username)
@@ -140,7 +140,7 @@ func (s SendMessage) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendMessage) EndPoint() string {
+func (s *SendMessage) EndPoint() string {
 	return config.EndpointSendMessage
 }
 
@@ -157,7 +157,7 @@ type ForwardMessage struct {
 	MessageID           int // required
 }
 
-func (s ForwardMessage) Params() (Params, error) {
+func (s *ForwardMessage) Params() (Params, error) {
 	params := make(Params, 5)
 
 	params.AddAt(s.Username)
@@ -175,7 +175,7 @@ func (s ForwardMessage) Params() (Params, error) {
 
 	return params, nil
 }
-func (s ForwardMessage) EndPoint() string {
+func (s *ForwardMessage) EndPoint() string {
 	return config.EndpointForwardMessage
 }
 
@@ -198,7 +198,7 @@ type CopyMessage struct {
 	ReplyMarkup              interface{}
 }
 
-func (s CopyMessage) Params() (Params, error) {
+func (s *CopyMessage) Params() (Params, error) {
 	params := make(Params, 11)
 
 	params.AddAt(s.Username)
@@ -225,7 +225,7 @@ func (s CopyMessage) Params() (Params, error) {
 
 	return params, err
 }
-func (s CopyMessage) EndPoint() string {
+func (s *CopyMessage) EndPoint() string {
 	return config.EndpointCopyMessage
 }
 
@@ -246,7 +246,7 @@ type SendPhoto struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendPhoto) Params() (Params, error) {
+func (s *SendPhoto) Params() (Params, error) {
 	params := make(Params, 9)
 
 	params.AddAt(s.Username)
@@ -268,16 +268,16 @@ func (s SendPhoto) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendPhoto) Files() []RequestFile {
+func (s *SendPhoto) Files() []RequestFile {
 	files := []RequestFile{{
-		Name: "photo",
-		Data: s.Photo,
+		Name:     "photo",
+		Data:     s.Photo,
 		FileName: s.CustomFileName,
 	}}
 
 	return files
 }
-func (s SendPhoto) EndPoint() string {
+func (s *SendPhoto) EndPoint() string {
 	return config.EndpointSendPhoto
 }
 
@@ -302,7 +302,7 @@ type SendAudio struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendAudio) Params() (Params, error) {
+func (s *SendAudio) Params() (Params, error) {
 	params := make(Params, 12)
 
 	params.AddAt(s.Username)
@@ -327,10 +327,10 @@ func (s SendAudio) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendAudio) Files() []RequestFile {
+func (s *SendAudio) Files() []RequestFile {
 	files := []RequestFile{{
-		Name: "audio",
-		Data: s.Audio,
+		Name:     "audio",
+		Data:     s.Audio,
 		FileName: s.CustomFileName,
 	}}
 
@@ -343,7 +343,7 @@ func (s SendAudio) Files() []RequestFile {
 
 	return files
 }
-func (s SendAudio) EndPoint() string {
+func (s *SendAudio) EndPoint() string {
 	return config.EndpointSendAudio
 }
 
@@ -366,7 +366,7 @@ type SendDocument struct {
 	ReplyMarkup                 interface{}
 }
 
-func (s SendDocument) Params() (Params, error) {
+func (s *SendDocument) Params() (Params, error) {
 	params := make(Params, 10)
 
 	params.AddAt(s.Username)
@@ -389,7 +389,7 @@ func (s SendDocument) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendDocument) Files() []RequestFile {
+func (s *SendDocument) Files() []RequestFile {
 	files := []RequestFile{{
 		Name:     "document",
 		Data:     s.Document,
@@ -404,7 +404,7 @@ func (s SendDocument) Files() []RequestFile {
 
 	return files
 }
-func (s SendDocument) EndPoint() string {
+func (s *SendDocument) EndPoint() string {
 	return config.EndpointSendDocument
 }
 
@@ -430,7 +430,7 @@ type SendVideo struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendVideo) Params() (Params, error) {
+func (s *SendVideo) Params() (Params, error) {
 	params := make(Params, 13)
 
 	params.AddAt(s.Username)
@@ -456,10 +456,10 @@ func (s SendVideo) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendVideo) Files() []RequestFile {
+func (s *SendVideo) Files() []RequestFile {
 	files := []RequestFile{{
-		Name: "video",
-		Data: s.Video,
+		Name:     "video",
+		Data:     s.Video,
 		FileName: s.CustomFileName,
 	}}
 	if s.Thumb != nil {
@@ -471,7 +471,7 @@ func (s SendVideo) Files() []RequestFile {
 
 	return files
 }
-func (s SendVideo) EndPoint() string {
+func (s *SendVideo) EndPoint() string {
 	return config.EndpointSendVideo
 }
 
@@ -495,7 +495,7 @@ type SendAnimation struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendAnimation) Params() (Params, error) {
+func (s *SendAnimation) Params() (Params, error) {
 	params := make(Params, 12)
 
 	params.AddAt(s.Username)
@@ -520,7 +520,7 @@ func (s SendAnimation) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendAnimation) Files() []RequestFile {
+func (s *SendAnimation) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "animation",
 		Data: s.Animation,
@@ -534,7 +534,7 @@ func (s SendAnimation) Files() []RequestFile {
 
 	return files
 }
-func (s SendAnimation) EndPoint() string {
+func (s *SendAnimation) EndPoint() string {
 	return config.EndpointSendAnimation
 }
 
@@ -556,7 +556,7 @@ type SendVoice struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendVoice) Params() (Params, error) {
+func (s *SendVoice) Params() (Params, error) {
 	params := make(Params, 10)
 
 	params.AddAt(s.Username)
@@ -579,7 +579,7 @@ func (s SendVoice) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendVoice) Files() []RequestFile {
+func (s *SendVoice) Files() []RequestFile {
 	files := []RequestFile{{
 		Name:     "voice",
 		Data:     s.Voice,
@@ -588,7 +588,7 @@ func (s SendVoice) Files() []RequestFile {
 
 	return files
 }
-func (s SendVoice) EndPoint() string {
+func (s *SendVoice) EndPoint() string {
 	return config.EndpointSendVoice
 }
 
@@ -609,7 +609,7 @@ type SendVideoNote struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendVideoNote) Params() (Params, error) {
+func (s *SendVideoNote) Params() (Params, error) {
 	params := make(Params, 8)
 
 	params.AddAt(s.Username)
@@ -627,10 +627,10 @@ func (s SendVideoNote) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendVideoNote) Files() []RequestFile {
+func (s *SendVideoNote) Files() []RequestFile {
 	files := []RequestFile{{
-		Name: "video_note",
-		Data: s.VideoNote,
+		Name:     "video_note",
+		Data:     s.VideoNote,
 		FileName: s.CustomFileName,
 	}}
 	if s.Thumb != nil {
@@ -642,7 +642,7 @@ func (s SendVideoNote) Files() []RequestFile {
 
 	return files
 }
-func (s SendVideoNote) EndPoint() string {
+func (s *SendVideoNote) EndPoint() string {
 	return config.EndpointSendVideoNote
 }
 
@@ -658,7 +658,7 @@ type SendMediaGroup struct {
 	AllowSendingWithoutReply bool
 }
 
-func (s SendMediaGroup) Params() (Params, error) {
+func (s *SendMediaGroup) Params() (Params, error) {
 	params := make(Params, 6)
 
 	params.AddAt(s.Username)
@@ -674,10 +674,10 @@ func (s SendMediaGroup) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendMediaGroup) Files() []RequestFile {
+func (s *SendMediaGroup) Files() []RequestFile {
 	return prepareInputMediaForFiles(s.Media)
 }
-func (s SendMediaGroup) EndPoint() string {
+func (s *SendMediaGroup) EndPoint() string {
 	return config.EndpointSendMediaGroup
 }
 
@@ -829,7 +829,7 @@ type SendLocation struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendLocation) Params() (Params, error) {
+func (s *SendLocation) Params() (Params, error) {
 	params := make(Params, 12)
 
 	params.AddAt(s.Username)
@@ -851,7 +851,7 @@ func (s SendLocation) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendLocation) EndPoint() string {
+func (s *SendLocation) EndPoint() string {
 	return config.EndpointSendLocation
 }
 
@@ -870,7 +870,7 @@ type EditMessageLiveLocation struct {
 	ReplyMarkup          *InlineKeyboardMarkup
 }
 
-func (s EditMessageLiveLocation) Params() (Params, error) {
+func (s *EditMessageLiveLocation) Params() (Params, error) {
 	params := make(Params, 8)
 
 	if s.InlineMessageID != "" {
@@ -894,7 +894,7 @@ func (s EditMessageLiveLocation) Params() (Params, error) {
 
 	return params, err
 }
-func (s EditMessageLiveLocation) EndPoint() string {
+func (s *EditMessageLiveLocation) EndPoint() string {
 	return config.EndpointEditMessageLiveLocation
 }
 
@@ -908,7 +908,7 @@ type StopMessageLiveLocation struct {
 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s StopMessageLiveLocation) Params() (Params, error) {
+func (s *StopMessageLiveLocation) Params() (Params, error) {
 	params := make(Params, 3)
 
 	if s.InlineMessageID != "" {
@@ -926,7 +926,7 @@ func (s StopMessageLiveLocation) Params() (Params, error) {
 
 	return params, err
 }
-func (s StopMessageLiveLocation) EndPoint() string {
+func (s *StopMessageLiveLocation) EndPoint() string {
 	return config.EndpointStopMessageLiveLocation
 }
 
@@ -950,7 +950,7 @@ type SendVenue struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendVenue) Params() (Params, error) {
+func (s *SendVenue) Params() (Params, error) {
 	params := make(Params, 14)
 
 	params.AddAt(s.Username)
@@ -974,7 +974,7 @@ func (s SendVenue) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendVenue) EndPoint() string {
+func (s *SendVenue) EndPoint() string {
 	return config.EndpointSendVenue
 }
 
@@ -994,7 +994,7 @@ type SendContact struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendContact) Params() (Params, error) {
+func (s *SendContact) Params() (Params, error) {
 	params := make(Params, 10)
 
 	params.AddAt(s.Username)
@@ -1014,7 +1014,7 @@ func (s SendContact) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendContact) EndPoint() string {
+func (s *SendContact) EndPoint() string {
 	return config.EndpointSendContact
 }
 
@@ -1042,7 +1042,7 @@ type SendPoll struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendPoll) Params() (Params, error) {
+func (s *SendPoll) Params() (Params, error) {
 	params := make(Params, 18)
 
 	params.AddAt(s.Username)
@@ -1076,7 +1076,7 @@ func (s SendPoll) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendPoll) EndPoint() string {
+func (s *SendPoll) EndPoint() string {
 	return config.EndpointSendPoll
 }
 
@@ -1093,7 +1093,7 @@ type SendDice struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendDice) Params() (Params, error) {
+func (s *SendDice) Params() (Params, error) {
 	params := make(Params, 7)
 
 	params.AddAt(s.Username)
@@ -1110,7 +1110,7 @@ func (s SendDice) Params() (Params, error) {
 
 	return params, err
 }
-func (s SendDice) EndPoint() string {
+func (s *SendDice) EndPoint() string {
 	return config.EndpointSendDice
 }
 
@@ -1122,7 +1122,7 @@ type SendChatAction struct {
 	Action    string // required. `typing` for text messages, `upload_photo` for photos, `record_video` or `upload_video` for videos, `record_voice` or `upload_voice` for voice notes, `upload_document` for general files, `choose_sticker` for stickers, `find_location` for location data, `record_video_note` or `upload_video_note` for video notes.
 }
 
-func (s SendChatAction) Params() (Params, error) {
+func (s *SendChatAction) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1134,7 +1134,7 @@ func (s SendChatAction) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SendChatAction) EndPoint() string {
+func (s *SendChatAction) EndPoint() string {
 	return config.EndpointSendChatAction
 }
 
@@ -1145,7 +1145,7 @@ type GetUserProfilePhotos struct {
 	Limit  int
 }
 
-func (s GetUserProfilePhotos) Params() (Params, error) {
+func (s *GetUserProfilePhotos) Params() (Params, error) {
 	params := make(Params, 3)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -1154,7 +1154,7 @@ func (s GetUserProfilePhotos) Params() (Params, error) {
 
 	return params, nil
 }
-func (s GetUserProfilePhotos) EndPoint() string {
+func (s *GetUserProfilePhotos) EndPoint() string {
 	return config.EndpointGetUserProfilePhotos
 }
 
@@ -1171,14 +1171,14 @@ type GetFile struct {
 	FileID string // required
 }
 
-func (s GetFile) Params() (Params, error) {
+func (s *GetFile) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params["file_id"] = s.FileID
 
 	return params, nil
 }
-func (s GetFile) EndPoint() string {
+func (s *GetFile) EndPoint() string {
 	return config.EndpointGetFile
 }
 
@@ -1192,7 +1192,7 @@ type BanChatMember struct {
 	RevokeMessages bool
 }
 
-func (s BanChatMember) Params() (Params, error) {
+func (s *BanChatMember) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params.AddAt(s.Username)
@@ -1206,7 +1206,7 @@ func (s BanChatMember) Params() (Params, error) {
 
 	return params, nil
 }
-func (s BanChatMember) EndPoint() string {
+func (s *BanChatMember) EndPoint() string {
 	return config.EndpointBanChatMember
 }
 
@@ -1219,7 +1219,7 @@ type UnbanChatMember struct {
 	OnlyIfBanned bool
 }
 
-func (s UnbanChatMember) Params() (Params, error) {
+func (s *UnbanChatMember) Params() (Params, error) {
 	params := make(Params, 3)
 
 	params.AddAt(s.Username)
@@ -1232,7 +1232,7 @@ func (s UnbanChatMember) Params() (Params, error) {
 
 	return params, nil
 }
-func (s UnbanChatMember) EndPoint() string {
+func (s *UnbanChatMember) EndPoint() string {
 	return config.EndpointUnbanChatMember
 }
 
@@ -1246,7 +1246,7 @@ type RestrictChatMember struct {
 	UntilDate   int64
 }
 
-func (s RestrictChatMember) Params() (Params, error) {
+func (s *RestrictChatMember) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params.AddAt(s.Username)
@@ -1263,7 +1263,7 @@ func (s RestrictChatMember) Params() (Params, error) {
 
 	return params, nil
 }
-func (s RestrictChatMember) EndPoint() string {
+func (s *RestrictChatMember) EndPoint() string {
 	return config.EndpointRestrictChatMember
 }
 
@@ -1286,7 +1286,7 @@ type PromoteChatMember struct {
 	CanPromoteMembers   bool
 }
 
-func (s PromoteChatMember) Params() (Params, error) {
+func (s *PromoteChatMember) Params() (Params, error) {
 	params := make(Params, 13)
 
 	params.AddAt(s.Username)
@@ -1309,7 +1309,7 @@ func (s PromoteChatMember) Params() (Params, error) {
 
 	return params, nil
 }
-func (s PromoteChatMember) EndPoint() string {
+func (s *PromoteChatMember) EndPoint() string {
 	return config.EndpointPromoteChatMember
 }
 
@@ -1322,7 +1322,7 @@ type SetChatAdministratorCustomTitle struct {
 	CustomTitle string
 }
 
-func (s SetChatAdministratorCustomTitle) Params() (Params, error) {
+func (s *SetChatAdministratorCustomTitle) Params() (Params, error) {
 	params := make(Params, 3)
 
 	params.AddAt(s.Username)
@@ -1335,7 +1335,7 @@ func (s SetChatAdministratorCustomTitle) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetChatAdministratorCustomTitle) EndPoint() string {
+func (s *SetChatAdministratorCustomTitle) EndPoint() string {
 	return config.EndpointSetChatAdministratorCustomTitle
 }
 
@@ -1347,7 +1347,7 @@ type BanChatSenderChat struct {
 	SenderChatID int64  // required
 }
 
-func (s BanChatSenderChat) Params() (Params, error) {
+func (s *BanChatSenderChat) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1359,7 +1359,7 @@ func (s BanChatSenderChat) Params() (Params, error) {
 
 	return params, nil
 }
-func (s BanChatSenderChat) EndPoint() string {
+func (s *BanChatSenderChat) EndPoint() string {
 	return config.EndpointBanChatSenderChat
 }
 
@@ -1371,7 +1371,7 @@ type UnbanChatSenderChat struct {
 	SenderChatID int64  // required
 }
 
-func (s UnbanChatSenderChat) Params() (Params, error) {
+func (s *UnbanChatSenderChat) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1383,7 +1383,7 @@ func (s UnbanChatSenderChat) Params() (Params, error) {
 
 	return params, nil
 }
-func (s UnbanChatSenderChat) EndPoint() string {
+func (s *UnbanChatSenderChat) EndPoint() string {
 	return config.EndpointUnbanChatSenderChat
 }
 
@@ -1395,7 +1395,7 @@ type SetChatPermissions struct {
 	Permissions *ChatPermissions // required
 }
 
-func (s SetChatPermissions) Params() (Params, error) {
+func (s *SetChatPermissions) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1407,7 +1407,7 @@ func (s SetChatPermissions) Params() (Params, error) {
 
 	return params, err
 }
-func (s SetChatPermissions) EndPoint() string {
+func (s *SetChatPermissions) EndPoint() string {
 	return config.EndpointSetChatPermissions
 }
 
@@ -1419,7 +1419,7 @@ type ExportChatInviteLink struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s ExportChatInviteLink) Params() (Params, error) {
+func (s *ExportChatInviteLink) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1427,7 +1427,7 @@ func (s ExportChatInviteLink) Params() (Params, error) {
 
 	return params, err
 }
-func (s ExportChatInviteLink) EndPoint() string {
+func (s *ExportChatInviteLink) EndPoint() string {
 	return config.EndpointExportChatInviteLink
 }
 
@@ -1442,7 +1442,7 @@ type CreateChatInviteLink struct {
 	CreatesJoinRequest bool
 }
 
-func (s CreateChatInviteLink) Params() (Params, error) {
+func (s *CreateChatInviteLink) Params() (Params, error) {
 	params := make(Params, 5)
 
 	params.AddAt(s.Username)
@@ -1457,7 +1457,7 @@ func (s CreateChatInviteLink) Params() (Params, error) {
 
 	return params, nil
 }
-func (s CreateChatInviteLink) EndPoint() string {
+func (s *CreateChatInviteLink) EndPoint() string {
 	return config.EndpointCreateChatInviteLink
 }
 
@@ -1473,7 +1473,7 @@ type EditChatInviteLink struct {
 	CreatesJoinRequest bool
 }
 
-func (s EditChatInviteLink) Params() (Params, error) {
+func (s *EditChatInviteLink) Params() (Params, error) {
 	params := make(Params, 6)
 
 	params.AddAt(s.Username)
@@ -1489,7 +1489,7 @@ func (s EditChatInviteLink) Params() (Params, error) {
 
 	return params, nil
 }
-func (s EditChatInviteLink) EndPoint() string {
+func (s *EditChatInviteLink) EndPoint() string {
 	return config.EndpointEditChatInviteLink
 }
 
@@ -1501,7 +1501,7 @@ type RevokeChatInviteLink struct {
 	InviteLink string // required
 }
 
-func (s RevokeChatInviteLink) Params() (Params, error) {
+func (s *RevokeChatInviteLink) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1513,7 +1513,7 @@ func (s RevokeChatInviteLink) Params() (Params, error) {
 
 	return params, nil
 }
-func (s RevokeChatInviteLink) EndPoint() string {
+func (s *RevokeChatInviteLink) EndPoint() string {
 	return config.EndpointRevokeChatInviteLink
 }
 
@@ -1525,7 +1525,7 @@ type ApproveChatJoinRequest struct {
 	UserID    int64  // required
 }
 
-func (s ApproveChatJoinRequest) Params() (Params, error) {
+func (s *ApproveChatJoinRequest) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1537,7 +1537,7 @@ func (s ApproveChatJoinRequest) Params() (Params, error) {
 
 	return params, nil
 }
-func (s ApproveChatJoinRequest) EndPoint() string {
+func (s *ApproveChatJoinRequest) EndPoint() string {
 	return config.EndpointApproveChatJoinRequest
 }
 
@@ -1549,7 +1549,7 @@ type DeclineChatJoinRequest struct {
 	UserID    int64  // required
 }
 
-func (s DeclineChatJoinRequest) Params() (Params, error) {
+func (s *DeclineChatJoinRequest) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1561,7 +1561,7 @@ func (s DeclineChatJoinRequest) Params() (Params, error) {
 
 	return params, nil
 }
-func (s DeclineChatJoinRequest) EndPoint() string {
+func (s *DeclineChatJoinRequest) EndPoint() string {
 	return config.EndpointDeclineChatJoinRequest
 }
 
@@ -1573,7 +1573,7 @@ type SetChatPhoto struct {
 	Photo     RequestFileData // required must be uploaded or string path
 }
 
-func (s SetChatPhoto) Params() (Params, error) {
+func (s *SetChatPhoto) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1581,13 +1581,13 @@ func (s SetChatPhoto) Params() (Params, error) {
 
 	return params, err
 }
-func (s SetChatPhoto) Files() []RequestFile {
+func (s *SetChatPhoto) Files() []RequestFile {
 	return []RequestFile{{
 		Name: "photo",
 		Data: s.Photo,
 	}}
 }
-func (s SetChatPhoto) EndPoint() string {
+func (s *SetChatPhoto) EndPoint() string {
 	return config.EndpointSetChatPhoto
 }
 
@@ -1598,7 +1598,7 @@ type DeleteChatPhoto struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s DeleteChatPhoto) Params() (Params, error) {
+func (s *DeleteChatPhoto) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1606,7 +1606,7 @@ func (s DeleteChatPhoto) Params() (Params, error) {
 
 	return params, err
 }
-func (s DeleteChatPhoto) EndPoint() string {
+func (s *DeleteChatPhoto) EndPoint() string {
 	return config.EndpointDeleteChatPhoto
 }
 
@@ -1618,7 +1618,7 @@ type SetChatTitle struct {
 	Title     string // required
 }
 
-func (s SetChatTitle) Params() (Params, error) {
+func (s *SetChatTitle) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1630,7 +1630,7 @@ func (s SetChatTitle) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetChatTitle) EndPoint() string {
+func (s *SetChatTitle) EndPoint() string {
 	return config.EndpointSetChatTitle
 }
 
@@ -1642,7 +1642,7 @@ type SetChatDescription struct {
 	Description string // required
 }
 
-func (s SetChatDescription) Params() (Params, error) {
+func (s *SetChatDescription) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1654,7 +1654,7 @@ func (s SetChatDescription) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetChatDescription) EndPoint() string {
+func (s *SetChatDescription) EndPoint() string {
 	return config.EndpointSetChatDescription
 }
 
@@ -1667,7 +1667,7 @@ type PinChatMessage struct {
 	DisableNotification bool
 }
 
-func (s PinChatMessage) Params() (Params, error) {
+func (s *PinChatMessage) Params() (Params, error) {
 	params := make(Params, 3)
 
 	params.AddAt(s.Username)
@@ -1680,7 +1680,7 @@ func (s PinChatMessage) Params() (Params, error) {
 
 	return params, nil
 }
-func (s PinChatMessage) EndPoint() string {
+func (s *PinChatMessage) EndPoint() string {
 	return config.EndpointPinChatMessage
 }
 
@@ -1692,7 +1692,7 @@ type UnpinChatMessage struct {
 	MessageID int    // required
 }
 
-func (s UnpinChatMessage) Params() (Params, error) {
+func (s *UnpinChatMessage) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1704,7 +1704,7 @@ func (s UnpinChatMessage) Params() (Params, error) {
 
 	return params, nil
 }
-func (s UnpinChatMessage) EndPoint() string {
+func (s *UnpinChatMessage) EndPoint() string {
 	return config.EndpointUnpinChatMessage
 }
 
@@ -1715,7 +1715,7 @@ type UnpinAllChatMessages struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s UnpinAllChatMessages) Params() (Params, error) {
+func (s *UnpinAllChatMessages) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1723,7 +1723,7 @@ func (s UnpinAllChatMessages) Params() (Params, error) {
 
 	return params, err
 }
-func (s UnpinAllChatMessages) EndPoint() string {
+func (s *UnpinAllChatMessages) EndPoint() string {
 	return config.EndpointUnpinAllChatMessages
 }
 
@@ -1734,7 +1734,7 @@ type LeaveChat struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s LeaveChat) Params() (Params, error) {
+func (s *LeaveChat) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1742,7 +1742,7 @@ func (s LeaveChat) Params() (Params, error) {
 
 	return params, err
 }
-func (s LeaveChat) EndPoint() string {
+func (s *LeaveChat) EndPoint() string {
 	return config.EndpointLeaveChat
 }
 
@@ -1753,7 +1753,7 @@ type GetChat struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s GetChat) Params() (Params, error) {
+func (s *GetChat) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1761,7 +1761,7 @@ func (s GetChat) Params() (Params, error) {
 
 	return params, err
 }
-func (s GetChat) EndPoint() string {
+func (s *GetChat) EndPoint() string {
 	return config.EndpointGetChat
 }
 
@@ -1772,7 +1772,7 @@ type GetChatAdministrators struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s GetChatAdministrators) Params() (Params, error) {
+func (s *GetChatAdministrators) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1780,7 +1780,7 @@ func (s GetChatAdministrators) Params() (Params, error) {
 
 	return params, err
 }
-func (s GetChatAdministrators) EndPoint() string {
+func (s *GetChatAdministrators) EndPoint() string {
 	return config.EndpointGetChatAdministrators
 }
 
@@ -1791,7 +1791,7 @@ type GetChatMemberCount struct {
 	Username  string // required. use for group|supergroup|channel
 }
 
-func (s GetChatMemberCount) Params() (Params, error) {
+func (s *GetChatMemberCount) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1799,7 +1799,7 @@ func (s GetChatMemberCount) Params() (Params, error) {
 
 	return params, err
 }
-func (s GetChatMemberCount) EndPoint() string {
+func (s *GetChatMemberCount) EndPoint() string {
 	return config.EndpointGetChatMemberCount
 }
 
@@ -1811,7 +1811,7 @@ type GetChatMember struct {
 	UserID    int64  // required
 }
 
-func (s GetChatMember) Params() (Params, error) {
+func (s *GetChatMember) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1823,7 +1823,7 @@ func (s GetChatMember) Params() (Params, error) {
 
 	return params, nil
 }
-func (s GetChatMember) EndPoint() string {
+func (s *GetChatMember) EndPoint() string {
 	return config.EndpointGetChatMember
 }
 
@@ -1835,7 +1835,7 @@ type SetChatStickerSet struct {
 	StickerSetName string // required
 }
 
-func (s SetChatStickerSet) Params() (Params, error) {
+func (s *SetChatStickerSet) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddAt(s.Username)
@@ -1847,7 +1847,7 @@ func (s SetChatStickerSet) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetChatStickerSet) EndPoint() string {
+func (s *SetChatStickerSet) EndPoint() string {
 	return config.EndpointSetChatStickerSet
 }
 
@@ -1858,7 +1858,7 @@ type DeleteChatStickerSet struct {
 	Username  string // required. use for supergroup
 }
 
-func (s DeleteChatStickerSet) Params() (Params, error) {
+func (s *DeleteChatStickerSet) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddAt(s.Username)
@@ -1866,7 +1866,7 @@ func (s DeleteChatStickerSet) Params() (Params, error) {
 
 	return params, err
 }
-func (s DeleteChatStickerSet) EndPoint() string {
+func (s *DeleteChatStickerSet) EndPoint() string {
 	return config.EndpointDeleteChatStickerSet
 }
 
@@ -1879,7 +1879,7 @@ type AnswerCallbackQuery struct {
 	CacheTime       int
 }
 
-func (s AnswerCallbackQuery) Params() (Params, error) {
+func (s *AnswerCallbackQuery) Params() (Params, error) {
 	params := make(Params, 5)
 
 	params["callback_query_id"] = s.CallbackQueryID
@@ -1890,7 +1890,7 @@ func (s AnswerCallbackQuery) Params() (Params, error) {
 
 	return params, nil
 }
-func (s AnswerCallbackQuery) EndPoint() string {
+func (s *AnswerCallbackQuery) EndPoint() string {
 	return config.EndpointAnswerCallbackQuery
 }
 
@@ -1901,7 +1901,7 @@ type SetMyCommands struct {
 	LanguageCode string
 }
 
-func (s SetMyCommands) Params() (Params, error) {
+func (s *SetMyCommands) Params() (Params, error) {
 	params := make(Params, 3)
 
 	err := params.AddInterface("commands", s.Commands)
@@ -1916,7 +1916,7 @@ func (s SetMyCommands) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetMyCommands) EndPoint() string {
+func (s *SetMyCommands) EndPoint() string {
 	return config.EndpointSetMyCommands
 }
 
@@ -1926,7 +1926,7 @@ type DeleteMyCommands struct {
 	LanguageCode string
 }
 
-func (s DeleteMyCommands) Params() (Params, error) {
+func (s *DeleteMyCommands) Params() (Params, error) {
 	params := make(Params, 2)
 
 	err := params.AddInterface("scope", s.Scope)
@@ -1937,7 +1937,7 @@ func (s DeleteMyCommands) Params() (Params, error) {
 
 	return params, nil
 }
-func (s DeleteMyCommands) EndPoint() string {
+func (s *DeleteMyCommands) EndPoint() string {
 	return config.EndpointDeleteMyCommands
 }
 
@@ -1947,7 +1947,7 @@ type GetMyCommands struct {
 	LanguageCode string
 }
 
-func (s GetMyCommands) Params() (Params, error) {
+func (s *GetMyCommands) Params() (Params, error) {
 	params := make(Params, 2)
 
 	err := params.AddInterface("scope", s.Scope)
@@ -1958,7 +1958,7 @@ func (s GetMyCommands) Params() (Params, error) {
 
 	return params, nil
 }
-func (s GetMyCommands) EndPoint() string {
+func (s *GetMyCommands) EndPoint() string {
 	return config.EndpointGetMyCommands
 }
 
@@ -1971,7 +1971,7 @@ type SetChatMenuButton struct {
 	MenuButton MenuButton
 }
 
-func (s SetChatMenuButton) Params() (Params, error) {
+func (s *SetChatMenuButton) Params() (Params, error) {
 	params := make(Params, 2)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -1982,7 +1982,7 @@ func (s SetChatMenuButton) Params() (Params, error) {
 
 	return params, err
 }
-func (s SetChatMenuButton) EndPoint() string {
+func (s *SetChatMenuButton) EndPoint() string {
 	return config.EndpointSetChatMenuButton
 }
 
@@ -1993,14 +1993,14 @@ type GetChatMenuButton struct {
 	Username  string // required. use for chat|channel
 }
 
-func (s GetChatMenuButton) Params() (Params, error) {
+func (s *GetChatMenuButton) Params() (Params, error) {
 	params := make(Params, 1)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 
 	return params, err
 }
-func (s GetChatMenuButton) EndPoint() string {
+func (s *GetChatMenuButton) EndPoint() string {
 	return config.EndpointGetChatMenuButton
 }
 
@@ -2010,7 +2010,7 @@ type SetMyDefaultAdministratorRights struct {
 	ForChannels bool
 }
 
-func (s SetMyDefaultAdministratorRights) Params() (Params, error) {
+func (s *SetMyDefaultAdministratorRights) Params() (Params, error) {
 	params := make(Params, 2)
 
 	err := params.AddInterface("rights", s.Rights)
@@ -2021,7 +2021,7 @@ func (s SetMyDefaultAdministratorRights) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetMyDefaultAdministratorRights) EndPoint() string {
+func (s *SetMyDefaultAdministratorRights) EndPoint() string {
 	return config.EndpointSetMyDefaultAdministratorRights
 }
 
@@ -2030,14 +2030,14 @@ type GetMyDefaultAdministratorRights struct {
 	ForChannels bool
 }
 
-func (s GetMyDefaultAdministratorRights) Params() (Params, error) {
+func (s *GetMyDefaultAdministratorRights) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddBool("for_channels", s.ForChannels)
 
 	return params, nil
 }
-func (s GetMyDefaultAdministratorRights) EndPoint() string {
+func (s *GetMyDefaultAdministratorRights) EndPoint() string {
 	return config.EndpointGetMyDefaultAdministratorRights
 }
 
@@ -2055,7 +2055,7 @@ type EditMessageText struct {
 	ReplyMarkup           interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s EditMessageText) Params() (Params, error) {
+func (s *EditMessageText) Params() (Params, error) {
 	params := make(Params, 8)
 
 	if s.InlineMessageID == "" {
@@ -2077,7 +2077,7 @@ func (s EditMessageText) Params() (Params, error) {
 
 	return params, err
 }
-func (s EditMessageText) EndPoint() string {
+func (s *EditMessageText) EndPoint() string {
 	return config.EndpointEditMessageText
 }
 
@@ -2094,7 +2094,7 @@ type EditMessageCaption struct {
 	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s EditMessageCaption) Params() (Params, error) {
+func (s *EditMessageCaption) Params() (Params, error) {
 	params := make(Params, 7)
 
 	if s.InlineMessageID == "" {
@@ -2115,7 +2115,7 @@ func (s EditMessageCaption) Params() (Params, error) {
 
 	return params, err
 }
-func (s EditMessageCaption) EndPoint() string {
+func (s *EditMessageCaption) EndPoint() string {
 	return config.EndpointEditMessageCaption
 }
 
@@ -2130,7 +2130,7 @@ type EditMessageMedia struct {
 	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s EditMessageMedia) Params() (Params, error) {
+func (s *EditMessageMedia) Params() (Params, error) {
 	params := make(Params, 5)
 
 	if s.InlineMessageID == "" {
@@ -2149,10 +2149,10 @@ func (s EditMessageMedia) Params() (Params, error) {
 
 	return params, err
 }
-func (s EditMessageMedia) Files() []RequestFile {
+func (s *EditMessageMedia) Files() []RequestFile {
 	return prepareInputMediaFile(s.Media, 0)
 }
-func (s EditMessageMedia) EndPoint() string {
+func (s *EditMessageMedia) EndPoint() string {
 	return config.EndpointEditMessageMedia
 }
 
@@ -2166,7 +2166,7 @@ type EditMessageReplyMarkup struct {
 	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s EditMessageReplyMarkup) Params() (Params, error) {
+func (s *EditMessageReplyMarkup) Params() (Params, error) {
 	params := make(Params, 4)
 
 	if s.InlineMessageID == "" {
@@ -2181,7 +2181,7 @@ func (s EditMessageReplyMarkup) Params() (Params, error) {
 
 	return params, err
 }
-func (s EditMessageReplyMarkup) EndPoint() string {
+func (s *EditMessageReplyMarkup) EndPoint() string {
 	return config.EndpointEditMessageReplyMarkup
 }
 
@@ -2194,7 +2194,7 @@ type StopPoll struct {
 	ReplyMarkup interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
 }
 
-func (s StopPoll) Params() (Params, error) {
+func (s *StopPoll) Params() (Params, error) {
 	params := make(Params, 3)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -2206,7 +2206,7 @@ func (s StopPoll) Params() (Params, error) {
 
 	return params, err
 }
-func (s StopPoll) EndPoint() string {
+func (s *StopPoll) EndPoint() string {
 	return config.EndpointStopPoll
 }
 
@@ -2218,7 +2218,7 @@ type DeleteMessage struct {
 	MessageID int    // required
 }
 
-func (s DeleteMessage) Params() (Params, error) {
+func (s *DeleteMessage) Params() (Params, error) {
 	params := make(Params, 2)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -2229,7 +2229,7 @@ func (s DeleteMessage) Params() (Params, error) {
 
 	return params, nil
 }
-func (s DeleteMessage) EndPoint() string {
+func (s *DeleteMessage) EndPoint() string {
 	return config.EndpointDeleteMessage
 }
 
@@ -2246,7 +2246,7 @@ type SendSticker struct {
 	ReplyMarkup              interface{}
 }
 
-func (s SendSticker) Params() (Params, error) {
+func (s *SendSticker) Params() (Params, error) {
 	params := make(Params, 6)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -2261,7 +2261,7 @@ func (s SendSticker) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SendSticker) Files() []RequestFile {
+func (s *SendSticker) Files() []RequestFile {
 	files := []RequestFile{{
 		Name: "sticker",
 		Data: s.Sticker,
@@ -2269,7 +2269,7 @@ func (s SendSticker) Files() []RequestFile {
 
 	return files
 }
-func (s SendSticker) EndPoint() string {
+func (s *SendSticker) EndPoint() string {
 	return config.EndpointSendSticker
 }
 
@@ -2278,14 +2278,14 @@ type GetStickerSet struct {
 	Name string // required
 }
 
-func (s GetStickerSet) Params() (Params, error) {
+func (s *GetStickerSet) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params["name"] = s.Name
 
 	return params, nil
 }
-func (s GetStickerSet) EndPoint() string {
+func (s *GetStickerSet) EndPoint() string {
 	return config.EndpointGetStickerSet
 }
 
@@ -2295,20 +2295,20 @@ type UploadStickerFile struct {
 	PNGSticker RequestFileData // required
 }
 
-func (s UploadStickerFile) Params() (Params, error) {
+func (s *UploadStickerFile) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params.AddNonZero64("user_id", s.UserID)
 
 	return params, nil
 }
-func (s UploadStickerFile) Files() []RequestFile {
+func (s *UploadStickerFile) Files() []RequestFile {
 	return []RequestFile{{
 		Name: "png_sticker",
 		Data: s.PNGSticker,
 	}}
 }
-func (s UploadStickerFile) EndPoint() string {
+func (s *UploadStickerFile) EndPoint() string {
 	return config.EndpointUploadStickerFile
 }
 
@@ -2325,7 +2325,7 @@ type CreateNewStickerSet struct {
 	MaskPosition  MaskPosition
 }
 
-func (s CreateNewStickerSet) Params() (Params, error) {
+func (s *CreateNewStickerSet) Params() (Params, error) {
 	params := make(Params, 6)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -2337,7 +2337,7 @@ func (s CreateNewStickerSet) Params() (Params, error) {
 
 	return params, err
 }
-func (s CreateNewStickerSet) Files() []RequestFile {
+func (s *CreateNewStickerSet) Files() []RequestFile {
 	if s.PNGSticker != nil {
 		return []RequestFile{{
 			Name: "png_sticker",
@@ -2359,7 +2359,7 @@ func (s CreateNewStickerSet) Files() []RequestFile {
 
 	return nil
 }
-func (s CreateNewStickerSet) EndPoint() string {
+func (s *CreateNewStickerSet) EndPoint() string {
 	return config.EndpointCreateNewStickerSet
 }
 
@@ -2374,7 +2374,7 @@ type AddStickerToSet struct {
 	MaskPosition MaskPosition
 }
 
-func (s AddStickerToSet) Params() (Params, error) {
+func (s *AddStickerToSet) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -2384,7 +2384,7 @@ func (s AddStickerToSet) Params() (Params, error) {
 
 	return params, err
 }
-func (s AddStickerToSet) Files() []RequestFile {
+func (s *AddStickerToSet) Files() []RequestFile {
 	if s.PNGSticker != nil {
 		return []RequestFile{{
 			Name: "png_sticker",
@@ -2406,7 +2406,7 @@ func (s AddStickerToSet) Files() []RequestFile {
 
 	return nil
 }
-func (s AddStickerToSet) EndPoint() string {
+func (s *AddStickerToSet) EndPoint() string {
 	return config.EndpointAddStickerToSet
 }
 
@@ -2416,7 +2416,7 @@ type SetStickerPositionInSet struct {
 	Position int    // required
 }
 
-func (s SetStickerPositionInSet) Params() (Params, error) {
+func (s *SetStickerPositionInSet) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["sticker"] = s.Sticker
@@ -2424,7 +2424,7 @@ func (s SetStickerPositionInSet) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetStickerPositionInSet) EndPoint() string {
+func (s *SetStickerPositionInSet) EndPoint() string {
 	return config.EndpointSetStickerPositionInSet
 }
 
@@ -2435,7 +2435,7 @@ type SetStickerSetThumb struct {
 	Thumb  RequestFileData
 }
 
-func (s SetStickerSetThumb) Params() (Params, error) {
+func (s *SetStickerSetThumb) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["name"] = s.Name
@@ -2443,7 +2443,7 @@ func (s SetStickerSetThumb) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetStickerSetThumb) Files() []RequestFile {
+func (s *SetStickerSetThumb) Files() []RequestFile {
 	if s.Thumb != nil {
 		return []RequestFile{{
 			Name: "thumb",
@@ -2453,7 +2453,7 @@ func (s SetStickerSetThumb) Files() []RequestFile {
 
 	return nil
 }
-func (s SetStickerSetThumb) EndPoint() string {
+func (s *SetStickerSetThumb) EndPoint() string {
 	return config.EndpointSetStickerSetThumb
 }
 
@@ -2462,14 +2462,14 @@ type DeleteStickerFromSet struct {
 	Sticker string // required
 }
 
-func (s DeleteStickerFromSet) Params() (Params, error) {
+func (s *DeleteStickerFromSet) Params() (Params, error) {
 	params := make(Params, 1)
 
 	params["sticker"] = s.Sticker
 
 	return params, nil
 }
-func (s DeleteStickerFromSet) EndPoint() string {
+func (s *DeleteStickerFromSet) EndPoint() string {
 	return config.EndpointDeleteStickerFromSet
 }
 
@@ -2484,7 +2484,7 @@ type AnswerInlineQuery struct {
 	SwitchPMParameter string
 }
 
-func (s AnswerInlineQuery) Params() (Params, error) {
+func (s *AnswerInlineQuery) Params() (Params, error) {
 	params := make(Params, 7)
 
 	params["inline_query_id"] = s.InlineQueryID
@@ -2497,7 +2497,7 @@ func (s AnswerInlineQuery) Params() (Params, error) {
 
 	return params, err
 }
-func (s AnswerInlineQuery) EndPoint() string {
+func (s *AnswerInlineQuery) EndPoint() string {
 	return config.EndpointAnswerInlineQuery
 }
 
@@ -2507,7 +2507,7 @@ type AnswerWebAppQuery struct {
 	Result        interface{} // required
 }
 
-func (s AnswerWebAppQuery) Params() (Params, error) {
+func (s *AnswerWebAppQuery) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["web_app_query_id"] = s.WebAppQueryID
@@ -2515,7 +2515,7 @@ func (s AnswerWebAppQuery) Params() (Params, error) {
 
 	return params, err
 }
-func (s AnswerWebAppQuery) EndPoint() string {
+func (s *AnswerWebAppQuery) EndPoint() string {
 	return config.EndpointAnswerWebAppQuery
 }
 
@@ -2552,7 +2552,7 @@ type SendInvoice struct {
 	ReplyMarkup               interface{}
 }
 
-func (s SendInvoice) Params() (Params, error) {
+func (s *SendInvoice) Params() (Params, error) {
 	params := make(Params, 27)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -2593,7 +2593,7 @@ func (s SendInvoice) Params() (Params, error) {
 	err = params.AddInterface("reply_markup", s.ReplyMarkup)
 	return params, nil
 }
-func (s SendInvoice) EndPoint() string {
+func (s *SendInvoice) EndPoint() string {
 	return config.EndpointSendInvoice
 }
 
@@ -2621,7 +2621,7 @@ type CreateInvoiceLink struct {
 	IsFlexible                bool
 }
 
-func (s CreateInvoiceLink) Params() (Params, error) {
+func (s *CreateInvoiceLink) Params() (Params, error) {
 	params := make(Params, 20)
 
 	params["title"] = s.Title
@@ -2653,7 +2653,7 @@ func (s CreateInvoiceLink) Params() (Params, error) {
 
 	return params, nil
 }
-func (s CreateInvoiceLink) EndPoint() string {
+func (s *CreateInvoiceLink) EndPoint() string {
 	return config.EndpointCreateInvoiceLink
 }
 
@@ -2665,7 +2665,7 @@ type AnswerShippingQuery struct {
 	ErrorMessage    string           // required if ok is False
 }
 
-func (s AnswerShippingQuery) Params() (Params, error) {
+func (s *AnswerShippingQuery) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params["shipping_query_id"] = s.ShippingQueryID
@@ -2678,7 +2678,7 @@ func (s AnswerShippingQuery) Params() (Params, error) {
 
 	return params, nil
 }
-func (s AnswerShippingQuery) EndPoint() string {
+func (s *AnswerShippingQuery) EndPoint() string {
 	return config.EndpointAnswerShippingQuery
 }
 
@@ -2689,7 +2689,7 @@ type AnswerPreCheckoutQuery struct {
 	ErrorMessage       string // required if ok is False
 }
 
-func (s AnswerPreCheckoutQuery) Params() (Params, error) {
+func (s *AnswerPreCheckoutQuery) Params() (Params, error) {
 	params := make(Params, 3)
 
 	params["pre_checkout_query_id"] = s.PreCheckoutQueryID
@@ -2698,7 +2698,7 @@ func (s AnswerPreCheckoutQuery) Params() (Params, error) {
 
 	return params, nil
 }
-func (s AnswerPreCheckoutQuery) EndPoint() string {
+func (s *AnswerPreCheckoutQuery) EndPoint() string {
 	return config.EndpointAnswerPreCheckoutQuery
 }
 
@@ -2708,7 +2708,7 @@ type SetPassportDataErrors struct {
 	Errors []interface{} // required
 }
 
-func (s SetPassportDataErrors) Params() (Params, error) {
+func (s *SetPassportDataErrors) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -2716,7 +2716,7 @@ func (s SetPassportDataErrors) Params() (Params, error) {
 
 	return params, err
 }
-func (s SetPassportDataErrors) EndPoint() string {
+func (s *SetPassportDataErrors) EndPoint() string {
 	return config.EndpointSetPassportDataErrors
 }
 
@@ -2731,7 +2731,7 @@ type SendGame struct {
 	ReplyMarkup              *InlineKeyboardMarkup
 }
 
-func (s SendGame) Params() (Params, error) {
+func (s *SendGame) Params() (Params, error) {
 	params := make(Params, 7)
 
 	params.AddNonZero64("chat_id", s.ChatID)
@@ -2743,7 +2743,7 @@ func (s SendGame) Params() (Params, error) {
 	err := params.AddInterface("reply_markup", s.ReplyMarkup)
 	return params, err
 }
-func (s SendGame) EndPoint() string {
+func (s *SendGame) EndPoint() string {
 	return config.EndpointSendGame
 }
 
@@ -2758,7 +2758,7 @@ type SetGameScore struct {
 	InlineMessageID    string // required if chat_id and message_id are not specified
 }
 
-func (s SetGameScore) Params() (Params, error) {
+func (s *SetGameScore) Params() (Params, error) {
 	params := make(Params, 5)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -2773,7 +2773,7 @@ func (s SetGameScore) Params() (Params, error) {
 
 	return params, nil
 }
-func (s SetGameScore) EndPoint() string {
+func (s *SetGameScore) EndPoint() string {
 	return config.EndpointSetGameScore
 }
 
@@ -2785,7 +2785,7 @@ type GetGameHighScores struct {
 	InlineMessageID string // required if chat_id and message_id are not specified
 }
 
-func (s GetGameHighScores) Params() (Params, error) {
+func (s *GetGameHighScores) Params() (Params, error) {
 	params := make(Params, 4)
 
 	params.AddNonZero64("user_id", s.UserID)
@@ -2795,6 +2795,6 @@ func (s GetGameHighScores) Params() (Params, error) {
 
 	return params, nil
 }
-func (s GetGameHighScores) EndPoint() string {
+func (s *GetGameHighScores) EndPoint() string {
 	return config.EndpointGetGameHighScores
 }

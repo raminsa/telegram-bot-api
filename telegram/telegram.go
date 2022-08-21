@@ -14,16 +14,16 @@ type Api struct {
 	Bot types.BotApi
 }
 
-var telegram Api
+var Core *Api
 
 // BaseUrl set custom api base url.
-func (t Api) BaseUrl(baseUrl string) {
+func (t *Api) BaseUrl(baseUrl string) {
 	t.Bot.BaseUrl = baseUrl
 }
 
 // Client make new telegram client.
-func Client() client.Client {
-	return client.Client{}
+func Client() *client.Client {
+	return &client.Client{}
 }
 
 // New make new telegram bot api response.
@@ -39,9 +39,9 @@ func New(token string) (*Api, error) {
 		return nil, err
 	}
 
-	telegram.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
+	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
 
-	return &telegram, nil
+	return Core, nil
 }
 
 // NewWithBaseUrl make new telegram bot api response with custom base url.
@@ -61,9 +61,9 @@ func NewWithBaseUrl(token, baseUrl string) (*Api, error) {
 		return nil, err
 	}
 
-	telegram.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
+	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
 
-	return &telegram, nil
+	return Core, nil
 }
 
 // NewWithCustomClient make new telegram bot api response with custom client.
@@ -80,9 +80,9 @@ func NewWithCustomClient(token string, Client *client.Client) (*Api, error) {
 		return nil, err
 	}
 
-	telegram.Bot = types.BotApi{Token: token, BaseUrl: Client.BaseUrl, Client: makeClient}
+	Core.Bot = types.BotApi{Token: token, BaseUrl: Client.BaseUrl, Client: makeClient}
 
-	return &telegram, nil
+	return Core, nil
 }
 
 // HandleUpdate parses and returns update received via webhook
