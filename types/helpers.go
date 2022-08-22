@@ -190,9 +190,9 @@ func (e *Error) Error() string {
 func (u *Update) SentFrom() *User {
 	switch {
 	case u.Message != nil:
-		return &u.Message.From
+		return u.Message.From
 	case u.EditedMessage != nil:
-		return &u.EditedMessage.From
+		return u.EditedMessage.From
 	case u.InlineQuery != nil:
 		return &u.InlineQuery.From
 	case u.ChosenInlineResult != nil:
@@ -220,15 +220,15 @@ func (u *Update) CallbackData() string {
 func (u *Update) FromChat() *Chat {
 	switch {
 	case u.Message != nil:
-		return &u.Message.Chat
+		return u.Message.Chat
 	case u.EditedMessage != nil:
-		return &u.EditedMessage.Chat
+		return u.EditedMessage.Chat
 	case u.ChannelPost != nil:
-		return &u.ChannelPost.Chat
+		return u.ChannelPost.Chat
 	case u.EditedChannelPost != nil:
-		return &u.EditedChannelPost.Chat
+		return u.EditedChannelPost.Chat
 	case u.CallbackQuery != nil:
-		return &u.CallbackQuery.Message.Chat
+		return u.CallbackQuery.Message.Chat
 	default:
 		return nil
 	}
