@@ -126,24 +126,24 @@ func (t *Api) NewKeyboardButton(text string) types.KeyboardButton {
 }
 
 // NewKeyboardButtonContact creates a keyboard button that requests. user contact information upon click.
-func (t *Api) NewKeyboardButtonContact(text string) *types.KeyboardButton {
-	return &types.KeyboardButton{
+func (t *Api) NewKeyboardButtonContact(text string) types.KeyboardButton {
+	return types.KeyboardButton{
 		Text:           text,
 		RequestContact: true,
 	}
 }
 
 // NewKeyboardButtonLocation creates a keyboard button that requests. user location information upon click.
-func (t *Api) NewKeyboardButtonLocation(text string) *types.KeyboardButton {
-	return &types.KeyboardButton{
+func (t *Api) NewKeyboardButtonLocation(text string) types.KeyboardButton {
+	return types.KeyboardButton{
 		Text:            text,
 		RequestLocation: true,
 	}
 }
 
 // NewKeyboardButtonPool creates a keyboard button that requests. For pool, if `quiz` is passed, the user will be allowed to create only polls in the quiz mode. If `regular` is passed, only regular polls will be allowed.
-func (t *Api) NewKeyboardButtonPool(text, pool string) *types.KeyboardButton {
-	return &types.KeyboardButton{
+func (t *Api) NewKeyboardButtonPool(text, pool string) types.KeyboardButton {
+	return types.KeyboardButton{
 		Text: text,
 		RequestPoll: &types.KeyboardButtonPollType{
 			Type: pool,
@@ -152,8 +152,8 @@ func (t *Api) NewKeyboardButtonPool(text, pool string) *types.KeyboardButton {
 }
 
 // NewKeyboardButtonWebApp creates a keyboard button that requests. WebApp information upon click.
-func (t *Api) NewKeyboardButtonWebApp(text, Url string) *types.KeyboardButton {
-	return &types.KeyboardButton{
+func (t *Api) NewKeyboardButtonWebApp(text, Url string) types.KeyboardButton {
+	return types.KeyboardButton{
 		Text: text,
 		WebApp: &types.WebAppInfo{
 			URL: Url,
@@ -199,8 +199,8 @@ func (t *Api) NewInlineKeyboardMarkup(rows ...[]types.InlineKeyboardButton) *typ
 }
 
 // NewInlineKeyboardButtonURL creates an inline keyboard url button with text
-func (t *Api) NewInlineKeyboardButtonURL(text, url string) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardButtonURL(text, url string) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text: text,
 		URL:  url,
 	}
@@ -215,8 +215,8 @@ func (t *Api) NewInlineKeyboardCallbackData(text, data string) types.InlineKeybo
 }
 
 // NewInlineKeyboardWebApp creates an inline keyboard webapp button with text
-func (t *Api) NewInlineKeyboardWebApp(text, url string) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardWebApp(text, url string) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text: text,
 		WebApp: &types.WebAppInfo{
 			URL: url,
@@ -225,24 +225,24 @@ func (t *Api) NewInlineKeyboardWebApp(text, url string) *types.InlineKeyboardBut
 }
 
 // NewInlineKeyboardButtonLoginURL creates an inline keyboard login url button with text
-func (t *Api) NewInlineKeyboardButtonLoginURL(text string, loginURL types.LoginURL) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardButtonLoginURL(text string, loginURL types.LoginURL) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text:     text,
 		LoginURL: &loginURL,
 	}
 }
 
 // NewInlineKeyboardButtonSwitch creates an inline keyboard switch inline query button with text
-func (t *Api) NewInlineKeyboardButtonSwitch(text, switchInline string) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardButtonSwitch(text, switchInline string) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text:              text,
 		SwitchInlineQuery: switchInline,
 	}
 }
 
 // NewInlineKeyboardButtonSwitchCurrentChat creates an inline keyboard switch inline query bot chat button with text
-func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text:                         text,
 		SwitchInlineQueryCurrentChat: switchInline,
 	}
