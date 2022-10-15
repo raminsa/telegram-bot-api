@@ -513,9 +513,6 @@ func (t *Api) RestrictChatMember(c *types.RestrictChatMember) (bool, error) {
 	if c.UserID == 0 {
 		return false, errors.New("user_id Required")
 	}
-	if c.Permissions == nil {
-		return false, errors.New("permissions Required")
-	}
 
 	resp, err := t.Request(c)
 	if err != nil {
@@ -630,9 +627,6 @@ func (t *Api) UnbanChatSenderChat(c *types.UnbanChatSenderChat) (bool, error) {
 func (t *Api) SetChatPermissions(c *types.SetChatPermissions) (bool, error) {
 	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
 		return false, errors.New("ChatID or Username Required")
-	}
-	if c.Permissions == nil {
-		return false, errors.New("permissions Required")
 	}
 
 	resp, err := t.Request(c)
