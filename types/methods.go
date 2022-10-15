@@ -1238,11 +1238,11 @@ func (s *UnbanChatMember) EndPoint() string {
 
 // RestrictChatMember Restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
 type RestrictChatMember struct {
-	ChatID      int64            // required. use for supergroup as int
-	ChatIDStr   string           // required. use for supergroup as string
-	Username    string           // required. use for supergroup
-	UserID      int64            // required
-	Permissions *ChatPermissions // required
+	ChatID      int64           // required. use for supergroup as int
+	ChatIDStr   string          // required. use for supergroup as string
+	Username    string          // required. use for supergroup
+	UserID      int64           // required
+	Permissions ChatPermissions // required
 	UntilDate   int64
 }
 
@@ -1389,10 +1389,10 @@ func (s *UnbanChatSenderChat) EndPoint() string {
 
 // SetChatPermissions Set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members administrator rights. Returns True on success.
 type SetChatPermissions struct {
-	ChatID      int64            // required. use for group|supergroup as int
-	ChatIDStr   string           // required. use for group|supergroup as string
-	Username    string           // required. use for group|supergroup
-	Permissions *ChatPermissions // required
+	ChatID      int64           // required. use for group|supergroup as int
+	ChatIDStr   string          // required. use for group|supergroup as string
+	Username    string          // required. use for group|supergroup
+	Permissions ChatPermissions // required
 }
 
 func (s *SetChatPermissions) Params() (Params, error) {
@@ -1896,7 +1896,7 @@ func (s *AnswerCallbackQuery) EndPoint() string {
 
 // SetMyCommands Change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success.
 type SetMyCommands struct {
-	Commands     []*BotCommand // required
+	Commands     []BotCommand // required
 	Scope        *BotCommandScope
 	LanguageCode string
 }
@@ -2006,7 +2006,7 @@ func (s *GetChatMenuButton) EndPoint() string {
 
 // SetMyDefaultAdministratorRights Change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns True on success.
 type SetMyDefaultAdministratorRights struct {
-	Rights      ChatAdministratorRights
+	Rights      *ChatAdministratorRights
 	ForChannels bool
 }
 
@@ -2322,7 +2322,7 @@ type CreateNewStickerSet struct {
 	WEBMSticker   RequestFileData
 	Emojis        string // required
 	ContainsMasks bool
-	MaskPosition  MaskPosition
+	MaskPosition  *MaskPosition
 }
 
 func (s *CreateNewStickerSet) Params() (Params, error) {
@@ -2371,7 +2371,7 @@ type AddStickerToSet struct {
 	TGSSticker   RequestFileData
 	WEBMSticker  RequestFileData
 	Emojis       string // required
-	MaskPosition MaskPosition
+	MaskPosition *MaskPosition
 }
 
 func (s *AddStickerToSet) Params() (Params, error) {
@@ -2599,12 +2599,12 @@ func (s *SendInvoice) EndPoint() string {
 
 // CreateInvoiceLink Create a link for an invoice. Returns the created invoice link as String on success.
 type CreateInvoiceLink struct {
-	Title                     string          // required
-	Description               string          // required
-	Payload                   string          // required
-	ProviderToken             string          // required
-	Currency                  string          // required
-	Prices                    []*LabeledPrice // required
+	Title                     string         // required
+	Description               string         // required
+	Payload                   string         // required
+	ProviderToken             string         // required
+	Currency                  string         // required
+	Prices                    []LabeledPrice // required
 	MaxTipAmount              int
 	SuggestedTipAmounts       []int
 	ProviderData              string

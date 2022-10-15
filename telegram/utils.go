@@ -458,8 +458,8 @@ func (t *Api) NewRestrictChatMember() *types.RestrictChatMember {
 }
 
 // NewChatPermissions creates a new chat permissions message.
-func (t *Api) NewChatPermissions() *types.ChatPermissions {
-	return &types.ChatPermissions{}
+func (t *Api) NewChatPermissions() types.ChatPermissions {
+	return types.ChatPermissions{}
 }
 
 // NewPromoteChatMember creates a new promote chat member message.
@@ -593,17 +593,17 @@ func (t *Api) NewAnswerCallbackQuery() *types.AnswerCallbackQuery {
 }
 
 // NewSetMyCommands creates a new set my commands message.
-func (t *Api) NewSetMyCommands(commands ...*types.BotCommand) *types.SetMyCommands {
+func (t *Api) NewSetMyCommands(commands ...types.BotCommand) *types.SetMyCommands {
 	return &types.SetMyCommands{Commands: commands}
 }
 
 // NewSetMyCommandsWithScope creates a set my commands with scope message.
-func (t *Api) NewSetMyCommandsWithScope(scope *types.BotCommandScope, commands ...*types.BotCommand) *types.SetMyCommands {
+func (t *Api) NewSetMyCommandsWithScope(scope *types.BotCommandScope, commands ...types.BotCommand) *types.SetMyCommands {
 	return &types.SetMyCommands{Commands: commands, Scope: scope}
 }
 
 // NewSetMyCommandsWithScopeAndLanguage creates a set my commands with scope and language message.
-func (t *Api) NewSetMyCommandsWithScopeAndLanguage(scope *types.BotCommandScope, languageCode string, commands ...*types.BotCommand) *types.SetMyCommands {
+func (t *Api) NewSetMyCommandsWithScopeAndLanguage(scope *types.BotCommandScope, languageCode string, commands ...types.BotCommand) *types.SetMyCommands {
 	return &types.SetMyCommands{Commands: commands, Scope: scope, LanguageCode: languageCode}
 }
 
@@ -633,8 +633,8 @@ func (t *Api) NewDeleteMyCommandsWithScopeAndLanguage(scope *types.BotCommandSco
 }
 
 // NewBotCommand creates a new bot command message.
-func (t *Api) NewBotCommand(command, description string) *types.BotCommand {
-	return &types.BotCommand{
+func (t *Api) NewBotCommand(command, description string) types.BotCommand {
+	return types.BotCommand{
 		Command:     command,
 		Description: description,
 	}
@@ -1054,13 +1054,13 @@ func (t *Api) NewSendInvoice() *types.SendInvoice {
 }
 
 // NewLabeledPrices creates a new labeled price message.
-func (t *Api) NewLabeledPrices() []*types.LabeledPrice {
-	return []*types.LabeledPrice{}
+func (t *Api) NewLabeledPrices() []types.LabeledPrice {
+	return []types.LabeledPrice{}
 }
 
 // NewLabeledPrice creates a new labeled price message.
-func (t *Api) NewLabeledPrice() *types.LabeledPrice {
-	return &types.LabeledPrice{}
+func (t *Api) NewLabeledPrice() types.LabeledPrice {
+	return types.LabeledPrice{}
 }
 
 // NewCreateInvoiceLink creates a new create invoice link.
