@@ -217,7 +217,7 @@ func (u *Update) CallbackData() string {
 }
 
 // FromChat returns the chat where an update occurred.
-func (u *Update) FromChat() *Chat {
+func (u *Update) FromChat() Chat {
 	switch {
 	case u.Message != nil:
 		return u.Message.Chat
@@ -230,7 +230,7 @@ func (u *Update) FromChat() *Chat {
 	case u.CallbackQuery != nil:
 		return u.CallbackQuery.Message.Chat
 	default:
-		return nil
+		return Chat{}
 	}
 }
 

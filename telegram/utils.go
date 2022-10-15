@@ -107,8 +107,8 @@ func (t *Api) NewDeleteWebhook() *types.DeleteWebhook {
 }
 
 // NewReplyKeyboardMarkup creates a new regular keyboard with sane defaults.
-func (t *Api) NewReplyKeyboardMarkup(rows ...[]*types.KeyboardButton) *types.ReplyKeyboardMarkup {
-	var keyboard [][]*types.KeyboardButton
+func (t *Api) NewReplyKeyboardMarkup(rows ...[]types.KeyboardButton) *types.ReplyKeyboardMarkup {
+	var keyboard [][]types.KeyboardButton
 
 	keyboard = append(keyboard, rows...)
 
@@ -119,8 +119,8 @@ func (t *Api) NewReplyKeyboardMarkup(rows ...[]*types.KeyboardButton) *types.Rep
 }
 
 // NewKeyboardButton creates a regular keyboard button.
-func (t *Api) NewKeyboardButton(text string) *types.KeyboardButton {
-	return &types.KeyboardButton{
+func (t *Api) NewKeyboardButton(text string) types.KeyboardButton {
+	return types.KeyboardButton{
 		Text: text,
 	}
 }
@@ -145,7 +145,7 @@ func (t *Api) NewKeyboardButtonLocation(text string) *types.KeyboardButton {
 func (t *Api) NewKeyboardButtonPool(text, pool string) *types.KeyboardButton {
 	return &types.KeyboardButton{
 		Text: text,
-		RequestPoll: types.KeyboardButtonPollType{
+		RequestPoll: &types.KeyboardButtonPollType{
 			Type: pool,
 		},
 	}
@@ -155,15 +155,15 @@ func (t *Api) NewKeyboardButtonPool(text, pool string) *types.KeyboardButton {
 func (t *Api) NewKeyboardButtonWebApp(text, Url string) *types.KeyboardButton {
 	return &types.KeyboardButton{
 		Text: text,
-		WebApp: types.WebAppInfo{
+		WebApp: &types.WebAppInfo{
 			URL: Url,
 		},
 	}
 }
 
 // NewKeyboardButtonRow creates a row of keyboard buttons.
-func (t *Api) NewKeyboardButtonRow(buttons ...*types.KeyboardButton) []*types.KeyboardButton {
-	var row []*types.KeyboardButton
+func (t *Api) NewKeyboardButtonRow(buttons ...types.KeyboardButton) []types.KeyboardButton {
+	var row []types.KeyboardButton
 
 	row = append(row, buttons...)
 
@@ -188,8 +188,8 @@ func (t *Api) NewForceReply(inputFieldPlaceholder string, selective bool) *types
 }
 
 // NewInlineKeyboardMarkup creates a new inline keyboard.
-func (t *Api) NewInlineKeyboardMarkup(rows ...[]*types.InlineKeyboardButton) *types.InlineKeyboardMarkup {
-	var keyboard [][]*types.InlineKeyboardButton
+func (t *Api) NewInlineKeyboardMarkup(rows ...[]types.InlineKeyboardButton) *types.InlineKeyboardMarkup {
+	var keyboard [][]types.InlineKeyboardButton
 
 	keyboard = append(keyboard, rows...)
 
@@ -207,8 +207,8 @@ func (t *Api) NewInlineKeyboardButtonURL(text, url string) *types.InlineKeyboard
 }
 
 // NewInlineKeyboardCallbackData creates an inline keyboard callback data button with text
-func (t *Api) NewInlineKeyboardCallbackData(text, data string) *types.InlineKeyboardButton {
-	return &types.InlineKeyboardButton{
+func (t *Api) NewInlineKeyboardCallbackData(text, data string) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
 		Text:         text,
 		CallbackData: data,
 	}
@@ -218,7 +218,7 @@ func (t *Api) NewInlineKeyboardCallbackData(text, data string) *types.InlineKeyb
 func (t *Api) NewInlineKeyboardWebApp(text, url string) *types.InlineKeyboardButton {
 	return &types.InlineKeyboardButton{
 		Text: text,
-		WebApp: types.WebAppInfo{
+		WebApp: &types.WebAppInfo{
 			URL: url,
 		},
 	}
@@ -228,7 +228,7 @@ func (t *Api) NewInlineKeyboardWebApp(text, url string) *types.InlineKeyboardBut
 func (t *Api) NewInlineKeyboardButtonLoginURL(text string, loginURL types.LoginURL) *types.InlineKeyboardButton {
 	return &types.InlineKeyboardButton{
 		Text:     text,
-		LoginURL: loginURL,
+		LoginURL: &loginURL,
 	}
 }
 
@@ -249,8 +249,8 @@ func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string
 }
 
 // NewInlineKeyboardRow creates an inline keyboard row with buttons.
-func (t *Api) NewInlineKeyboardRow(buttons ...*types.InlineKeyboardButton) []*types.InlineKeyboardButton {
-	var row []*types.InlineKeyboardButton
+func (t *Api) NewInlineKeyboardRow(buttons ...types.InlineKeyboardButton) []types.InlineKeyboardButton {
+	var row []types.InlineKeyboardButton
 
 	row = append(row, buttons...)
 
@@ -704,7 +704,7 @@ func (t *Api) NewMenuButtonWebApp(text, Url string) *types.MenuButton {
 	return &types.MenuButton{
 		Type: "web_app",
 		Text: text,
-		WebApp: types.WebAppInfo{
+		WebApp: &types.WebAppInfo{
 			URL: Url,
 		},
 	}
