@@ -107,12 +107,12 @@ func (t *Api) NewDeleteWebhook() *types.DeleteWebhook {
 }
 
 // NewReplyKeyboardMarkup creates a new regular keyboard with sane defaults.
-func (t *Api) NewReplyKeyboardMarkup(rows ...[]types.KeyboardButton) *types.ReplyKeyboardMarkup {
+func (t *Api) NewReplyKeyboardMarkup(rows ...[]types.KeyboardButton) types.ReplyKeyboardMarkup {
 	var keyboard [][]types.KeyboardButton
 
 	keyboard = append(keyboard, rows...)
 
-	return &types.ReplyKeyboardMarkup{
+	return types.ReplyKeyboardMarkup{
 		ResizeKeyboard: true,
 		Keyboard:       keyboard,
 	}
@@ -171,16 +171,16 @@ func (t *Api) NewKeyboardButtonRow(buttons ...types.KeyboardButton) []types.Keyb
 }
 
 // NewReplyKeyboardRemove hides the keyboard, with the option for being selective or hiding for everyone.
-func (t *Api) NewReplyKeyboardRemove(selective bool) *types.ReplyKeyboardRemove {
-	return &types.ReplyKeyboardRemove{
+func (t *Api) NewReplyKeyboardRemove(selective bool) types.ReplyKeyboardRemove {
+	return types.ReplyKeyboardRemove{
 		RemoveKeyboard: true,
 		Selective:      selective,
 	}
 }
 
 // NewForceReply creates a new force reply.
-func (t *Api) NewForceReply(inputFieldPlaceholder string, selective bool) *types.ForceReply {
-	return &types.ForceReply{
+func (t *Api) NewForceReply(inputFieldPlaceholder string, selective bool) types.ForceReply {
+	return types.ForceReply{
 		ForceReply:            true,
 		InputFieldPlaceholder: inputFieldPlaceholder,
 		Selective:             selective,
@@ -188,12 +188,12 @@ func (t *Api) NewForceReply(inputFieldPlaceholder string, selective bool) *types
 }
 
 // NewInlineKeyboardMarkup creates a new inline keyboard.
-func (t *Api) NewInlineKeyboardMarkup(rows ...[]types.InlineKeyboardButton) *types.InlineKeyboardMarkup {
+func (t *Api) NewInlineKeyboardMarkup(rows ...[]types.InlineKeyboardButton) types.InlineKeyboardMarkup {
 	var keyboard [][]types.InlineKeyboardButton
 
 	keyboard = append(keyboard, rows...)
 
-	return &types.InlineKeyboardMarkup{
+	return types.InlineKeyboardMarkup{
 		InlineKeyboard: keyboard,
 	}
 }
