@@ -2289,6 +2289,25 @@ func (s *GetStickerSet) EndPoint() string {
 	return config.EndpointGetStickerSet
 }
 
+// GetCustomEmojiStickers Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
+type GetCustomEmojiStickers struct {
+	CustomEmojiIds []string // required
+}
+
+func (s *GetCustomEmojiStickers) Params() (Params, error) {
+	params := make(Params, 1)
+
+	err := params.AddInterface("custom_emoji_ids", s.CustomEmojiIds)
+	if err != nil {
+		return params, err
+	}
+
+	return params, nil
+}
+func (s *GetCustomEmojiStickers) EndPoint() string {
+	return config.EndpointGetCustomEmojiStickers
+}
+
 // UploadStickerFile Upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
 type UploadStickerFile struct {
 	UserID     int64           // required
@@ -2314,15 +2333,15 @@ func (s *UploadStickerFile) EndPoint() string {
 
 // CreateNewStickerSet Create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
 type CreateNewStickerSet struct {
-	UserID        int64  // required
-	Name          string // required
-	Title         string // required
-	PNGSticker    RequestFileData
-	TGSSticker    RequestFileData
-	WEBMSticker   RequestFileData
-	Emojis        string // required
-	ContainsMasks bool
-	MaskPosition  *MaskPosition
+	UserID       int64  // required
+	Name         string // required
+	Title        string // required
+	PNGSticker   RequestFileData
+	TGSSticker   RequestFileData
+	WEBMSticker  RequestFileData
+	StickerType  string
+	Emojis       string // required
+	MaskPosition *MaskPosition
 }
 
 func (s *CreateNewStickerSet) Params() (Params, error) {
@@ -2332,7 +2351,7 @@ func (s *CreateNewStickerSet) Params() (Params, error) {
 	params["name"] = s.Name
 	params["title"] = s.Title
 	params["emojis"] = s.Emojis
-	params.AddBool("contains_masks", s.ContainsMasks)
+	params["sticker_type"] = s.StickerType
 	err := params.AddInterface("mask_position", s.MaskPosition)
 
 	return params, err

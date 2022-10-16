@@ -81,6 +81,7 @@ const (
 	EndpointDeleteMessage                   = "deleteMessage"
 	EndpointSendSticker                     = "sendSticker"
 	EndpointGetStickerSet                   = "getStickerSet"
+	EndpointGetCustomEmojiStickers          = "getCustomEmojiStickers"
 	EndpointUploadStickerFile               = "uploadStickerFile"
 	EndpointCreateNewStickerSet             = "createNewStickerSet"
 	EndpointAddStickerToSet                 = "addStickerToSet"

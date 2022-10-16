@@ -63,29 +63,30 @@ type User struct {
 
 // Chat Represents a chat.
 type Chat struct {
-	ID                    int64            `json:"id"`                                 // Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
-	IDString              string           `json:"-"`                                  // String ID
-	Type                  string           `json:"type"`                               // Type of chat, can be either “private”, “group”, “supergroup” or “channel”
-	Title                 string           `json:"title,omitempty"`                    // Optional. Title, for supergroups, channels and group chats
-	UserName              string           `json:"username,omitempty"`                 // Optional. Username, for private chats, supergroups and channels if available
-	FirstName             string           `json:"first_name,omitempty"`               // Optional. First name of the other party in a private chat
-	LastName              string           `json:"last_name,omitempty"`                // Optional. Last name of the other party in a private chat
-	Photo                 *ChatPhoto       `json:"photo,omitempty"`                    // Optional. Chat photo. Returned only in getChat.
-	Bio                   string           `json:"bio,omitempty"`                      // Optional. Bio of the other party in a private chat. Returned only in getChat.
-	HasPrivateForwards    bool             `json:"has_private_forwards,omitempty"`     // Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
-	JoinToSendMessages    bool             `json:"join_to_send_messages,omitempty"`    // Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
-	JoinByRequest         bool             `json:"join_by_request,omitempty"`          // Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
-	Description           string           `json:"description,omitempty"`              // Optional. description, for groups, supergroups and channel chats. Returned only in getChat.
-	InviteLink            string           `json:"invite_link,omitempty"`              // Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
-	PinnedMessage         *Message         `json:"pinned_message,omitempty"`           // Optional. The most recent pinned message (by sending date). Returned only in getChat.
-	Permissions           *ChatPermissions `json:"permissions,omitempty"`              // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
-	SlowModeDelay         int              `json:"slow_mode_delay,omitempty"`          // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in getChat.
-	MessageAutoDeleteTime int              `json:"message_auto_delete_time,omitempty"` // Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
-	HasProtectedContent   bool             `json:"has_protected_content,omitempty"`    // Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
-	StickerSetName        string           `json:"sticker_set_name,omitempty"`         // Optional. For supergroups, name of group sticker set. Returned only in getChat.
-	CanSetStickerSet      bool             `json:"can_set_sticker_set,omitempty"`      // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
-	LinkedChatID          int64            `json:"linked_chat_id,omitempty"`           // Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat.
-	Location              *ChatLocation    `json:"location,omitempty"`                 // Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
+	ID                                 int64            `json:"id"`                                                // Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	IDString                           string           `json:"-"`                                                 // String ID
+	Type                               string           `json:"type"`                                              // Type of chat, can be either “private”, “group”, “supergroup” or “channel”
+	Title                              string           `json:"title,omitempty"`                                   // Optional. Title, for supergroups, channels and group chats
+	UserName                           string           `json:"username,omitempty"`                                // Optional. Username, for private chats, supergroups and channels if available
+	FirstName                          string           `json:"first_name,omitempty"`                              // Optional. First name of the other party in a private chat
+	LastName                           string           `json:"last_name,omitempty"`                               // Optional. Last name of the other party in a private chat
+	Photo                              *ChatPhoto       `json:"photo,omitempty"`                                   // Optional. Chat photo. Returned only in getChat.
+	Bio                                string           `json:"bio,omitempty"`                                     // Optional. Bio of the other party in a private chat. Returned only in getChat.
+	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`                    // Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
+	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"` // Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
+	JoinToSendMessages                 bool             `json:"join_to_send_messages,omitempty"`                   // Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
+	JoinByRequest                      bool             `json:"join_by_request,omitempty"`                         // Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
+	Description                        string           `json:"description,omitempty"`                             // Optional. description, for groups, supergroups and channel chats. Returned only in getChat.
+	InviteLink                         string           `json:"invite_link,omitempty"`                             // Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
+	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`                          // Optional. The most recent pinned message (by sending date). Returned only in getChat.
+	Permissions                        *ChatPermissions `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
+	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in getChat.
+	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
+	HasProtectedContent                bool             `json:"has_protected_content,omitempty"`                   // Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
+	StickerSetName                     string           `json:"sticker_set_name,omitempty"`                        // Optional. For supergroups, name of group sticker set. Returned only in getChat.
+	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`                     // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
+	LinkedChatID                       int64            `json:"linked_chat_id,omitempty"`                          // Optional. Unique identifier for the linked chat, i.e. the discussion group identifier for a channel and vice versa; for supergroups and channel chats. This identifier may be greater than 32 bits and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64 bit integer or double-precision float type are safe for storing this identifier. Returned only in getChat.
+	Location                           *ChatLocation    `json:"location,omitempty"`                                // Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
 }
 
 // Message Represents a message.
@@ -158,12 +159,13 @@ type MessageID struct {
 
 // MessageEntity Represents one special entity in a text message. For example, hashtags, usernames, URLs, etc
 type MessageEntity struct {
-	Type     string `json:"type"`               // Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
-	Offset   int    `json:"offset"`             // Offset in UTF-16 code units to the start of the entity
-	Length   int    `json:"length"`             // Length of the entity in UTF-16 code units
-	URL      string `json:"url,omitempty"`      // Optional. For “text_link” only, URL that will be opened after user taps on the text
-	User     *User  `json:"user,omitempty"`     // Optional. For “text_mention” only, the mentioned user
-	Language string `json:"language,omitempty"` // Optional. For “pre” only, the programming language of the entity text
+	Type          string `json:"type"`                      // Type of the entity. Currently, can be “mention” (@username), “hashtag” (#hashtag), “cashtag” ($USD), “bot_command” (/start@jobs_bot), “url” (https://telegram.org), “email” (do-not-reply@telegram.org), “phone_number” (+1-212-555-0123), “bold” (bold text), “italic” (italic text), “underline” (underlined text), “strikethrough” (strikethrough text), “spoiler” (spoiler message), “code” (monowidth string), “pre” (monowidth block), “text_link” (for clickable text URLs), “text_mention” (for users without usernames)
+	Offset        int    `json:"offset"`                    // Offset in UTF-16 code units to the start of the entity
+	Length        int    `json:"length"`                    // Length of the entity in UTF-16 code units
+	URL           string `json:"url,omitempty"`             // Optional. For “text_link” only, URL that will be opened after user taps on the text
+	User          *User  `json:"user,omitempty"`            // Optional. For “text_mention” only, the mentioned user
+	Language      string `json:"language,omitempty"`        // Optional. For “pre” only, the programming language of the entity text
+	CustomEmojiId string `json:"custom_emoji_id,omitempty"` // Optional. For “custom_emoji” only, unique identifier of the custom emoji. Use getCustomEmojiStickers to get full information about the sticker
 }
 
 // PhotoSize Represents one size of a photo or a file / sticker thumbnail.
@@ -755,6 +757,7 @@ type InputMediaDocument struct {
 type Sticker struct {
 	FileID           string        `json:"file_id"`                     // Identifier for this file, which can be used to download or reuse the file
 	FileUniqueID     string        `json:"file_unique_id"`              // Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	Type             string        `json:"type"`                        // Type of the sticker, currently one of “regular”, “mask”, “custom_emoji”. The type of the sticker is independent from its format, which is determined by the fields is_animated and is_video.
 	Width            int           `json:"width"`                       // Sticker width
 	Height           int           `json:"height"`                      // Sticker height
 	IsAnimated       bool          `json:"is_animated"`                 // True, if the sticker is animated
@@ -764,18 +767,19 @@ type Sticker struct {
 	SetName          string        `json:"set_name,omitempty"`          // Optional. Name of the sticker set to which the sticker belongs
 	PremiumAnimation *File         `json:"premium_animation,omitempty"` // Optional. Premium animation for the sticker, if the sticker is premium
 	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`     // Optional. For mask stickers, the position where the mask should be placed
+	CustomEmojiId    string        `json:"custom_emoji_id,omitempty"`   // Optional. For custom emoji stickers, unique identifier of the custom emoji
 	FileSize         int           `json:"file_size,omitempty"`         // Optional. File size in bytes
 }
 
 // StickerSet Represents a sticker set.
 type StickerSet struct {
-	Name          string     `json:"name"`            // Sticker set name
-	Title         string     `json:"title"`           // Sticker set title
-	IsAnimated    bool       `json:"is_animated"`     // True, if the sticker set contains animated stickers
-	IsVideo       bool       `json:"is_video"`        // True, if the sticker set contains video stickers
-	ContainsMasks bool       `json:"contains_masks"`  // True, if the sticker set contains masks
-	Stickers      []Sticker  `json:"stickers"`        // List of all set stickers
-	Thumbnail     *PhotoSize `json:"thumb,omitempty"` // Optional. Sticker set thumbnail in the .WEBP, .TGS, or .WEBM format
+	Name        string     `json:"name"`            // Sticker set name
+	Title       string     `json:"title"`           // Sticker set title
+	StickerType string     `json:"sticker_type"`    // Type of stickers in the set, currently one of “regular”, “mask”, “custom_emoji”
+	IsAnimated  bool       `json:"is_animated"`     // True, if the sticker set contains animated stickers
+	IsVideo     bool       `json:"is_video"`        // True, if the sticker set contains video stickers
+	Stickers    []Sticker  `json:"stickers"`        // List of all set stickers
+	Thumbnail   *PhotoSize `json:"thumb,omitempty"` // Optional. Sticker set thumbnail in the .WEBP, .TGS, or .WEBM format
 }
 
 // MaskPosition Describes the position on faces where a mask should be placed by default. by default.

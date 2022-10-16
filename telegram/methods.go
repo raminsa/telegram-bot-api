@@ -1436,6 +1436,23 @@ func (t *Api) GetStickerSet(c *types.GetStickerSet) (*types.StickerSet, error) {
 	return &stickerSet, err
 }
 
+// GetCustomEmojiStickers Use this method to get a sticker set. On success, a StickerSet object is returned.
+func (t *Api) GetCustomEmojiStickers(c *types.GetCustomEmojiStickers) ([]types.Sticker, error) {
+	if len(c.CustomEmojiIds) < 1 {
+		return nil, errors.New("customEmojiIds Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var stickerSet []types.Sticker
+	err = json.Unmarshal(resp.Result, &stickerSet)
+
+	return stickerSet, err
+}
+
 // UploadStickerFile Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
 func (t *Api) UploadStickerFile(c *types.UploadStickerFile) (*types.File, error) {
 	if c.UserID == 0 {

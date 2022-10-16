@@ -772,6 +772,11 @@ func (t *Api) NewGetStickerSet() *types.GetStickerSet {
 	return &types.GetStickerSet{}
 }
 
+// NewGetCustomEmojiStickers creates a new get custom emoji stickers message.
+func (t *Api) NewGetCustomEmojiStickers() *types.GetCustomEmojiStickers {
+	return &types.GetCustomEmojiStickers{}
+}
+
 // NewUploadStickerFile creates a new upload sticker file message.
 func (t *Api) NewUploadStickerFile() *types.UploadStickerFile {
 	return &types.UploadStickerFile{}
