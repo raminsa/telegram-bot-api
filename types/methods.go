@@ -670,7 +670,6 @@ func (s *SendMediaGroup) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("media", prepareInputMediaForParams(s.Media))
 
 	return params, err
 }
@@ -2141,11 +2140,7 @@ func (s *EditMessageMedia) Params() (Params, error) {
 		params.AddNonZero("message_id", s.MessageID)
 	}
 	params.AddNonEmpty("inline_message_id", s.InlineMessageID)
-	err := params.AddInterface("media", prepareInputMediaParam(s.Media, 0))
-	if err != nil {
-		return params, err
-	}
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err := params.AddInterface("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
