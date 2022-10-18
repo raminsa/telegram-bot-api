@@ -313,28 +313,28 @@ func (t *Api) NewSendMediaGroup() *types.SendMediaGroup {
 }
 
 // NewInputMediaPhoto creates a new inputMediaPhoto.
-func (t *Api) NewInputMediaPhoto() *types.InputMediaPhoto {
-	return &types.InputMediaPhoto{Type: "photo"}
+func (t *Api) NewInputMediaPhoto() types.InputMediaPhoto {
+	return types.InputMediaPhoto{Type: "photo"}
 }
 
 // NewInputMediaVideo creates a new inputMediaVideo.
-func (t *Api) NewInputMediaVideo() *types.InputMediaVideo {
-	return &types.InputMediaVideo{Type: "video"}
+func (t *Api) NewInputMediaVideo() types.InputMediaVideo {
+	return types.InputMediaVideo{Type: "video"}
 }
 
 // NewInputMediaAnimation creates a new inputMediaAnimation.
-func (t *Api) NewInputMediaAnimation() *types.InputMediaAnimation {
-	return &types.InputMediaAnimation{Type: "animation"}
+func (t *Api) NewInputMediaAnimation() types.InputMediaAnimation {
+	return types.InputMediaAnimation{Type: "animation"}
 }
 
 // NewInputMediaAudio creates a new inputMediaAudio.
-func (t *Api) NewInputMediaAudio() *types.InputMediaAudio {
-	return &types.InputMediaAudio{Type: "audio"}
+func (t *Api) NewInputMediaAudio() types.InputMediaAudio {
+	return types.InputMediaAudio{Type: "audio"}
 }
 
 // NewInputMediaDocument creates a new inputMediaDocument.
-func (t *Api) NewInputMediaDocument() *types.InputMediaDocument {
-	return &types.InputMediaDocument{Type: "document"}
+func (t *Api) NewInputMediaDocument() types.InputMediaDocument {
+	return types.InputMediaDocument{Type: "document"}
 }
 
 // NewSendLocation creates a new location message.
