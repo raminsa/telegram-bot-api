@@ -86,26 +86,35 @@ func NewWithCustomClient(token string, Client *client.Client) (*Api, error) {
 }
 
 // HandleUpdate parses and returns update received via webhook
-func HandleUpdate(r *http.Request) (*types.Update, error) {
-	if r.Method != http.MethodPost {
-		return nil, errors.New("wrong HTTP method required POST")
-	}
+func HandleUpdate(r *http.Request) (types.Update, error) {
+	var update types.Update
 
+	if r.Method != http.MethodPost {
+		return update, errors.New("wrong HTTP method required POST")
+	}
 	defer r.Body.Close()
 
-	var update types.Update
 	err := json.NewDecoder(r.Body).Decode(&update)
 	if err != nil {
-		return nil, err
+		return update, err
 	}
 
-	return &update, nil
+	return update, nil
 }
 
 // HandleUpdateError response writer error to requested server
-func HandleUpdateError(w http.ResponseWriter, err error) {
-	errMsg, _ := json.Marshal(map[string]string{"error": err.Error()})
+func HandleUpdateError(w http.ResponseWriter, wErr error) error {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Header().Set("Content-Type", "application/json")
-	_, _ = w.Write(errMsg)
+	errMsg, err := json.Marshal(map[string]string{
+		"error": wErr.Error(),
+	})
+	if err != nil {
+		return err
+	}
+	if _, err = w.Write(errMsg); err != nil {
+		return err
+	}
+
+	return nil
 }
