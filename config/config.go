@@ -4,7 +4,7 @@ package config
 const (
 	DefaultBaseUrl  = "https://api.telegram.org"
 	APIEndpoint     = "/bot%s/%s"
-	APIFileEndpoint = "/file/bot%s/%s"
+	APIFileEndpoint = DefaultBaseUrl + "/file/bot%s/%s"
 )
 
 // Constant values for Endpoints
