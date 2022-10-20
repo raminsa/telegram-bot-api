@@ -27,62 +27,70 @@ func Client() *client.Client {
 }
 
 // New make new telegram bot api response.
-func New(token string) (*Api, error) {
+func New(token string) (Core Api, err error) {
 	if token == "" {
-		return nil, errors.New("bot token missed")
+		err = errors.New("bot token missed")
+		return
 	}
+
 	c := Client()
 	c.BaseUrl = config.DefaultBaseUrl
 
-	makeClient, err := c.MakeClient()
+	var makeClient *http.Client
+	makeClient, err = c.MakeClient()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
 
-	return &Core, nil
+	return
 }
 
 // NewWithBaseUrl make new telegram bot api response with custom base url.
-func NewWithBaseUrl(token, baseUrl string) (*Api, error) {
+func NewWithBaseUrl(token, baseUrl string) (Core Api, err error) {
 	if token == "" {
-		return nil, errors.New("bot token missed")
+		err = errors.New("bot token missed")
+		return
 	}
 	if baseUrl == "" {
-		return nil, errors.New("base url missed")
+		err = errors.New("base url missed")
+		return
 	}
 
 	c := Client()
 	c.BaseUrl = baseUrl
 
-	makeClient, err := c.MakeClient()
+	var makeClient *http.Client
+	makeClient, err = c.MakeClient()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
 
-	return &Core, nil
+	return
 }
 
 // NewWithCustomClient make new telegram bot api response with custom client.
-func NewWithCustomClient(token string, Client *client.Client) (*Api, error) {
+func NewWithCustomClient(token string, Client *client.Client) (Core Api, err error) {
 	if token == "" {
-		return nil, errors.New("bot token missed")
+		err = errors.New("bot token missed")
+		return
 	}
 	if Client.BaseUrl == "" {
 		Client.BaseUrl = config.DefaultBaseUrl
 	}
 
-	makeClient, err := Client.MakeClient()
+	var makeClient *http.Client
+	makeClient, err = Client.MakeClient()
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	Core.Bot = types.BotApi{Token: token, BaseUrl: Client.BaseUrl, Client: makeClient}
 
-	return &Core, nil
+	return
 }
 
 // HandleUpdate parses and returns update received via webhook
