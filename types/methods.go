@@ -416,7 +416,7 @@ type SendVideo struct {
 	Video                    RequestFileData // required
 	CustomFileName           string
 	Duration                 int
-	Weight                   int
+	Width                    int
 	Height                   int
 	Thumb                    RequestFileData
 	Caption                  string
@@ -439,7 +439,7 @@ func (s *SendVideo) Params() (Params, error) {
 		return params, err
 	}
 	params.AddNonZero("duration", s.Duration)
-	params.AddNonZero("weight", s.Weight)
+	params.AddNonZero("width", s.Width)
 	params.AddNonZero("height", s.Height)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
@@ -482,7 +482,7 @@ type SendAnimation struct {
 	Username                 string          // required. use for channel
 	Animation                RequestFileData // required
 	Duration                 int
-	Weight                   int
+	Width                    int
 	Height                   int
 	Thumb                    RequestFileData
 	Caption                  string
@@ -504,7 +504,7 @@ func (s *SendAnimation) Params() (Params, error) {
 		return params, err
 	}
 	params.AddNonZero("duration", s.Duration)
-	params.AddNonZero("weight", s.Weight)
+	params.AddNonZero("width", s.Width)
 	params.AddNonZero("height", s.Height)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
