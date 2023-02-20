@@ -70,7 +70,10 @@ type Chat struct {
 	UserName                           string           `json:"username,omitempty"`                                // Optional. Username, for private chats, supergroups and channels if available
 	FirstName                          string           `json:"first_name,omitempty"`                              // Optional. First name of the other party in a private chat
 	LastName                           string           `json:"last_name,omitempty"`                               // Optional. Last name of the other party in a private chat
+	IsForum                            bool             `json:"is_forum,omitempty"`                                // Optional. True, if the supergroup chat is a forum (has topics enabled)
 	Photo                              *ChatPhoto       `json:"photo,omitempty"`                                   // Optional. Chat photo. Returned only in getChat.
+	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`                        // Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
+	EmojiStatusCustomEmojiID           string           `json:"emoji_status_custom_emoji_id,omitempty"`            // Optional. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in getChat.
 	Bio                                string           `json:"bio,omitempty"`                                     // Optional. Bio of the other party in a private chat. Returned only in getChat.
 	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`                    // Optional. True, if privacy settings of the other party in the private chat allows to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
 	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"` // Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
@@ -82,6 +85,8 @@ type Chat struct {
 	Permissions                        *ChatPermissions `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
 	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unpriviledged user; in seconds. Returned only in getChat.
 	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted; in seconds. Returned only in getChat.
+	HasAggressiveAntiSpamEnabled       bool             `json:"has_aggressive_anti_spam_enabled,omitempty"`        // Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
+	HasHiddenMembers                   bool             `json:"has_hidden_members,omitempty"`                      // Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
 	HasProtectedContent                bool             `json:"has_protected_content,omitempty"`                   // Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
 	StickerSetName                     string           `json:"sticker_set_name,omitempty"`                        // Optional. For supergroups, name of group sticker set. Returned only in getChat.
 	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`                     // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
@@ -92,6 +97,7 @@ type Chat struct {
 // Message Represents a message.
 type Message struct {
 	MessageID                     int                            `json:"message_id"`                                  // Unique message identifier inside this chat
+	MessageThreadID               int                            `json:"message_thread_id,omitempty"`                 // Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
 	From                          *User                          `json:"from,omitempty"`                              // Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`                       // Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field from contains a fake sender user in non-channel chats, if the message was sent on behalf of a chat.
 	Date                          int                            `json:"date"`                                        // date the message was sent in Unix time
@@ -102,6 +108,7 @@ type Message struct {
 	ForwardSignature              string                         `json:"forward_signature,omitempty"`                 // Optional. For forwarded messages that were originally sent in channels or by an anonymous chat administrator, signature of the message sender if present
 	ForwardSenderName             string                         `json:"forward_sender_name,omitempty"`               // Optional. Sender's name for messages forwarded from users who disallow adding a link to their account in forwarded messages
 	ForwardDate                   int                            `json:"forward_date,omitempty"`                      // Optional. For forwarded messages, date the original message was sent in Unix time
+	IsTopicMessage                bool                           `json:"is_topic_message,omitempty"`                  // Optional. True, if the message is sent to a forum topic
 	IsAutomaticForward            bool                           `json:"is_automatic_forward,omitempty"`              // Optional. True, if the message is a channel post that was automatically forwarded to the connected discussion group
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`                  // Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
 	ViaBot                        *User                          `json:"via_bot,omitempty"`                           // Optional. Bot through which the message was sent
@@ -121,6 +128,7 @@ type Message struct {
 	Voice                         *Voice                         `json:"voice,omitempty"`                             // Optional. Message is a voice message, information about the file
 	Caption                       string                         `json:"caption,omitempty"`                           // Optional. Caption for the animation, audio, document, photo, video or voice
 	CaptionEntities               []*MessageEntity               `json:"caption_entities,omitempty"`                  // Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+	HasMediaSpoiler               bool                           `json:"has_media_spoiler,omitempty"`                 // Optional. True, if the message media is covered by a spoiler animation
 	Contact                       *Contact                       `json:"contact,omitempty"`                           // Optional. Message is a shared contact, information about the contact
 	Dice                          *Dice                          `json:"dice,omitempty"`                              // Optional. Message is a dice with random value
 	Game                          *Game                          `json:"game,omitempty"`                              // Optional. Message is a game, information about the game.
@@ -141,9 +149,18 @@ type Message struct {
 	PinnedMessage                 *Message                       `json:"pinned_message,omitempty"`                    // Optional. Specified message was pinned. Note that the Message object in this field will not contain further reply_to_message fields even if it is itself a reply.
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`                           // Optional. Message is an invoice for a payment, information about the invoice.
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`                // Optional. Message is a service message about a successful payment, information about the payment.
+	UserShared                    *UserShared                    `json:"user_shared,omitempty"`                       // Optional. Service message: a user was shared with the bot
+	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`                       // Optional. Service message: a chat was shared with the bot
 	ConnectedWebsite              string                         `json:"connected_website,omitempty"`                 // Optional. The domain name of the website on which the user has logged in.
+	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`              // Optional. Service message: the user allowed the bot added to the attachment menu to write messages
 	PassportData                  *PassportData                  `json:"passport_data,omitempty"`                     // Optional. Telegram Passport data
 	ProximityAlertTriggered       *ProximityAlertTriggered       `json:"proximity_alert_triggered,omitempty"`         // Optional. Service message. A user in the chat triggered another user's proximity alert while sharing Live Location.
+	ForumTopicCreated             *ForumTopicCreated             `json:"forum_topic_created,omitempty"`               // Optional. Service message: forum topic created
+	ForumTopicEdited              *ForumTopicEdited              `json:"forum_topic_edited,omitempty"`                // Optional. Service message: forum topic edited
+	ForumTopicClosed              *ForumTopicClosed              `json:"forum_topic_closed,omitempty"`                // Optional. Service message: forum topic closed
+	ForumTopicReopened            *ForumTopicReopened            `json:"forum_topic_reopened,omitempty"`              // Optional. Service message: forum topic reopened
+	GeneralForumTopicHidden       *GeneralForumTopicHidden       `json:"general_forum_topic_hidden,omitempty"`        // Optional. Service message: the 'General' forum topic hidden
+	GeneralForumTopicUnhidden     *GeneralForumTopicUnhidden     `json:"general_forum_topic_unhidden,omitempty"`      // Optional. Service message: the 'General' forum topic unhidden
 	VideoChatScheduled            *VideoChatScheduled            `json:"video_chat_scheduled,omitempty"`              // Optional. Service message: video chat scheduled
 	VideoChatStarted              *VideoChatStarted              `json:"video_chat_started,omitempty"`                // Optional. Service message: video chat started
 	VideoChatEnded                *VideoChatEnded                `json:"video_chat_ended,omitempty"`                  // Optional. Service message: video chat ended
@@ -329,6 +346,51 @@ type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"` // New auto-delete time for messages in the chat; in seconds
 }
 
+// ForumTopicCreated Represents a service message about a new forum topic created in the chat.
+type ForumTopicCreated struct {
+	Name              string `json:"name"`                           // Name of the topic
+	IconColor         int    `json:"icon_color"`                     // Color of the topic icon in RGB format
+	IconCustomEmojiID string `json:"icon_custom_emoji_id,omitempty"` // Optional. Unique identifier of the custom emoji shown as the topic icon
+}
+
+// ForumTopicClosed Represents a service message about a forum topic closed in the chat. Currently holds no information.
+type ForumTopicClosed struct {
+}
+
+// ForumTopicEdited Represents a service message about an edited forum topic.
+type ForumTopicEdited struct {
+	Name              string `json:"name"`                           // Optional. New name of the topic, if it was edited
+	IconCustomEmojiID string `json:"icon_custom_emoji_id,omitempty"` // Optional. New identifier of the custom emoji shown as the topic icon, if it was edited; an empty string if the icon was removed
+}
+
+// ForumTopicReopened Represents a service message about a forum topic reopened in the chat. Currently holds no information.
+type ForumTopicReopened struct {
+}
+
+// GeneralForumTopicHidden Represents a service message about General forum topic hidden in the chat. Currently holds no information
+type GeneralForumTopicHidden struct {
+}
+
+// GeneralForumTopicUnhidden Represents a service message about General forum topic unhidden in the chat. Currently holds no information.
+type GeneralForumTopicUnhidden struct {
+}
+
+// UserShared Contains information about the user whose identifier was shared with the bot using a KeyboardButtonRequestUser button.
+type UserShared struct {
+	RequestID int   `json:"request_id"` // Identifier of the request
+	UserID    int64 `json:"user_id"`    // Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means.
+}
+
+// ChatShared Contains information about the chat whose identifier was shared with the bot using a KeyboardButtonRequestChat button.
+type ChatShared struct {
+	RequestID int   `json:"request_id"` // Identifier of the request
+	ChatID    int64 `json:"user_id"`    // Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
+}
+
+// WriteAccessAllowed Represents a service message about a user allowing a bot added to the attachment menu to write messages. Currently holds no information.
+type WriteAccessAllowed struct {
+}
+
 // VideoChatScheduled Represents a service message about a video chat scheduled in the chat.
 type VideoChatScheduled struct {
 	StartDate int `json:"start_date"` // Point in time (Unix timestamp) when the video chat is supposed to be started by a chat administrator
@@ -353,7 +415,7 @@ type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`      // Requested profile pictures (in up to 4 sizes each)
 }
 
-// File This object represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.
+// File Represents a file ready to be downloaded. The file can be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile.
 // Note: The maximum file size to download is 20 MB
 type File struct {
 	FileID       string `json:"file_id"`             // Identifier for this file, which can be used to download or reuse the file
@@ -370,6 +432,7 @@ type WebAppInfo struct {
 // ReplyKeyboardMarkup Represents a custom keyboard with reply options (see Introduction to bots for details and examples).
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`                          // Array of button rows, each represented by an Array of KeyboardButton objects
+	IsPersistent          bool               `json:"is_persistent,omitempty"`           // Optional. Requests clients to always show the keyboard when the regular keyboard is hidden. Defaults to false, in which case the custom keyboard can be hidden and opened with a keyboard icon.
 	ResizeKeyboard        bool               `json:"resize_keyboard,omitempty"`         // Optional. Requests clients to resize the keyboard vertically for optimal fit (e.g., make the keyboard smaller if there are just two rows of buttons). Defaults to false, in which case the custom keyboard is always of the same height as the app's standard keyboard.
 	OneTimeKeyboard       bool               `json:"one_time_keyboard,omitempty"`       // Optional. Requests clients to hide the keyboard as soon as it's been used. The keyboard will still be available, but clients will automatically display the usual letter-keyboard in the chat - the user can press a special button in the input field to see the custom keyboard again. Defaults to false.
 	InputFieldPlaceholder string             `json:"input_field_placeholder,omitempty"` // Optional. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
@@ -381,11 +444,32 @@ type ReplyKeyboardMarkup struct {
 // Note: request_poll option will only work in Telegram versions released after 23 January, 2020. Older clients will display unsupported message.
 // Note: web_app option will only work in Telegram versions released after 16 April, 2022. Older clients will display unsupported message.
 type KeyboardButton struct {
-	Text            string                  `json:"text"`                       // Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
-	RequestContact  bool                    `json:"request_contact,omitempty"`  // Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
-	RequestLocation bool                    `json:"request_location,omitempty"` // Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only.
-	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`     // Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only.
-	WebApp          *WebAppInfo             `json:"web_app,omitempty"`          // Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+	Text            string                     `json:"text"`                       // Text of the button. If none of the optional fields are used, it will be sent as a message when the button is pressed
+	RequestUser     *KeyboardButtonRequestUser `json:"request_user,omitempty"`     // Optional. If specified, pressing the button will open a list of suitable users. Tapping on any user will send their identifier to the bot in a “user_shared” service message. Available in private chats only.
+	RequestChat     *KeyboardButtonRequestChat `json:"request_chat,omitempty"`     // Optional. If specified, pressing the button will open a list of suitable chats. Tapping on a chat will send its identifier to the bot in a “chat_shared” service message. Available in private chats only.
+	RequestContact  bool                       `json:"request_contact,omitempty"`  // Optional. If True, the user's phone number will be sent as a contact when the button is pressed. Available in private chats only.
+	RequestLocation bool                       `json:"request_location,omitempty"` // Optional. If True, the user's current location will be sent when the button is pressed. Available in private chats only.
+	RequestPoll     *KeyboardButtonPollType    `json:"request_poll,omitempty"`     // Optional. If specified, the user will be asked to create a poll and send it to the bot when the button is pressed. Available in private chats only.
+	WebApp          *WebAppInfo                `json:"web_app,omitempty"`          // Optional. If specified, the described Web App will be launched when the button is pressed. The Web App will be able to send a “web_app_data” service message. Available in private chats only.
+}
+
+// KeyboardButtonRequestUser Defines the criteria used to request a suitable user. The identifier of the selected user will be shared with the bot when the corresponding button is pressed.
+type KeyboardButtonRequestUser struct {
+	RequestID     int  `json:"request_id"`                // Signed 32-bit identifier of the request, which will be received back in the UserShared object. Must be unique within the message
+	UserIsBot     bool `json:"user_is_bot,omitempty"`     // Optional. Pass True to request a bot, pass False to request a regular user. If not specified, no additional restrictions are applied.
+	UserIsPremium bool `json:"user_is_premium,omitempty"` // Optional. Pass True to request a premium user, pass False to request a non-premium user. If not specified, no additional restrictions are applied.
+}
+
+// KeyboardButtonRequestChat Defines the criteria used to request a suitable chat. The identifier of the selected chat will be shared with the bot when the corresponding button is pressed.
+type KeyboardButtonRequestChat struct {
+	RequestID               int                      `json:"request_id"`                          // Signed 32-bit identifier of the request, which will be received back in the ChatShared object. Must be unique within the message
+	ChatIsChannel           bool                     `json:"chat_is_channel"`                     // Pass True to request a channel chat, pass False to request a group or a supergroup chat.
+	ChatIsForum             bool                     `json:"chat_is_forum,omitempty"`             // Optional. Pass True to request a forum supergroup, pass False to request a non-forum chat. If not specified, no additional restrictions are applied.
+	ChatHasUsername         bool                     `json:"chat_has_username,omitempty"`         // Optional. Pass True to request a supergroup or a channel with a username, pass False to request a chat without a username. If not specified, no additional restrictions are applied.
+	ChatIsCreated           bool                     `json:"chat_is_created,omitempty"`           // Optional. Pass True to request a chat owned by the user. Otherwise, no additional restrictions are applied.
+	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"` // Optional. A JSON-serialized object listing the required administrator rights of the user in the chat. The rights must be a superset of bot_administrator_rights. If not specified, no additional restrictions are applied.
+	BotAdministratorRights  *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`  // Optional. A JSON-serialized object listing the required administrator rights of the bot in the chat. The rights must be a subset of user_administrator_rights. If not specified, no additional restrictions are applied.
+	BotIsMember             bool                     `json:"bot_is_member,omitempty"`             // Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
 }
 
 // KeyboardButtonPollType Represents type of a poll, which is allowed to be created and sent when the corresponding button is pressed.
@@ -484,85 +568,46 @@ type ChatAdministratorRights struct {
 	CanPostMessages     bool `json:"can_post_messages,omitempty"` // Optional. True, if the administrator can post in the channel; channels only
 	CanEditMessages     bool `json:"can_edit_messages,omitempty"` // Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
 	CanPinMessages      bool `json:"can_pin_messages,omitempty"`  // Optional. True, if the user is allowed to pin messages; groups and supergroups only
+	CanManageTopics     bool `json:"can_manage_topics,omitempty"` // Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
 }
 
-// ChatMember This object contains information about one member of a chat. Currently, the following 6 types of chat members are supported:
+// ChatMember Contains information about one member of a chat. Currently, the following 6 types of chat members are supported:
 type ChatMember struct {
-	ChatMemberOwner         ChatMemberOwner
-	ChatMemberAdministrator ChatMemberAdministrator
-	ChatMemberMember        ChatMemberMember
-	ChatMemberRestricted    ChatMemberRestricted
-	ChatMemberLeft          ChatMemberLeft
-	ChatMemberBanned        ChatMemberBanned
-}
-
-// ChatMemberOwner Represents a chat member that owns the chat and has all administrator privileges.
-type ChatMemberOwner struct {
-	Status      string `json:"status"`                 // The member's status in the chat, always “creator”
-	User        User   `json:"user"`                   // Information about the user
-	IsAnonymous bool   `json:"is_anonymous"`           // True, if the user's presence in the chat is hidden
-	CustomTitle string `json:"custom_title,omitempty"` // Optional. Custom title for this user
-}
-
-// ChatMemberAdministrator Represents a chat member that has some additional privileges.
-type ChatMemberAdministrator struct {
-	Status              string `json:"status"`                      // The member's status in the chat, always “administrator”
-	User                User   `json:"user"`                        // Information about the user
-	CanBeEdited         bool   `json:"can_be_edited"`               // True, if the bot is allowed to edit administrator privileges of that user
-	IsAnonymous         bool   `json:"is_anonymous"`                // True, if the user's presence in the chat is hidden
-	CanManageChat       bool   `json:"can_manage_chat"`             // True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
-	CanDeleteMessages   bool   `json:"can_delete_messages"`         // True, if the administrator can delete messages of other users
-	CanManageVideoChats bool   `json:"can_manage_video_chats"`      // True, if the administrator can manage video chats
-	CanRestrictMembers  bool   `json:"can_restrict_members"`        // True, if the administrator can restrict, ban or unban chat members
-	CanPromoteMembers   bool   `json:"can_promote_members"`         // True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
-	CanChangeInfo       bool   `json:"can_change_info"`             // True, if the user is allowed to change the chat title, photo and other settings
-	CanInviteUsers      bool   `json:"can_invite_users"`            // True, if the user is allowed to invite new users to the chat
-	CanPostMessages     bool   `json:"can_post_messages,omitempty"` // Optional. True, if the administrator can post in the channel; channels only
-	CanEditMessages     bool   `json:"can_edit_messages,omitempty"` // Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
-	CanPinMessages      bool   `json:"can_pin_messages,omitempty"`  // Optional. True, if the user is allowed to pin messages; groups and supergroups only
-	CustomTitle         string `json:"custom_title,omitempty"`      // Optional. Custom title for this user
-}
-
-// ChatMemberMember Represents a chat member that has no additional privileges or restrictions.
-type ChatMemberMember struct {
-	Status string `json:"status"` // The member's status in the chat, always “member”
-	User   User   `json:"user"`   // Information about the user
-}
-
-// ChatMemberRestricted Represents a chat member that is under certain restrictions in the chat. Supergroups only.
-type ChatMemberRestricted struct {
-	Status                string `json:"status"`                     // The member's status in the chat, always “restricted”
-	User                  User   `json:"user"`                       // Information about the user
-	IsMember              bool   `json:"is_member"`                  // True, if the user is a member of the chat at the moment of the request
-	CanChangeInfo         bool   `json:"can_change_info"`            // True, if the user is allowed to change the chat title, photo and other settings
-	CanInviteUsers        bool   `json:"can_invite_users"`           // True, if the user is allowed to invite new users to the chat
-	CanPinMessages        bool   `json:"can_pin_messages,omitempty"` // Optional. True, if the user is allowed to pin messages; groups and supergroups only
-	CanSendMessages       bool   `json:"can_send_messages"`          // True, if the user is allowed to send text messages, contacts, locations and venues
-	CanSendMediaMessages  bool   `json:"can_send_media_messages"`    // True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
-	CanSendPolls          bool   `json:"can_send_polls"`             // True, if the user is allowed to send polls
-	CanSendOtherMessages  bool   `json:"can_send_other_messages"`    // True, if the user is allowed to send animations, games, stickers and use inline bots
-	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`  // True, if the user is allowed to add web page previews to their messages
-	UntilDate             int    `json:"until_date"`                 // Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever
-}
-
-// ChatMemberLeft Represents a chat member that isn't currently a member of the chat, but may join it themselves.
-type ChatMemberLeft struct {
-	Status string `json:"status"` // The member's status in the chat, always “left”
-	User   User   `json:"user"`   // Information about the user
-}
-
-// ChatMemberBanned Represents a chat member that was banned in the chat and can't return to the chat or view chat messages.
-type ChatMemberBanned struct {
-	Status    string `json:"status"`     // The member's status in the chat, always “kicked”
-	User      User   `json:"user"`       // Information about the user
-	UntilDate int    `json:"until_date"` // Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever
+	User                  *User  `json:"user"`                                // User information about the user
+	Status                string `json:"status"`                              // the member's status in the chat. Can be “creator”,“administrator”, “member”, “restricted”, “left” or “kicked”
+	CustomTitle           string `json:"custom_title,omitempty"`              // Optional. owner and administrators only. Custom title for this user
+	IsAnonymous           bool   `json:"is_anonymous,omitempty"`              // Optional. owner and administrators only. True, if the user's presence in the chat is hidden
+	UntilDate             int64  `json:"until_date,omitempty"`                // Optional. restricted and kicked only. Date when restrictions will be lifted for this user;unix time.
+	CanBeEdited           bool   `json:"can_be_edited,omitempty"`             // Optional. administrators only. True, if the bot is allowed to edit administrator privileges of that user.
+	CanManageChat         bool   `json:"can_manage_chat,omitempty"`           // Optional. administrators only. True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege.
+	CanPostMessages       bool   `json:"can_post_messages,omitempty"`         // Optional. administrators only. True, if the administrator can post in the channel; channels only.
+	CanEditMessages       bool   `json:"can_edit_messages,omitempty"`         // Optional. administrators only. True, if the administrator can edit messages of other users and can pin messages; channels only.
+	CanDeleteMessages     bool   `json:"can_delete_messages,omitempty"`       // Optional. administrators only. True, if the administrator can delete messages of other users.
+	CanManageVideoChats   bool   `json:"can_manage_video_chats,omitempty"`    // Optional. administrators only. True, if the administrator can manage video chats.
+	CanRestrictMembers    bool   `json:"can_restrict_members,omitempty"`      // Optional. administrators only. True, if the administrator can restrict, ban or unban chat members.
+	CanPromoteMembers     bool   `json:"can_promote_members,omitempty"`       // Optional. administrators only. True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user).
+	CanChangeInfo         bool   `json:"can_change_info,omitempty"`           // Optional. administrators and restricted only. True, if the user is allowed to change the chat title, photo and other settings.
+	CanInviteUsers        bool   `json:"can_invite_users,omitempty"`          // Optional. administrators and restricted only. True, if the user is allowed to invite new users to the chat.
+	CanPinMessages        bool   `json:"can_pin_messages,omitempty"`          // Optional. administrators and restricted only. True, if the user is allowed to pin messages; groups and supergroups only
+	IsMember              bool   `json:"is_member,omitempty"`                 // Optional. restricted only. True, if the user is a member of the chat at the moment of the request
+	CanSendMessages       bool   `json:"can_send_messages,omitempty"`         // Optional. restricted only. True, if the user is allowed to send text messages, contacts, invoices, locations and venues
+	CanSendAudios         bool   `json:"can_send_audios,omitempty"`           // Optional. restricted only. True, if the user is allowed to send audios
+	CanSendDocuments      bool   `json:"can_send_documents,omitempty"`        // Optional. restricted only. True, if the user is allowed to send documents
+	CanSendPhotos         bool   `json:"can_send_photos,omitempty"`           // Optional. restricted only. True, if the user is allowed to send photos
+	CanSendVideos         bool   `json:"can_send_videos,omitempty"`           // Optional. restricted only. True, if the user is allowed to send videos
+	CanSendVideoNotes     bool   `json:"can_send_video_notes,omitempty"`      // Optional. restricted only. True, if the user is allowed to send video notes
+	CanSendVoiceNotes     bool   `json:"can_send_voice_notes,omitempty"`      // Optional. restricted only. True, if the user is allowed to send voice notes
+	CanSendPolls          bool   `json:"can_send_polls,omitempty"`            // Optional. restricted only. True, if the user is allowed to send polls
+	CanSendOtherMessages  bool   `json:"can_send_other_messages,omitempty"`   // Optional. restricted only. True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes.
+	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews,omitempty"` // Optional. restricted only. True, if the user is allowed to add web page previews to their messages.
+	CanManageTopics       bool   `json:"can_manage_topics,omitempty"`         // Optional. administrators and restricted only. true, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
 }
 
 // ChatMemberUpdated Represents changes in the status of a chat member.
 type ChatMemberUpdated struct {
-	Chat          Chat            `json:"chat"`                  // Chat the user belongs to
+	Chat          Chat            `json:"chat"`                  // the user belongs to
 	From          User            `json:"from"`                  // Performer of the action, which resulted in the change
-	Date          int             `json:"date"`                  // Date the change was done in Unix time
+	Date          int             `json:"date"`                  // the change was done in Unix time
 	OldChatMember ChatMember      `json:"old_chat_member"`       // Previous information about the chat member
 	NewChatMember ChatMember      `json:"new_chat_member"`       // New information about the chat member
 	InviteLink    *ChatInviteLink `json:"invite_link,omitempty"` // Optional. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
@@ -570,9 +615,10 @@ type ChatMemberUpdated struct {
 
 // ChatJoinRequest Represents a join request sent to a chat.
 type ChatJoinRequest struct {
-	Chat       Chat            `json:"chat"`                  // Chat to which the request was sent
-	From       User            `json:"from"`                  // User that sent the join request
-	Date       int             `json:"date"`                  // Date the request was sent in Unix time
+	Chat       Chat            `json:"chat"`                  // to which the request was sent
+	From       User            `json:"from"`                  // that sent the join request
+	UserChatId int64           `json:"user_chat_id"`          // Identifier of a private chat with the user who sent the join request. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot can use this identifier for 24 hours to send messages until the join request is processed, assuming no other administrator contacted the user.
+	Date       int             `json:"date"`                  // the request was sent in Unix time
 	Bio        string          `json:"bio,omitempty"`         // Optional. Bio of the user.
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"` // Optional. Chat invite link that was used by the user to send the join request
 }
@@ -587,12 +633,21 @@ type ChatPermissions struct {
 	CanChangeInfo         bool `json:"can_change_info,omitempty"`           // Optional. True, if the user is allowed to change the chat title, photo and other settings. Ignored in public supergroups
 	CanInviteUsers        bool `json:"can_invite_users,omitempty"`          // Optional. True, if the user is allowed to invite new users to the chat
 	CanPinMessages        bool `json:"can_pin_messages,omitempty"`          // Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
+	CanManageTopics       bool `json:"can_manage_topics,omitempty"`         // Optional. True, if the user is allowed to create forum topics. If omitted defaults to the value of can_pin_messages
 }
 
 // ChatLocation Represents a location to which a chat is connected.
 type ChatLocation struct {
 	Location Location `json:"location"` // The location to which the supergroup is connected. Can't be a live location.
 	Address  string   `json:"address"`  // Location address; 1-64 characters, as defined by the chat owner
+}
+
+// ForumTopic Represents a forum topic.
+type ForumTopic struct {
+	MessageThreadID   int64  `json:"message_thread_id"`    // Unique identifier of the forum topic
+	Name              string `json:"name"`                 // Name of the topic
+	IconColor         int    `json:"icon_color"`           // Color of the topic icon in RGB format
+	IconCustomEmojiID string `json:"icon_custom_emoji_id"` // Optional. Unique identifier of the custom emoji shown as the topic icon
 }
 
 // BotCommand Represents a bot command.
@@ -700,6 +755,7 @@ type InputMediaPhoto struct {
 	Caption         string           `json:"caption,omitempty"`          // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
 	ParseMode       string           `json:"parse_mode,omitempty"`       // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"` // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	HasSpoiler      bool             `json:"has_spoiler,omitempty"`      // Optional. Pass True if the photo needs to be covered with a spoiler animation
 }
 
 // InputMediaVideo Represents a video to be sent.
@@ -714,6 +770,7 @@ type InputMediaVideo struct {
 	Height            int              `json:"height,omitempty"`             // Optional. Video height
 	Duration          int              `json:"duration,omitempty"`           // Optional. Video duration in seconds
 	SupportsStreaming bool             `json:"supports_streaming,omitempty"` // Optional. Pass True, if the uploaded video is suitable for streaming
+	HasSpoiler        bool             `json:"has_spoiler,omitempty"`        // Optional. Pass True if the video needs to be covered with a spoiler animation
 }
 
 // InputMediaAnimation Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
@@ -727,6 +784,7 @@ type InputMediaAnimation struct {
 	Width           int              `json:"width,omitempty"`            // Optional. Animation width
 	Height          int              `json:"height,omitempty"`           // Optional. Animation height
 	Duration        int              `json:"duration,omitempty"`         // Optional. Animation duration in seconds
+	HasSpoiler      bool             `json:"has_spoiler,omitempty"`      // Optional. Pass True if the animation needs to be covered with a spoiler animation
 }
 
 // InputMediaAudio Represents an audio file to be treated as music to be sent.
@@ -800,7 +858,7 @@ type InlineQuery struct {
 	Location *Location `json:"location,omitempty"`  // Optional. Sender location, only for bots that request user location
 }
 
-// InlineQueryResult This object represents one result of an inline query. Telegram clients currently support results of the following 20 types
+// InlineQueryResult Represents one result of an inline query. Telegram clients currently support results of the following 20 types
 // Note: All URLs passed in inline query results will be available to end users and therefore must be assumed to be public.
 type InlineQueryResult struct {
 	InlineQueryResultArticle        InlineQueryResultArticle

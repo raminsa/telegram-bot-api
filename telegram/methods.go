@@ -1056,6 +1056,270 @@ func (t *Api) DeleteChatStickerSet(c *types.DeleteChatStickerSet) (bool, error) 
 	return result, err
 }
 
+// GetForumTopicIconStickers Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
+func (t *Api) GetForumTopicIconStickers(c *types.GetForumTopicIconStickers) ([]types.Sticker, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []types.Sticker
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, err
+}
+
+// CreateForumTopic Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
+func (t *Api) CreateForumTopic(c *types.CreateForumTopic) (*types.ForumTopic, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return nil, errors.New("ChatID or Username Required")
+	}
+
+	if c.Name == "" {
+		return nil, errors.New("name is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var result types.ForumTopic
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, err
+}
+
+// EditForumTopic Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+func (t *Api) EditForumTopic(c *types.EditForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.MessageThreadID == 0 {
+		return false, errors.New("message_thread_id is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// CloseForumTopic Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+func (t *Api) CloseForumTopic(c *types.CloseForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.MessageThreadID == 0 {
+		return false, errors.New("message_thread_id is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// ReopenForumTopic Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+func (t *Api) ReopenForumTopic(c *types.ReopenForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.MessageThreadID == 0 {
+		return false, errors.New("message_thread_id is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// DeleteForumTopic Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
+func (t *Api) DeleteForumTopic(c *types.DeleteForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.MessageThreadID == 0 {
+		return false, errors.New("message_thread_id is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// UnpinAllForumTopicMessages Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+func (t *Api) UnpinAllForumTopicMessages(c *types.UnpinAllForumTopicMessages) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.MessageThreadID == 0 {
+		return false, errors.New("message_thread_id is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// EditGeneralForumTopic Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
+func (t *Api) EditGeneralForumTopic(c *types.EditGeneralForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	if c.Name == "" {
+		return false, errors.New("name is Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// CloseGeneralForumTopic Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+func (t *Api) CloseGeneralForumTopic(c *types.CloseGeneralForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// ReopenGeneralForumTopic Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
+func (t *Api) ReopenGeneralForumTopic(c *types.ReopenGeneralForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// HideGeneralForumTopic Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
+func (t *Api) HideGeneralForumTopic(c *types.HideGeneralForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// UnHideGeneralForumTopic Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+func (t *Api) UnHideGeneralForumTopic(c *types.UnHideGeneralForumTopic) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
 // AnswerCallbackQuery Use this method to send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned. Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your bot via @BotFather and accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
 func (t *Api) AnswerCallbackQuery(c *types.AnswerCallbackQuery) (bool, error) {
 	if c.CallbackQueryID == "" {

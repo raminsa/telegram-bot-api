@@ -587,6 +587,66 @@ func (t *Api) NewDeleteChatStickerSet() *types.DeleteChatStickerSet {
 	return &types.DeleteChatStickerSet{}
 }
 
+// NewGetForumTopicIconStickers creates a new get forum topic icon stickers message.
+func (t *Api) NewGetForumTopicIconStickers() *types.GetForumTopicIconStickers {
+	return &types.GetForumTopicIconStickers{}
+}
+
+// NewCreateForumTopic creates a new create forum topic message.
+func (t *Api) NewCreateForumTopic() *types.CreateForumTopic {
+	return &types.CreateForumTopic{}
+}
+
+// NewEditForumTopic creates a new edit forum topic message.
+func (t *Api) NewEditForumTopic() *types.EditForumTopic {
+	return &types.EditForumTopic{}
+}
+
+// NewCloseForumTopic creates a new close forum topic message.
+func (t *Api) NewCloseForumTopic() *types.CloseForumTopic {
+	return &types.CloseForumTopic{}
+}
+
+// NewReopenForumTopic creates a new reopen forum topic message.
+func (t *Api) NewReopenForumTopic() *types.ReopenForumTopic {
+	return &types.ReopenForumTopic{}
+}
+
+// NewDeleteForumTopic creates a new delete forum topic message.
+func (t *Api) NewDeleteForumTopic() *types.DeleteForumTopic {
+	return &types.DeleteForumTopic{}
+}
+
+// NewUnpinAllForumTopicMessages creates a new unpin all forum topic messages message.
+func (t *Api) NewUnpinAllForumTopicMessages() *types.UnpinAllForumTopicMessages {
+	return &types.UnpinAllForumTopicMessages{}
+}
+
+// NewEditGeneralForumTopic creates a new edit general forum topic message.
+func (t *Api) NewEditGeneralForumTopic() *types.EditGeneralForumTopic {
+	return &types.EditGeneralForumTopic{}
+}
+
+// NewCloseGeneralForumTopic creates a new close general forum topic message.
+func (t *Api) NewCloseGeneralForumTopic() *types.CloseGeneralForumTopic {
+	return &types.CloseGeneralForumTopic{}
+}
+
+// NewReopenGeneralForumTopic creates a new reopen general forum topic message.
+func (t *Api) NewReopenGeneralForumTopic() *types.ReopenGeneralForumTopic {
+	return &types.ReopenGeneralForumTopic{}
+}
+
+// NewHideGeneralForumTopic creates a new hide general forum topic message.
+func (t *Api) NewHideGeneralForumTopic() *types.HideGeneralForumTopic {
+	return &types.HideGeneralForumTopic{}
+}
+
+// NewUnHideGeneralForumTopic creates a new unHide general forum topic message.
+func (t *Api) NewUnHideGeneralForumTopic() *types.UnHideGeneralForumTopic {
+	return &types.UnHideGeneralForumTopic{}
+}
+
 // NewAnswerCallbackQuery creates a new answer callback query message.
 func (t *Api) NewAnswerCallbackQuery() *types.AnswerCallbackQuery {
 	return &types.AnswerCallbackQuery{}

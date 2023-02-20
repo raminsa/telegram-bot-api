@@ -106,6 +106,7 @@ type SendMessage struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
 	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Text                     string // required
 	ParseMode                string
 	Entities                 []MessageEntity
@@ -125,6 +126,7 @@ func (s *SendMessage) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("text", s.Text)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
 	err = params.AddInterface("entities", s.Entities)
@@ -149,6 +151,7 @@ type ForwardMessage struct {
 	ChatID              int64  // required. use for user|channel as int
 	ChatIDStr           string // required. use for user|channel as string
 	Username            string // required. use for channel
+	MessageThreadID     int64
 	FromChatID          int64  // required. use for user|channel as int
 	FromChatIDStr       string // required. use for user|channel as string
 	FromUsername        string // required. use for channel
@@ -165,6 +168,7 @@ func (s *ForwardMessage) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	err = params.AddFirstValid("from_chat_id", s.FromChatID, s.FromChatIDStr, s.FromUsername)
 	if err != nil {
 		return params, err
@@ -184,6 +188,7 @@ type CopyMessage struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
 	Username                 string // required. use for channel
+	MessageThreadID          int64
 	FromChatID               int64  // required. use for user|channel as int
 	FromChatIDStr            string // required. use for user|channel as string
 	FromUsername             string // required. use for channel
@@ -206,6 +211,7 @@ func (s *CopyMessage) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	err = params.AddFirstValid("from_chat_id", s.FromChatID, s.FromChatIDStr, s.FromUsername)
 	if err != nil {
 		return params, err
@@ -231,14 +237,16 @@ func (s *CopyMessage) EndPoint() string {
 
 // SendPhoto Send photos. On success, the sent Message is returned.
 type SendPhoto struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Photo                    RequestFileData // required
 	CustomFileName           string
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
+	HasSpoiler               bool
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -254,12 +262,14 @@ func (s *SendPhoto) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
 	err = params.AddInterface("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
+	params.AddBool("has_spoiler", s.HasSpoiler)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
@@ -283,9 +293,10 @@ func (s *SendPhoto) EndPoint() string {
 
 // SendAudio Send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future. For sending voice messages, use the sendVoice method instead.
 type SendAudio struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Audio                    RequestFileData // required
 	CustomFileName           string
 	Caption                  string
@@ -310,6 +321,7 @@ func (s *SendAudio) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
 	err = params.AddInterface("caption_entities", s.CaptionEntities)
@@ -349,9 +361,10 @@ func (s *SendAudio) EndPoint() string {
 
 // SendDocument Send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
 type SendDocument struct {
-	ChatID                      int64           // required. use for user|channel as int
-	ChatIDStr                   string          // required. use for user|channel as string
-	Username                    string          // required. use for channel
+	ChatID                      int64  // required. use for user|channel as int
+	ChatIDStr                   string // required. use for user|channel as string
+	Username                    string // required. use for channel
+	MessageThreadID             int64
 	Document                    RequestFileData // required
 	Thumb                       RequestFileData
 	CustomFileName              string
@@ -374,6 +387,7 @@ func (s *SendDocument) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
 	err = params.AddInterface("caption_entities", s.CaptionEntities)
@@ -410,9 +424,10 @@ func (s *SendDocument) EndPoint() string {
 
 // SendVideo Send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
 type SendVideo struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Video                    RequestFileData // required
 	CustomFileName           string
 	Duration                 int
@@ -422,6 +437,7 @@ type SendVideo struct {
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
+	HasSpoiler               bool
 	SupportsStreaming        bool
 	DisableNotification      bool
 	ProtectContent           bool
@@ -438,6 +454,7 @@ func (s *SendVideo) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonZero("duration", s.Duration)
 	params.AddNonZero("width", s.Width)
 	params.AddNonZero("height", s.Height)
@@ -447,6 +464,7 @@ func (s *SendVideo) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddBool("has_spoiler", s.HasSpoiler)
 	params.AddBool("supports_streaming", s.SupportsStreaming)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
@@ -477,9 +495,10 @@ func (s *SendVideo) EndPoint() string {
 
 // SendAnimation Send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
 type SendAnimation struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Animation                RequestFileData // required
 	Duration                 int
 	Width                    int
@@ -488,6 +507,7 @@ type SendAnimation struct {
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
+	HasSpoiler               bool
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -503,6 +523,7 @@ func (s *SendAnimation) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonZero("duration", s.Duration)
 	params.AddNonZero("width", s.Width)
 	params.AddNonZero("height", s.Height)
@@ -512,6 +533,7 @@ func (s *SendAnimation) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddBool("has_spoiler", s.HasSpoiler)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
@@ -540,9 +562,10 @@ func (s *SendAnimation) EndPoint() string {
 
 // SendVoice Send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
 type SendVoice struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Voice                    RequestFileData // required
 	CustomFileName           string
 	Caption                  string
@@ -564,6 +587,7 @@ func (s *SendVoice) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
 	err = params.AddInterface("caption_entities", s.CaptionEntities)
@@ -594,9 +618,10 @@ func (s *SendVoice) EndPoint() string {
 
 // SendVideoNote As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
 type SendVideoNote struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	VideoNote                RequestFileData // required.
 	CustomFileName           string
 	Duration                 int
@@ -617,6 +642,7 @@ func (s *SendVideoNote) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonZero("duration", s.Duration)
 	params.AddNonZero("length", s.Length)
 	params.AddBool("disable_notification", s.DisableNotification)
@@ -648,9 +674,10 @@ func (s *SendVideoNote) EndPoint() string {
 
 // SendMediaGroup Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.
 type SendMediaGroup struct {
-	ChatID                   int64         // required. use for user|channel as int
-	ChatIDStr                string        // required. use for user|channel as string
-	Username                 string        // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Media                    []interface{} // required
 	DisableNotification      bool
 	ProtectContent           bool
@@ -666,6 +693,7 @@ func (s *SendMediaGroup) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
@@ -813,9 +841,10 @@ func prepareInputMediaForFiles(inputMedia []interface{}) []RequestFile {
 
 // SendLocation Send point on the map. On success, the sent Message is returned.
 type SendLocation struct {
-	ChatID                   int64   // required. use for user|channel as int
-	ChatIDStr                string  // required. use for user|channel as string
-	Username                 string  // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Latitude                 float64 // required
 	Longitude                float64 // required
 	HorizontalAccuracy       float64
@@ -837,6 +866,7 @@ func (s *SendLocation) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonZeroFloat("latitude", s.Latitude)
 	params.AddNonZeroFloat("longitude", s.Longitude)
 	params.AddNonZeroFloat("horizontal_accuracy", s.HorizontalAccuracy)
@@ -932,9 +962,10 @@ func (s *StopMessageLiveLocation) EndPoint() string {
 
 // SendVenue Send information about a venue. On success, the sent Message is returned.
 type SendVenue struct {
-	ChatID                   int64   // required. use for user|channel as int
-	ChatIDStr                string  // required. use for user|channel as string
-	Username                 string  // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Latitude                 float64 // required
 	Longitude                float64 // required
 	Title                    string  // required
@@ -958,6 +989,7 @@ func (s *SendVenue) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonZeroFloat("latitude", s.Latitude)
 	params.AddNonZeroFloat("longitude", s.Longitude)
 	params["title"] = s.Title
@@ -983,6 +1015,7 @@ type SendContact struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
 	Username                 string // required. use for channel
+	MessageThreadID          int64
 	PhoneNumber              string // required
 	FirstName                string // required
 	LastName                 string
@@ -1002,6 +1035,7 @@ func (s *SendContact) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["phone_number"] = s.PhoneNumber
 	params["first_name"] = s.FirstName
 	params.AddNonEmpty("last_name", s.LastName)
@@ -1020,9 +1054,10 @@ func (s *SendContact) EndPoint() string {
 
 // SendPoll Send a native poll. On success, the sent Message is returned.
 type SendPoll struct {
-	ChatID                   int64    // required. use for user|channel as int
-	ChatIDStr                string   // required. use for user|channel as string
-	Username                 string   // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Question                 string   // required
 	Options                  []string // required
 	IsAnonymous              bool
@@ -1050,6 +1085,7 @@ func (s *SendPoll) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["question"] = s.Question
 	err = params.AddInterface("options", s.Options)
 	if err != nil {
@@ -1085,6 +1121,7 @@ type SendDice struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
 	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Emoji                    string // Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲
 	DisableNotification      bool
 	ProtectContent           bool
@@ -1101,6 +1138,7 @@ func (s *SendDice) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("emoji", s.Emoji)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
@@ -1116,10 +1154,11 @@ func (s *SendDice) EndPoint() string {
 
 // SendChatAction Send an animated emoji that will display a random value. On success, the sent Message is returned.
 type SendChatAction struct {
-	ChatID    int64  // required. use for user|channel as int
-	ChatIDStr string // required. use for user|channel as string
-	Username  string // required. use for channel
-	Action    string // required. `typing` for text messages, `upload_photo` for photos, `record_video` or `upload_video` for videos, `record_voice` or `upload_voice` for voice notes, `upload_document` for general files, `choose_sticker` for stickers, `find_location` for location data, `record_video_note` or `upload_video_note` for video notes.
+	ChatID          int64  // required. use for user|channel as int
+	ChatIDStr       string // required. use for user|channel as string
+	Username        string // required. use for channel
+	MessageThreadID int64
+	Action          string // required. `typing` for text messages, `upload_photo` for photos, `record_video` or `upload_video` for videos, `record_voice` or `upload_voice` for voice notes, `upload_document` for general files, `choose_sticker` for stickers, `find_location` for location data, `record_video_note` or `upload_video_note` for video notes.
 }
 
 func (s *SendChatAction) Params() (Params, error) {
@@ -1130,6 +1169,7 @@ func (s *SendChatAction) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["action"] = s.Action
 
 	return params, nil
@@ -1238,12 +1278,13 @@ func (s *UnbanChatMember) EndPoint() string {
 
 // RestrictChatMember Restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
 type RestrictChatMember struct {
-	ChatID      int64           // required. use for supergroup as int
-	ChatIDStr   string          // required. use for supergroup as string
-	Username    string          // required. use for supergroup
-	UserID      int64           // required
-	Permissions ChatPermissions // required
-	UntilDate   int64
+	ChatID                        int64           // required. use for supergroup as int
+	ChatIDStr                     string          // required. use for supergroup as string
+	Username                      string          // required. use for supergroup
+	UserID                        int64           // required
+	Permissions                   ChatPermissions // required
+	UseIndependentChatPermissions bool
+	UntilDate                     int64
 }
 
 func (s *RestrictChatMember) Params() (Params, error) {
@@ -1259,6 +1300,7 @@ func (s *RestrictChatMember) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddBool("use_independent_chat_permissions", s.UseIndependentChatPermissions)
 	params.AddNonZero64("until_date", s.UntilDate)
 
 	return params, nil
@@ -1284,6 +1326,7 @@ type PromoteChatMember struct {
 	CanRestrictMembers  bool
 	CanPinMessages      bool
 	CanPromoteMembers   bool
+	CanManageTopics     bool
 }
 
 func (s *PromoteChatMember) Params() (Params, error) {
@@ -1306,6 +1349,7 @@ func (s *PromoteChatMember) Params() (Params, error) {
 	params.AddBool("can_restrict_members", s.CanRestrictMembers)
 	params.AddBool("can_pin_messages", s.CanPinMessages)
 	params.AddBool("can_promote_members", s.CanPromoteMembers)
+	params.AddBool("can_manage_topics", s.CanManageTopics)
 
 	return params, nil
 }
@@ -1389,10 +1433,11 @@ func (s *UnbanChatSenderChat) EndPoint() string {
 
 // SetChatPermissions Set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members administrator rights. Returns True on success.
 type SetChatPermissions struct {
-	ChatID      int64           // required. use for group|supergroup as int
-	ChatIDStr   string          // required. use for group|supergroup as string
-	Username    string          // required. use for group|supergroup
-	Permissions ChatPermissions // required
+	ChatID                        int64           // required. use for group|supergroup as int
+	ChatIDStr                     string          // required. use for group|supergroup as string
+	Username                      string          // required. use for group|supergroup
+	Permissions                   ChatPermissions // required
+	UseIndependentChatPermissions bool
 }
 
 func (s *SetChatPermissions) Params() (Params, error) {
@@ -1404,8 +1449,11 @@ func (s *SetChatPermissions) Params() (Params, error) {
 		return params, err
 	}
 	err = params.AddInterface("permissions", s.Permissions)
-
-	return params, err
+	if err != nil {
+		return params, err
+	}
+	params.AddBool("use_independent_chat_permissions", s.UseIndependentChatPermissions)
+	return params, nil
 }
 func (s *SetChatPermissions) EndPoint() string {
 	return config.EndpointSetChatPermissions
@@ -1870,6 +1918,259 @@ func (s *DeleteChatStickerSet) EndPoint() string {
 	return config.EndpointDeleteChatStickerSet
 }
 
+// GetForumTopicIconStickers Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
+type GetForumTopicIconStickers struct {
+}
+
+func (s *GetForumTopicIconStickers) Params() (Params, error) {
+	params := make(Params, 0)
+	return params, nil
+}
+func (s *GetForumTopicIconStickers) EndPoint() string {
+	return config.EndpointGetForumTopicIconStickers
+}
+
+// CreateForumTopic Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
+type CreateForumTopic struct {
+	ChatID            int64  // required. use for supergroup as int
+	ChatIDStr         string // required. use for supergroup as string
+	Username          string // required. use for supergroup
+	Name              string // required. use for supergroup
+	IconColor         int    // Color of the topic icon in RGB format. Currently, must be one of 7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB), 9367192 (0x8EEE98), 16749490 (0xFF93B2), or 16478047 (0xFB6F5F)
+	IconCustomEmojiID string // Unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers.
+}
+
+func (s *CreateForumTopic) Params() (Params, error) {
+	params := make(Params, 4)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonEmpty("name", s.Name)
+	params.AddNonZero("icon_color", s.IconColor)
+	params.AddNonEmpty("icon_custom_emoji_id", s.IconCustomEmojiID)
+	return params, nil
+}
+func (s *CreateForumTopic) EndPoint() string {
+	return config.EndpointCreateForumTopic
+}
+
+// EditForumTopic Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+type EditForumTopic struct {
+	ChatID            int64  // required. use for supergroup as int
+	ChatIDStr         string // required. use for supergroup as string
+	Username          string // required. use for supergroup
+	MessageThreadID   int64  // required. Unique identifier for the target message thread of the forum topic
+	Name              string // New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept
+	IconCustomEmojiID string // New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept
+}
+
+func (s *EditForumTopic) Params() (Params, error) {
+	params := make(Params, 4)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	params.AddNonEmpty("name", s.Name)
+	params.AddNonEmpty("icon_custom_emoji_id", s.IconCustomEmojiID)
+	return params, nil
+}
+func (s *EditForumTopic) EndPoint() string {
+	return config.EndpointEditForumTopic
+}
+
+// CloseForumTopic Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+type CloseForumTopic struct {
+	ChatID          int64  // required. use for supergroup as int
+	ChatIDStr       string // required. use for supergroup as string
+	Username        string // required. use for supergroup
+	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+}
+
+func (s *CloseForumTopic) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	return params, nil
+}
+func (s *CloseForumTopic) EndPoint() string {
+	return config.EndpointCloseForumTopic
+}
+
+// ReopenForumTopic Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+type ReopenForumTopic struct {
+	ChatID          int64  // required. use for supergroup as int
+	ChatIDStr       string // required. use for supergroup as string
+	Username        string // required. use for supergroup
+	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+}
+
+func (s *ReopenForumTopic) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	return params, nil
+}
+func (s *ReopenForumTopic) EndPoint() string {
+	return config.EndpointReopenForumTopic
+}
+
+// DeleteForumTopic Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
+type DeleteForumTopic struct {
+	ChatID          int64  // required. use for supergroup as int
+	ChatIDStr       string // required. use for supergroup as string
+	Username        string // required. use for supergroup
+	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+}
+
+func (s *DeleteForumTopic) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	return params, nil
+}
+func (s *DeleteForumTopic) EndPoint() string {
+	return config.EndpointDeleteForumTopic
+}
+
+// UnpinAllForumTopicMessages Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+type UnpinAllForumTopicMessages struct {
+	ChatID          int64  // required. use for supergroup as int
+	ChatIDStr       string // required. use for supergroup as string
+	Username        string // required. use for supergroup
+	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+}
+
+func (s *UnpinAllForumTopicMessages) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	return params, nil
+}
+func (s *UnpinAllForumTopicMessages) EndPoint() string {
+	return config.EndpointUnpinAllForumTopicMessages
+}
+
+// EditGeneralForumTopic Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
+type EditGeneralForumTopic struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+	Name      string // required. New topic name, 1-128 characters
+}
+
+func (s *EditGeneralForumTopic) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonEmpty("name", s.Name)
+	return params, nil
+}
+func (s *EditGeneralForumTopic) EndPoint() string {
+	return config.EndpointEditGeneralForumTopic
+}
+
+// CloseGeneralForumTopic Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+type CloseGeneralForumTopic struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+}
+
+func (s *CloseGeneralForumTopic) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	return params, err
+}
+func (s *CloseGeneralForumTopic) EndPoint() string {
+	return config.EndpointCloseGeneralForumTopic
+}
+
+// ReopenGeneralForumTopic Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
+type ReopenGeneralForumTopic struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+}
+
+func (s *ReopenGeneralForumTopic) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	return params, err
+}
+func (s *ReopenGeneralForumTopic) EndPoint() string {
+	return config.EndpointReopenGeneralForumTopic
+}
+
+// HideGeneralForumTopic Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
+type HideGeneralForumTopic struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+}
+
+func (s *HideGeneralForumTopic) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	return params, err
+}
+func (s *HideGeneralForumTopic) EndPoint() string {
+	return config.EndpointHideGeneralForumTopic
+}
+
+// UnHideGeneralForumTopic Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+type UnHideGeneralForumTopic struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+}
+
+func (s *UnHideGeneralForumTopic) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	return params, err
+}
+func (s *UnHideGeneralForumTopic) EndPoint() string {
+	return config.EndpointUnHideGeneralForumTopic
+}
+
 // AnswerCallbackQuery Send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned. Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your bot via @BotFather and accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
 type AnswerCallbackQuery struct {
 	CallbackQueryID string // required
@@ -2210,7 +2511,16 @@ func (s *StopPoll) EndPoint() string {
 	return config.EndpointStopPoll
 }
 
-// DeleteMessage Delete a message, including service messages, with the following limitations. Returns True on success.
+// DeleteMessage Use this method to delete a message, including service messages, with the following limitations:
+// 1. A message can only be deleted if it was sent less than 48 hours ago.
+// 2. Service messages about a supergroup, channel, or forum topic creation can't be deleted.
+// 3. A dice message in a private chat can only be deleted if it was sent more than 24 hours ago.
+// 4. Bots can delete outgoing messages in private chats, groups, and supergroups.
+// 5. Bots can delete incoming messages in private chats.
+// 6. Bots granted can_post_messages permissions can delete outgoing messages in channels.
+// 7. If the bot is an administrator of a group, it can delete any message there.
+// 8. If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
+// Returns True on success.
 type DeleteMessage struct {
 	ChatID    int64  // required. use for chat|channel as int
 	ChatIDStr string // required. use for chat|channel as string
@@ -2235,9 +2545,10 @@ func (s *DeleteMessage) EndPoint() string {
 
 // SendSticker Send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned.
 type SendSticker struct {
-	ChatID                   int64           // required. use for user|channel as int
-	ChatIDStr                string          // required. use for user|channel as string
-	Username                 string          // required. use for channel
+	ChatID                   int64  // required. use for user|channel as int
+	ChatIDStr                string // required. use for user|channel as string
+	Username                 string // required. use for channel
+	MessageThreadID          int64
 	Sticker                  RequestFileData //required.
 	DisableNotification      bool
 	ProtectContent           bool
@@ -2253,6 +2564,7 @@ func (s *SendSticker) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
@@ -2540,9 +2852,10 @@ func (s *AnswerWebAppQuery) EndPoint() string {
 
 // SendInvoice Send invoices. On success, the sent Message is returned.
 type SendInvoice struct {
-	ChatID                    int64          // required. use for user|channel as int
-	ChatIDStr                 string         // required. use for user|channel as string
-	Username                  string         // required. use for channel
+	ChatID                    int64  // required. use for user|channel as int
+	ChatIDStr                 string // required. use for user|channel as string
+	Username                  string // required. use for channel
+	MessageThreadID           int64
 	Title                     string         // required
 	Description               string         // required
 	Payload                   string         // required
@@ -2578,6 +2891,7 @@ func (s *SendInvoice) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["title"] = s.Title
 	params["description"] = s.Description
 	params["payload"] = s.Payload
@@ -2741,7 +3055,8 @@ func (s *SetPassportDataErrors) EndPoint() string {
 
 // SendGame Send a game. On success, the sent Message is returned.
 type SendGame struct {
-	ChatID                   int64  // required
+	ChatID                   int64 // required
+	MessageThreadID          int64
 	GameShortName            string // required
 	DisableNotification      bool
 	ProtectContent           bool
@@ -2754,6 +3069,7 @@ func (s *SendGame) Params() (Params, error) {
 	params := make(Params, 7)
 
 	params.AddNonZero64("chat_id", s.ChatID)
+	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["game_short_name"] = s.GameShortName
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
