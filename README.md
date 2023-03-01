@@ -144,6 +144,43 @@ to generate your cert file use this. See [self-signed](https://core.telegram.org
     openssl req -newkey rsa:2048 -sha256 -nodes -keyout <file.key> -x509 -days 36500 -out <file.pem> -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=<server_address>"
 
 
+Avoid ReadTimeoutExpired error:
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/raminsa/telegram-bot-api/types"
+)
+
+func main() {
+	fmt.Println("start at port:", "BotPortNumber")
+	updates := listenForWebhook(100)
+	go http.ListenAndServeTLS("BotPortNumber", "BotCertFile", "BotKeyFile", nil)
+	for update := range updates {
+		if update.Message != nil {
+			fmt.Println(update.Message.Text)
+		}
+	}
+}
+
+func listenForWebhook(maxWebhookConnections int) types.UpdatesChannel {
+	ch := make(chan types.Update, maxWebhookConnections)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if update, err := telegram.HandleUpdate(r); err != nil {
+			return
+		} else {
+			ch <- update
+		}
+	})
+
+	return ch
+}
+```
+
 <a name="custom-client"></a>
 ## Custom Client
 use client with custom options:
