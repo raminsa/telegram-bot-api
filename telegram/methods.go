@@ -1389,6 +1389,70 @@ func (t *Api) GetMyCommands(c *types.GetMyCommands) ([]types.BotCommand, error) 
 	return commands, err
 }
 
+// SetMyDescription Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
+func (t *Api) SetMyDescription(c *types.SetMyDescription) (bool, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// GetMyDescription Use this method to get the current bot description for the given user language. Returns BotDescription on success.
+func (t *Api) GetMyDescription(c *types.GetMyDescription) (*types.BotDescription, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var result types.BotDescription
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, err
+}
+
+// SetMyShortDescription Use this method to change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
+func (t *Api) SetMyShortDescription(c *types.SetMyShortDescription) (bool, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// GetMyShortDescription Use this method to get the current bot short description for the given user language. Returns BotShortDescription on success.
+func (t *Api) GetMyShortDescription(c *types.GetMyShortDescription) (*types.BotShortDescription, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var result types.BotShortDescription
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, err
+}
+
 // SetChatMenuButton Use this method to change the bot's menu button in a private chat, or the default menu button. Returns True on success.
 func (t *Api) SetChatMenuButton(c *types.SetChatMenuButton) (bool, error) {
 	resp, err := t.Request(c)
@@ -1700,7 +1764,7 @@ func (t *Api) GetStickerSet(c *types.GetStickerSet) (*types.StickerSet, error) {
 	return &stickerSet, err
 }
 
-// GetCustomEmojiStickers Use this method to get a sticker set. On success, a StickerSet object is returned.
+// GetCustomEmojiStickers Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
 func (t *Api) GetCustomEmojiStickers(c *types.GetCustomEmojiStickers) ([]types.Sticker, error) {
 	if len(c.CustomEmojiIds) < 1 {
 		return nil, errors.New("customEmojiIds Required")
@@ -1717,13 +1781,16 @@ func (t *Api) GetCustomEmojiStickers(c *types.GetCustomEmojiStickers) ([]types.S
 	return stickerSet, err
 }
 
-// UploadStickerFile Use this method to upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
+// UploadStickerFile Use this method to upload a file with a sticker for later use in the createNewStickerSet and addStickerToSet methods (the file can be used multiple times). Returns the uploaded File on success.
 func (t *Api) UploadStickerFile(c *types.UploadStickerFile) (*types.File, error) {
 	if c.UserID == 0 {
 		return nil, errors.New("UserID Required")
 	}
-	if c.PNGSticker == nil {
-		return nil, errors.New("PNGSticker Required")
+	if c.Sticker == nil {
+		return nil, errors.New("sticker Required")
+	}
+	if c.StickerFormat == "" {
+		return nil, errors.New("stickerFormat Required")
 	}
 
 	resp, err := t.Request(c)
@@ -1737,7 +1804,7 @@ func (t *Api) UploadStickerFile(c *types.UploadStickerFile) (*types.File, error)
 	return &file, err
 }
 
-// CreateNewStickerSet Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
+// CreateNewStickerSet Use this method to create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. Returns True on success.
 func (t *Api) CreateNewStickerSet(c *types.CreateNewStickerSet) (bool, error) {
 	if c.UserID == 0 {
 		return false, errors.New("UserID Required")
@@ -1748,8 +1815,11 @@ func (t *Api) CreateNewStickerSet(c *types.CreateNewStickerSet) (bool, error) {
 	if c.Title == "" {
 		return false, errors.New("title Required")
 	}
-	if c.Emojis == "" {
-		return false, errors.New("emojis Required")
+	if len(c.Stickers) < 1 {
+		return false, errors.New("stickers Required")
+	}
+	if c.StickerFormat == "" {
+		return false, errors.New("stickerFormat Required")
 	}
 
 	resp, err := t.Request(c)
@@ -1766,7 +1836,7 @@ func (t *Api) CreateNewStickerSet(c *types.CreateNewStickerSet) (bool, error) {
 	return result, err
 }
 
-// AddStickerToSet Use this method to add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.
+// AddStickerToSet Use this method to add a new sticker to a set created by the bot. The format of the added sticker must match the format of the other stickers in the set. Emoji sticker sets can have up to 200 stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.
 func (t *Api) AddStickerToSet(c *types.AddStickerToSet) (bool, error) {
 	if c.UserID == 0 {
 		return false, errors.New("UserID Required")
@@ -1774,8 +1844,8 @@ func (t *Api) AddStickerToSet(c *types.AddStickerToSet) (bool, error) {
 	if c.Name == "" {
 		return false, errors.New("name Required")
 	}
-	if c.Emojis == "" {
-		return false, errors.New("emojis Required")
+	if c.Stickers.Sticker == nil {
+		return false, errors.New("sticker Required")
 	}
 
 	resp, err := t.Request(c)
@@ -1835,13 +1905,142 @@ func (t *Api) DeleteStickerFromSet(c *types.DeleteStickerFromSet) (bool, error) 
 	return result, err
 }
 
-// SetStickerSetThumb Use this method to set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns True on success.
-func (t *Api) SetStickerSetThumb(c *types.SetStickerSetThumb) (bool, error) {
+// SetStickerEmojiList Use this method to change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+func (t *Api) SetStickerEmojiList(c *types.SetStickerEmojiList) (bool, error) {
+	if c.Sticker == "" {
+		return false, errors.New("sticker Required")
+	}
+	if len(c.EmojiList) < 1 {
+		return false, errors.New("emojiList Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// SetStickerKeywords Use this method to change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+func (t *Api) SetStickerKeywords(c *types.SetStickerKeywords) (bool, error) {
+	if c.Sticker == "" {
+		return false, errors.New("sticker Required")
+	}
+	if len(c.Keywords) < 1 {
+		return false, errors.New("keywords Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// SetStickerMaskPosition Use this method to change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
+func (t *Api) SetStickerMaskPosition(c *types.SetStickerMaskPosition) (bool, error) {
+	if c.Sticker == "" {
+		return false, errors.New("sticker Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// SetStickerSetTitle Use this method to set the title of a created sticker set. Returns True on success.
+func (t *Api) SetStickerSetTitle(c *types.SetStickerSetTitle) (bool, error) {
+	if c.Name == "" {
+		return false, errors.New("name Required")
+	}
+	if c.Title == "" {
+		return false, errors.New("title Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// SetStickerSetThumbnail Use this method to set the thumbnail of a regular or mask sticker set. The format of the thumbnail file must match the format of the stickers in the set. Returns True on success.
+func (t *Api) SetStickerSetThumbnail(c *types.SetStickerSetThumbnail) (bool, error) {
 	if c.Name == "" {
 		return false, errors.New("name Required")
 	}
 	if c.UserID == 0 {
-		return false, errors.New("UserID Required")
+		return false, errors.New("userID Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// SetCustomEmojiStickerSetThumbnail Use this method to set the thumbnail of a custom emoji sticker set. Returns True on success.
+func (t *Api) SetCustomEmojiStickerSetThumbnail(c *types.SetCustomEmojiStickerSetThumbnail) (bool, error) {
+	if c.Name == "" {
+		return false, errors.New("name Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// DeleteStickerSet Use this method to delete a sticker set that was created by the bot. Returns True on success.
+func (t *Api) DeleteStickerSet(c *types.DeleteStickerSet) (bool, error) {
+	if c.Name == "" {
+		return false, errors.New("name Required")
 	}
 
 	resp, err := t.Request(c)

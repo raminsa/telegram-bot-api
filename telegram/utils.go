@@ -342,16 +342,6 @@ func (t *Api) NewSendLocation() *types.SendLocation {
 	return &types.SendLocation{}
 }
 
-// NewEditMessageLiveLocation creates a new edit message live location message.
-func (t *Api) NewEditMessageLiveLocation() *types.EditMessageLiveLocation {
-	return &types.EditMessageLiveLocation{}
-}
-
-// NewStopMessageLiveLocation creates a new stop message live location message.
-func (t *Api) NewStopMessageLiveLocation() *types.StopMessageLiveLocation {
-	return &types.StopMessageLiveLocation{}
-}
-
 // NewSendVenue creates a new venue message.
 func (t *Api) NewSendVenue() *types.SendVenue {
 	return &types.SendVenue{}
@@ -747,6 +737,26 @@ func (t *Api) NewBotCommandScopeChatMember(chatID, userID int64) *types.BotComma
 	}
 }
 
+// NewSetMyDescription creates a set my description message.
+func (t *Api) NewSetMyDescription() *types.SetMyDescription {
+	return &types.SetMyDescription{}
+}
+
+// NewGetMyDescription creates a get my description message.
+func (t *Api) NewGetMyDescription() *types.GetMyDescription {
+	return &types.GetMyDescription{}
+}
+
+// NewSetMyShortDescription creates a set my short description message.
+func (t *Api) NewSetMyShortDescription() *types.SetMyShortDescription {
+	return &types.SetMyShortDescription{}
+}
+
+// NewGetMyShortDescription creates a get my short description message.
+func (t *Api) NewGetMyShortDescription() *types.GetMyShortDescription {
+	return &types.GetMyShortDescription{}
+}
+
 // NewSetChatMenuButton creates a new set chat menu button message.
 func (t *Api) NewSetChatMenuButton() *types.SetChatMenuButton {
 	return &types.SetChatMenuButton{}
@@ -807,6 +817,16 @@ func (t *Api) NewEditMessageMedia() *types.EditMessageMedia {
 	return &types.EditMessageMedia{}
 }
 
+// NewEditMessageLiveLocation creates a new edit message live location message.
+func (t *Api) NewEditMessageLiveLocation() *types.EditMessageLiveLocation {
+	return &types.EditMessageLiveLocation{}
+}
+
+// NewStopMessageLiveLocation creates a new stop message live location message.
+func (t *Api) NewStopMessageLiveLocation() *types.StopMessageLiveLocation {
+	return &types.StopMessageLiveLocation{}
+}
+
 // NewEditMessageReplyMarkup creates a new edit message reply markup message.
 func (t *Api) NewEditMessageReplyMarkup() *types.EditMessageReplyMarkup {
 	return &types.EditMessageReplyMarkup{}
@@ -852,6 +872,16 @@ func (t *Api) NewAddStickerToSet() *types.AddStickerToSet {
 	return &types.AddStickerToSet{}
 }
 
+// NewInputSticker creates a new input sticker message.
+func (t *Api) NewInputSticker() types.InputSticker {
+	return types.InputSticker{}
+}
+
+// NewMaskPosition creates a new mask position message.
+func (t *Api) NewMaskPosition() *types.MaskPosition {
+	return &types.MaskPosition{}
+}
+
 // NewSetStickerPositionInSet creates a new set sticker position in set message.
 func (t *Api) NewSetStickerPositionInSet() *types.SetStickerPositionInSet {
 	return &types.SetStickerPositionInSet{}
@@ -862,9 +892,39 @@ func (t *Api) NewDeleteStickerFromSet() *types.DeleteStickerFromSet {
 	return &types.DeleteStickerFromSet{}
 }
 
-// NewSetStickerSetThumb creates a new set sticker position in set message.
-func (t *Api) NewSetStickerSetThumb() *types.SetStickerSetThumb {
-	return &types.SetStickerSetThumb{}
+// NewSetStickerEmojiList creates a new set sticker emoji list message.
+func (t *Api) NewSetStickerEmojiList() *types.SetStickerEmojiList {
+	return &types.SetStickerEmojiList{}
+}
+
+// NewSetStickerKeywords creates a new set sticker keywords message.
+func (t *Api) NewSetStickerKeywords() *types.SetStickerKeywords {
+	return &types.SetStickerKeywords{}
+}
+
+// NewSetStickerMaskPosition creates a new set sticker mask position message.
+func (t *Api) NewSetStickerMaskPosition() *types.SetStickerMaskPosition {
+	return &types.SetStickerMaskPosition{}
+}
+
+// NewSetStickerSetTitle creates a new set sticker set title message.
+func (t *Api) NewSetStickerSetTitle() *types.SetStickerSetTitle {
+	return &types.SetStickerSetTitle{}
+}
+
+// NewSetStickerSetThumbnail creates a new set sticker set thumbnail message.
+func (t *Api) NewSetStickerSetThumbnail() *types.SetStickerSetThumbnail {
+	return &types.SetStickerSetThumbnail{}
+}
+
+// NewSetCustomEmojiStickerSetThumbnail creates a new set custom emoji sticker set thumbnail message.
+func (t *Api) NewSetCustomEmojiStickerSetThumbnail() *types.SetCustomEmojiStickerSetThumbnail {
+	return &types.SetCustomEmojiStickerSetThumbnail{}
+}
+
+// NewDeleteStickerSet creates a new delete sticker set message.
+func (t *Api) NewDeleteStickerSet() *types.DeleteStickerSet {
+	return &types.DeleteStickerSet{}
 }
 
 // NewAnswerInlineQuery creates a new answer inline query message.
@@ -904,33 +964,6 @@ func (t *Api) NewInputContactMessageContent() *types.InputContactMessageContent 
 // NewInputInvoiceMessageContent creates a new input invoice message content.
 func (t *Api) NewInputInvoiceMessageContent() *types.InputInvoiceMessageContent {
 	return &types.InputInvoiceMessageContent{}
-}
-
-// NewInlineQueryResultArticleMarkdown creates a new inline query article with Markdown parsing.
-func (t *Api) NewInlineQueryResultArticleMarkdown(id, title string) *types.InlineQueryResultArticle {
-	return &types.InlineQueryResultArticle{
-		Type:  "article",
-		ID:    id,
-		Title: title,
-	}
-}
-
-// NewInlineQueryResultArticleMarkdownV2 creates a new inline query article with MarkdownV2 parsing.
-func (t *Api) NewInlineQueryResultArticleMarkdownV2(id, title string) *types.InlineQueryResultArticle {
-	return &types.InlineQueryResultArticle{
-		Type:  "article",
-		ID:    id,
-		Title: title,
-	}
-}
-
-// NewInlineQueryResultArticleHTML creates a new inline query article with HTML parsing.
-func (t *Api) NewInlineQueryResultArticleHTML(id, title string) *types.InlineQueryResultArticle {
-	return &types.InlineQueryResultArticle{
-		Type:  "article",
-		ID:    id,
-		Title: title,
-	}
 }
 
 // NewInlineQueryResultGIF creates a new inline query GIF.
@@ -978,13 +1011,13 @@ func (t *Api) NewInlineQueryResultPhoto(id, url string) *types.InlineQueryResult
 	}
 }
 
-// NewInlineQueryResultPhotoWithThumb creates a new inline query photo.
-func (t *Api) NewInlineQueryResultPhotoWithThumb(id, url, thumb string) *types.InlineQueryResultPhoto {
+// NewInlineQueryResultPhotoWithThumbnail creates a new inline query photo.
+func (t *Api) NewInlineQueryResultPhotoWithThumbnail(id, url, thumbnail string) *types.InlineQueryResultPhoto {
 	return &types.InlineQueryResultPhoto{
-		Type:     "photo",
-		ID:       id,
-		URL:      url,
-		ThumbURL: thumb,
+		Type:         "photo",
+		ID:           id,
+		URL:          url,
+		ThumbnailURL: thumbnail,
 	}
 }
 
@@ -1118,14 +1151,21 @@ func (t *Api) NewSendInvoice() *types.SendInvoice {
 	return &types.SendInvoice{}
 }
 
-// NewLabeledPrices creates a new labeled price message.
-func (t *Api) NewLabeledPrices() []types.LabeledPrice {
-	return []types.LabeledPrice{}
+// NewLabeledPrice creates a new labeled price message.
+func (t *Api) NewLabeledPrice(label string, amount int) types.LabeledPrice {
+	return types.LabeledPrice{
+		Label:  label,
+		Amount: amount,
+	}
 }
 
-// NewLabeledPrice creates a new labeled price message.
-func (t *Api) NewLabeledPrice() types.LabeledPrice {
-	return types.LabeledPrice{}
+// NewLabeledPrices creates a new labeled prices message.
+func (t *Api) NewLabeledPrices(labeledPrice ...types.LabeledPrice) []types.LabeledPrice {
+	var row []types.LabeledPrice
+
+	row = append(row, labeledPrice...)
+
+	return row
 }
 
 // NewCreateInvoiceLink creates a new create invoice link.

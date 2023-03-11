@@ -12,12 +12,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewAnswerPreCheckoutQuery()
-	message.PreCheckoutQueryID = "id"
-	message.OK = false
-	message.ErrorMessage = "err"
+	getDescription := tg.NewGetMyShortDescription()
 
-	_, err = tg.AnswerPreCheckoutQuery(message)
+	_, err = tg.GetMyShortDescription(getDescription)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -15,8 +15,17 @@ func main() {
 	message := tg.NewAddStickerToSet()
 	message.UserID = 1234
 	message.Name = "myName_by_<bot_username>"
-	message.Emojis = "🏀"
-	message.PNGSticker = tg.FileURL("url")
+
+	stickers := tg.NewInputSticker()
+	stickers.EmojiList = []string{"🏀"}
+
+	maskPosition := tg.NewMaskPosition()
+
+	stickers.MaskPosition = maskPosition
+	stickers.Keywords = []string{"ball"}
+	stickers.Sticker = tg.FileURL("url")
+
+	message.Stickers = stickers
 
 	_, err = tg.AddStickerToSet(message)
 	if err != nil {

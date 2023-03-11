@@ -11,13 +11,13 @@ import (
 func main() {
 	fmt.Println("start at port:", "BotPortNumber")
 
-	err := http.ListenAndServeTLS("BotPortNumber", "BotCertFile", "BotKeyFile", http.HandlerFunc(handleWebhook))
+	err := http.ListenAndServeTLS("BotPortNumber", "BotCertFile", "BotKeyFile", http.HandlerFunc(handleWebhookTLS))
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func handleWebhook(w http.ResponseWriter, r *http.Request) {
+func handleWebhookTLS(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
 		telegram.HandleUpdateError(w, err)

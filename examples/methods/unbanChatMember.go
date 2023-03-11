@@ -12,11 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewSetStickerSetThumb()
-	message.UserID = 1234
-	message.Name = "name"
+	msg := tg.NewUnbanChatMember()
+	msg.Username = "username"
+	msg.UserID = 1234
 
-	_, err = tg.SetStickerSetThumb(message)
+	_, err = tg.UnbanChatMember(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

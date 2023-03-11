@@ -14,7 +14,8 @@ func main() {
 
 	message := tg.NewUploadStickerFile()
 	message.UserID = 1234
-	message.PNGSticker = tg.FileURL("url")
+	message.Sticker = tg.FilePath("path")
+	message.StickerFormat = "static" // “static”, “animated”, “video”
 
 	_, err = tg.UploadStickerFile(message)
 	if err != nil {

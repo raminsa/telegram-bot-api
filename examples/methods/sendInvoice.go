@@ -12,18 +12,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewCreateInvoiceLink()
+	message := tg.NewSendInvoice()
+	message.ChatIDStr = "chatId"
 	message.Title = "title"
 	message.Description = "description"
 	message.Payload = "payload"
-	message.ProviderToken = "provider token"
+	message.ProviderToken = "providerToken"
 	message.Currency = "currency"
 	message.Prices = tg.NewLabeledPrices(
 		tg.NewLabeledPrice("title1", 1234),
 		tg.NewLabeledPrice("title2", 1234),
 	)
 
-	_, err = tg.CreateInvoiceLink(message)
+	_, err = tg.SendInvoice(message)
 	if err != nil {
 		log.Fatal(err)
 	}

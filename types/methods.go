@@ -305,7 +305,7 @@ type SendAudio struct {
 	Duration                 int
 	Performer                string
 	Title                    string
-	Thumb                    RequestFileData
+	Thumbnail                RequestFileData
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -346,10 +346,10 @@ func (s *SendAudio) Files() []RequestFile {
 		FileName: s.CustomFileName,
 	}}
 
-	if s.Thumb != nil {
+	if s.Thumbnail != nil {
 		files = append(files, RequestFile{
-			Name: "thumb",
-			Data: s.Thumb,
+			Name: "thumbnail",
+			Data: s.Thumbnail,
 		})
 	}
 
@@ -366,7 +366,7 @@ type SendDocument struct {
 	Username                    string // required. use for channel
 	MessageThreadID             int64
 	Document                    RequestFileData // required
-	Thumb                       RequestFileData
+	Thumbnail                   RequestFileData
 	CustomFileName              string
 	Caption                     string
 	ParseMode                   string
@@ -409,10 +409,10 @@ func (s *SendDocument) Files() []RequestFile {
 		Data:     s.Document,
 		FileName: s.CustomFileName,
 	}}
-	if s.Thumb != nil {
+	if s.Thumbnail != nil {
 		files = append(files, RequestFile{
-			Name: "thumb",
-			Data: s.Thumb,
+			Name: "thumbnail",
+			Data: s.Thumbnail,
 		})
 	}
 
@@ -433,7 +433,7 @@ type SendVideo struct {
 	Duration                 int
 	Width                    int
 	Height                   int
-	Thumb                    RequestFileData
+	Thumbnail                RequestFileData
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -480,10 +480,10 @@ func (s *SendVideo) Files() []RequestFile {
 		Data:     s.Video,
 		FileName: s.CustomFileName,
 	}}
-	if s.Thumb != nil {
+	if s.Thumbnail != nil {
 		files = append(files, RequestFile{
-			Name: "thumb",
-			Data: s.Thumb,
+			Name: "thumbnail",
+			Data: s.Thumbnail,
 		})
 	}
 
@@ -503,7 +503,7 @@ type SendAnimation struct {
 	Duration                 int
 	Width                    int
 	Height                   int
-	Thumb                    RequestFileData
+	Thumbnail                RequestFileData
 	Caption                  string
 	ParseMode                string
 	CaptionEntities          []MessageEntity
@@ -547,10 +547,10 @@ func (s *SendAnimation) Files() []RequestFile {
 		Name: "animation",
 		Data: s.Animation,
 	}}
-	if s.Thumb != nil {
+	if s.Thumbnail != nil {
 		files = append(files, RequestFile{
-			Name: "thumb",
-			Data: s.Thumb,
+			Name: "thumbnail",
+			Data: s.Thumbnail,
 		})
 	}
 
@@ -626,7 +626,7 @@ type SendVideoNote struct {
 	CustomFileName           string
 	Duration                 int
 	Length                   int
-	Thumb                    RequestFileData
+	Thumbnail                RequestFileData
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -659,10 +659,10 @@ func (s *SendVideoNote) Files() []RequestFile {
 		Data:     s.VideoNote,
 		FileName: s.CustomFileName,
 	}}
-	if s.Thumb != nil {
+	if s.Thumbnail != nil {
 		files = append(files, RequestFile{
-			Name: "thumb",
-			Data: s.Thumb,
+			Name: "thumbnail",
+			Data: s.Thumbnail,
 		})
 	}
 
@@ -709,7 +709,7 @@ func (s *SendMediaGroup) EndPoint() string {
 	return config.EndpointSendMediaGroup
 }
 
-// prepareInputMediaParam evaluates a single InputMedia and determines if it needs to be modified for a successful upload. If it returns nil, then the value does not need to be included in the params. Otherwise, it will return the same type as was originally provided. The idx is used to calculate the file field name. If you only have a single file, 0 may be used. It is formatted into "attach://file-%d" for the primary media and "attach://file-%d-thumb" for thumbnails. It is expected to be used in conjunction with prepareInputMediaFile.
+// prepareInputMediaParam evaluates a single InputMedia and determines if it needs to be modified for a successful upload. If it returns nil, then the value does not need to be included in the params. Otherwise, it will return the same type as was originally provided. The idx is used to calculate the file field name. If you only have a single file, 0 may be used. It is formatted into "attach://file-%d" for the primary media and "attach://file-%d-thumbnail" for thumbnails. It is expected to be used in conjunction with prepareInputMediaFile.
 func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 	switch m := inputMedia.(type) {
 	case InputMediaPhoto:
@@ -723,8 +723,8 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 			m.Media = FileAttach(fmt.Sprintf("attach://file-%d", idx))
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
-			m.Thumb = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
 		}
 
 		return m
@@ -733,8 +733,8 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 			m.Media = FileAttach(fmt.Sprintf("attach://file-%d", idx))
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
-			m.Thumb = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
 		}
 
 		return m
@@ -743,8 +743,8 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 			m.Media = FileAttach(fmt.Sprintf("attach://file-%d", idx))
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
-			m.Thumb = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
 		}
 
 		return m
@@ -773,10 +773,10 @@ func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
 			})
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
 			files = append(files, RequestFile{
 				Name: fmt.Sprintf("file-%d", idx),
-				Data: m.Thumb,
+				Data: m.Thumbnail,
 			})
 		}
 	case InputMediaDocument:
@@ -787,10 +787,10 @@ func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
 			})
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
 			files = append(files, RequestFile{
 				Name: fmt.Sprintf("file-%d", idx),
-				Data: m.Thumb,
+				Data: m.Thumbnail,
 			})
 		}
 	case InputMediaAudio:
@@ -801,10 +801,10 @@ func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
 			})
 		}
 
-		if m.Thumb != nil && m.Thumb.NeedsUpload() {
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
 			files = append(files, RequestFile{
 				Name: fmt.Sprintf("file-%d", idx),
-				Data: m.Thumb,
+				Data: m.Thumbnail,
 			})
 		}
 	}
@@ -2263,6 +2263,74 @@ func (s *GetMyCommands) EndPoint() string {
 	return config.EndpointGetMyCommands
 }
 
+// SetMyDescription Change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
+type SetMyDescription struct {
+	Description  string
+	LanguageCode string
+}
+
+func (s *SetMyDescription) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddNonEmpty("description", s.Description)
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *SetMyDescription) EndPoint() string {
+	return config.EndpointSetMyDescription
+}
+
+// GetMyDescription Get the current bot description for the given user language. Returns BotDescription on success.
+type GetMyDescription struct {
+	LanguageCode string
+}
+
+func (s *GetMyDescription) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *GetMyDescription) EndPoint() string {
+	return config.EndpointGetMyDescription
+}
+
+// SetMyShortDescription Change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
+type SetMyShortDescription struct {
+	ShortDescription string
+	LanguageCode     string
+}
+
+func (s *SetMyShortDescription) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddNonEmpty("short_description", s.ShortDescription)
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *SetMyShortDescription) EndPoint() string {
+	return config.EndpointSetMyShortDescription
+}
+
+// GetMyShortDescription Get the current bot short description for the given user language. Returns BotShortDescription on success.
+type GetMyShortDescription struct {
+	LanguageCode string
+}
+
+func (s *GetMyShortDescription) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *GetMyShortDescription) EndPoint() string {
+	return config.EndpointGetMyShortDescription
+}
+
 // SetChatMenuButton Change the bot's menu button in a private chat, or the default menu button. Returns True on success.
 type SetChatMenuButton struct {
 	ChatID    int64  // required. use for chat|channel as int
@@ -2550,6 +2618,7 @@ type SendSticker struct {
 	Username                 string // required. use for channel
 	MessageThreadID          int64
 	Sticker                  RequestFileData //required.
+	Emoji                    string
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -2558,13 +2627,14 @@ type SendSticker struct {
 }
 
 func (s *SendSticker) Params() (Params, error) {
-	params := make(Params, 6)
+	params := make(Params, 8)
 
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
 		return params, err
 	}
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
+	params.AddNonEmpty("emoji", s.Emoji)
 	params.AddBool("disable_notification", s.DisableNotification)
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
@@ -2601,7 +2671,7 @@ func (s *GetStickerSet) EndPoint() string {
 	return config.EndpointGetStickerSet
 }
 
-// GetCustomEmojiStickers Use this method to get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
+// GetCustomEmojiStickers Get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
 type GetCustomEmojiStickers struct {
 	CustomEmojiIds []string // required
 }
@@ -2610,132 +2680,148 @@ func (s *GetCustomEmojiStickers) Params() (Params, error) {
 	params := make(Params, 1)
 
 	err := params.AddInterface("custom_emoji_ids", s.CustomEmojiIds)
-	if err != nil {
-		return params, err
-	}
 
-	return params, nil
+	return params, err
 }
 func (s *GetCustomEmojiStickers) EndPoint() string {
 	return config.EndpointGetCustomEmojiStickers
 }
 
-// UploadStickerFile Upload a .PNG file with a sticker for later use in createNewStickerSet and addStickerToSet methods (can be used multiple times). Returns the uploaded File on success.
+// UploadStickerFile Upload a file with a sticker for later use in the createNewStickerSet and addStickerToSet methods (the file can be used multiple times). Returns the uploaded File on success.
 type UploadStickerFile struct {
-	UserID     int64           // required
-	PNGSticker RequestFileData // required
+	UserID        int64           // required
+	Sticker       RequestFileData // required
+	StickerFormat string          // required
 }
 
 func (s *UploadStickerFile) Params() (Params, error) {
-	params := make(Params, 1)
+	params := make(Params, 2)
 
 	params.AddNonZero64("user_id", s.UserID)
+	params["sticker_format"] = s.StickerFormat
 
 	return params, nil
 }
 func (s *UploadStickerFile) Files() []RequestFile {
 	return []RequestFile{{
-		Name: "png_sticker",
-		Data: s.PNGSticker,
+		Name: "sticker",
+		Data: s.Sticker,
 	}}
 }
 func (s *UploadStickerFile) EndPoint() string {
 	return config.EndpointUploadStickerFile
 }
 
-// CreateNewStickerSet Create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Returns True on success.
+// CreateNewStickerSet Create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. Returns True on success.
 type CreateNewStickerSet struct {
-	UserID       int64  // required
-	Name         string // required
-	Title        string // required
-	PNGSticker   RequestFileData
-	TGSSticker   RequestFileData
-	WEBMSticker  RequestFileData
-	StickerType  string
-	Emojis       string // required
-	MaskPosition *MaskPosition
+	UserID          int64         // required
+	Name            string        // required
+	Title           string        // required
+	Stickers        []interface{} // required
+	StickerFormat   string        // required
+	StickerType     string
+	NeedsRepainting bool
 }
 
 func (s *CreateNewStickerSet) Params() (Params, error) {
-	params := make(Params, 6)
+	params := make(Params, 7)
 
 	params.AddNonZero64("user_id", s.UserID)
 	params["name"] = s.Name
 	params["title"] = s.Title
-	params["emojis"] = s.Emojis
-	params["sticker_type"] = s.StickerType
-	err := params.AddInterface("mask_position", s.MaskPosition)
+	err := params.AddInterface("stickers", prepareInputStickerForParams(s.Stickers))
+	if err != nil {
+		return nil, err
+	}
+	params["sticker_format"] = s.StickerFormat
+	params.AddNonEmpty("sticker_type", s.StickerType)
+	params.AddBool("needs_repainting", s.NeedsRepainting)
 
-	return params, err
+	return params, nil
 }
 func (s *CreateNewStickerSet) Files() []RequestFile {
-	if s.PNGSticker != nil {
-		return []RequestFile{{
-			Name: "png_sticker",
-			Data: s.PNGSticker,
-		}}
-	}
-	if s.TGSSticker != nil {
-		return []RequestFile{{
-			Name: "tgs_sticker",
-			Data: s.TGSSticker,
-		}}
-	}
-	if s.WEBMSticker != nil {
-		return []RequestFile{{
-			Name: "webm_sticker",
-			Data: s.WEBMSticker,
-		}}
-	}
-
-	return nil
+	return prepareInputStickerForFiles(s.Stickers)
 }
 func (s *CreateNewStickerSet) EndPoint() string {
 	return config.EndpointCreateNewStickerSet
 }
 
-// AddStickerToSet Add a new sticker to a set created by the bot. You must use exactly one of the fields png_sticker, tgs_sticker, or webm_sticker. Animated stickers can be added to animated sticker sets and only to them. Animated sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.
+// prepareInputStickerParam evaluates a InputSticker and determines if it needs to be modified for a successful upload. If it returns nil, then the value does not need to be included in the params. Otherwise, it will return the same type as was originally provided. The idx is used to calculate the file field name. If you only have a single file, 0 may be used. It is formatted into "attach://file-%d" for the primary sticker. It is expected to be used in conjunction with prepareInputStickerFile.
+func prepareInputStickerParam(inputSticker interface{}, idx int) interface{} {
+	switch m := inputSticker.(type) {
+	case InputSticker:
+		if m.Sticker.NeedsUpload() {
+			m.Sticker = FileAttach(fmt.Sprintf("attach://file-%d", idx))
+		}
+
+		return m
+	}
+
+	return nil
+}
+
+// prepareInputStickerFile generates an array of RequestFile to provide for Fileable's files method. It returns an array as a InputSticker may have multiple files, for the primary sticker. The idx parameter is used to generate file field names. It uses the names "file-%d" for the main file. It is expected to be used in conjunction with prepareInputStickerParam.
+func prepareInputStickerFile(inputSticker interface{}, idx int) []RequestFile {
+	var files []RequestFile
+
+	switch m := inputSticker.(type) {
+	case InputSticker:
+		if m.Sticker.NeedsUpload() {
+			files = append(files, RequestFile{
+				Name: fmt.Sprintf("file-%d", idx),
+				Data: m.Sticker,
+			})
+		}
+	}
+
+	return files
+}
+
+// prepareInputStickerForParams calls prepareInputStickerParam for each item provided and returns a new array with the correct params for a request. It is expected that files will get data from the associated function, prepareInputStickerForFiles.
+func prepareInputStickerForParams(inputSticker []interface{}) []interface{} {
+	newSticker := make([]interface{}, len(inputSticker))
+	copy(newSticker, inputSticker)
+
+	for idx, sticker := range inputSticker {
+		if param := prepareInputStickerParam(sticker, idx); param != nil {
+			newSticker[idx] = param
+		}
+	}
+
+	return newSticker
+}
+
+// prepareInputStickerForFiles calls prepareInputStickerFile for each item provided and returns a new array with the correct files for a request. It is expected that params will get data from the associated function, prepareInputStickerForParams.
+func prepareInputStickerForFiles(inputSticker []interface{}) []RequestFile {
+	var files []RequestFile
+
+	for idx, sticker := range inputSticker {
+		if file := prepareInputStickerFile(sticker, idx); file != nil {
+			files = append(files, file...)
+		}
+	}
+
+	return files
+}
+
+// AddStickerToSet Add a new sticker to a set created by the bot. The format of the added sticker must match the format of the other stickers in the set. Emoji sticker sets can have up to 200 stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.
 type AddStickerToSet struct {
-	UserID       int64  // required
-	Name         string // required
-	PNGSticker   RequestFileData
-	TGSSticker   RequestFileData
-	WEBMSticker  RequestFileData
-	Emojis       string // required
-	MaskPosition *MaskPosition
+	UserID   int64        // required
+	Name     string       // required
+	Stickers InputSticker // required
 }
 
 func (s *AddStickerToSet) Params() (Params, error) {
-	params := make(Params, 4)
+	params := make(Params, 3)
 
 	params.AddNonZero64("user_id", s.UserID)
 	params["name"] = s.Name
-	params["emojis"] = s.Emojis
-	err := params.AddInterface("mask_position", s.MaskPosition)
+	err := params.AddInterface("stickers", prepareInputStickerParam(s.Stickers, 0))
 
 	return params, err
 }
 func (s *AddStickerToSet) Files() []RequestFile {
-	if s.PNGSticker != nil {
-		return []RequestFile{{
-			Name: "png_sticker",
-			Data: s.PNGSticker,
-		}}
-	}
-	if s.TGSSticker != nil {
-		return []RequestFile{{
-			Name: "tgs_sticker",
-			Data: s.TGSSticker,
-		}}
-	}
-	if s.WEBMSticker != nil {
-		return []RequestFile{{
-			Name: "webm_sticker",
-			Data: s.WEBMSticker,
-		}}
-	}
-
-	return nil
+	return prepareInputStickerFile(s.Stickers, 0)
 }
 func (s *AddStickerToSet) EndPoint() string {
 	return config.EndpointAddStickerToSet
@@ -2759,35 +2845,6 @@ func (s *SetStickerPositionInSet) EndPoint() string {
 	return config.EndpointSetStickerPositionInSet
 }
 
-// SetStickerSetThumb Set the thumbnail of a sticker set. Animated thumbnails can be set for animated sticker sets only. Video thumbnails can be set only for video sticker sets only. Returns True on success.
-type SetStickerSetThumb struct {
-	Name   string
-	UserID int64
-	Thumb  RequestFileData
-}
-
-func (s *SetStickerSetThumb) Params() (Params, error) {
-	params := make(Params, 2)
-
-	params["name"] = s.Name
-	params.AddNonZero64("user_id", s.UserID)
-
-	return params, nil
-}
-func (s *SetStickerSetThumb) Files() []RequestFile {
-	if s.Thumb != nil {
-		return []RequestFile{{
-			Name: "thumb",
-			Data: s.Thumb,
-		}}
-	}
-
-	return nil
-}
-func (s *SetStickerSetThumb) EndPoint() string {
-	return config.EndpointSetStickerSetThumb
-}
-
 // DeleteStickerFromSet Delete a sticker from a set created by the bot. Returns True on success.
 type DeleteStickerFromSet struct {
 	Sticker string // required
@@ -2802,6 +2859,141 @@ func (s *DeleteStickerFromSet) Params() (Params, error) {
 }
 func (s *DeleteStickerFromSet) EndPoint() string {
 	return config.EndpointDeleteStickerFromSet
+}
+
+// SetStickerEmojiList Change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+type SetStickerEmojiList struct {
+	Sticker   string   // required
+	EmojiList []string // required
+}
+
+func (s *SetStickerEmojiList) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["sticker"] = s.Sticker
+	err := params.AddInterface("emoji_list", s.EmojiList)
+
+	return params, err
+}
+func (s *SetStickerEmojiList) EndPoint() string {
+	return config.EndpointSetStickerEmojiList
+}
+
+// SetStickerKeywords Change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+type SetStickerKeywords struct {
+	Sticker  string   // required
+	Keywords []string // required
+}
+
+func (s *SetStickerKeywords) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["sticker"] = s.Sticker
+	err := params.AddInterface("keywords", s.Keywords)
+
+	return params, err
+}
+func (s *SetStickerKeywords) EndPoint() string {
+	return config.EndpointSetStickerKeywords
+}
+
+// SetStickerMaskPosition Change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
+type SetStickerMaskPosition struct {
+	Sticker      string // required
+	MaskPosition *MaskPosition
+}
+
+func (s *SetStickerMaskPosition) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["sticker"] = s.Sticker
+	err := params.AddInterface("mask_position", s.MaskPosition)
+
+	return params, err
+}
+func (s *SetStickerMaskPosition) EndPoint() string {
+	return config.EndpointSetStickerMaskPosition
+}
+
+// SetStickerSetTitle Set the title of a created sticker set. Returns True on success.
+type SetStickerSetTitle struct {
+	Name  string // required
+	Title string // required
+}
+
+func (s *SetStickerSetTitle) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["name"] = s.Name
+	params["title"] = s.Title
+
+	return params, nil
+}
+func (s *SetStickerSetTitle) EndPoint() string {
+	return config.EndpointSetStickerSetTitle
+}
+
+// SetStickerSetThumbnail Set the thumbnail of a regular or mask sticker set. The format of the thumbnail file must match the format of the stickers in the set. Returns True on success.
+type SetStickerSetThumbnail struct {
+	Name      string // required
+	UserID    int64  // required
+	Thumbnail RequestFileData
+}
+
+func (s *SetStickerSetThumbnail) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["name"] = s.Name
+	params.AddNonZero64("user_id", s.UserID)
+
+	return params, nil
+}
+func (s *SetStickerSetThumbnail) Files() []RequestFile {
+	if s.Thumbnail != nil {
+		return []RequestFile{{
+			Name: "thumbnail",
+			Data: s.Thumbnail,
+		}}
+	}
+
+	return nil
+}
+func (s *SetStickerSetThumbnail) EndPoint() string {
+	return config.EndpointSetStickerSetThumbnail
+}
+
+// SetCustomEmojiStickerSetThumbnail Set the thumbnail of a custom emoji sticker set. Returns True on success.
+type SetCustomEmojiStickerSetThumbnail struct {
+	Name          string // required
+	CustomEmojiId string
+}
+
+func (s *SetCustomEmojiStickerSetThumbnail) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params["name"] = s.Name
+	params.AddNonEmpty("custom_emoji_id", s.CustomEmojiId)
+
+	return params, nil
+}
+func (s *SetCustomEmojiStickerSetThumbnail) EndPoint() string {
+	return config.EndpointSetCustomEmojiStickerSetThumbnail
+}
+
+// DeleteStickerSet Delete a sticker set that was created by the bot. Returns True on success.
+type DeleteStickerSet struct {
+	Name string // required
+}
+
+func (s *DeleteStickerSet) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params["name"] = s.Name
+
+	return params, nil
+}
+func (s *DeleteStickerSet) EndPoint() string {
+	return config.EndpointDeleteStickerSet
 }
 
 // AnswerInlineQuery Send answers to an inline query. On success, True is returned. No more than 50 results per query are allowed.

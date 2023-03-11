@@ -12,12 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewAnswerPreCheckoutQuery()
-	message.PreCheckoutQueryID = "id"
-	message.OK = false
-	message.ErrorMessage = "err"
+	msg := tg.NewSetStickerSetTitle()
+	msg.Name = "name"
+	msg.Title = "title"
 
-	_, err = tg.AnswerPreCheckoutQuery(message)
+	_, err = tg.SetStickerSetTitle(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

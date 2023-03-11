@@ -12,12 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewAnswerPreCheckoutQuery()
-	message.PreCheckoutQueryID = "id"
-	message.OK = false
-	message.ErrorMessage = "err"
+	message := tg.NewGetCustomEmojiStickers()
 
-	_, err = tg.AnswerPreCheckoutQuery(message)
+	message.CustomEmojiIds = []string{"1", "2", "3", "4"}
+
+	_, err = tg.GetCustomEmojiStickers(message)
 	if err != nil {
 		log.Fatal(err)
 	}
