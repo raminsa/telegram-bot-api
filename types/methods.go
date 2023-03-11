@@ -347,10 +347,15 @@ func (s *SendAudio) Files() []RequestFile {
 	}}
 
 	if s.Thumbnail != nil {
-		files = append(files, RequestFile{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		})
+		files = append(files,
+			RequestFile{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			RequestFile{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			})
 	}
 
 	return files
@@ -410,10 +415,16 @@ func (s *SendDocument) Files() []RequestFile {
 		FileName: s.CustomFileName,
 	}}
 	if s.Thumbnail != nil {
-		files = append(files, RequestFile{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		})
+		files = append(files,
+			RequestFile{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			RequestFile{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			},
+		)
 	}
 
 	return files
@@ -481,10 +492,16 @@ func (s *SendVideo) Files() []RequestFile {
 		FileName: s.CustomFileName,
 	}}
 	if s.Thumbnail != nil {
-		files = append(files, RequestFile{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		})
+		files = append(files,
+			RequestFile{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			RequestFile{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			},
+		)
 	}
 
 	return files
@@ -548,10 +565,16 @@ func (s *SendAnimation) Files() []RequestFile {
 		Data: s.Animation,
 	}}
 	if s.Thumbnail != nil {
-		files = append(files, RequestFile{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		})
+		files = append(files,
+			RequestFile{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			RequestFile{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			},
+		)
 	}
 
 	return files
@@ -660,10 +683,16 @@ func (s *SendVideoNote) Files() []RequestFile {
 		FileName: s.CustomFileName,
 	}}
 	if s.Thumbnail != nil {
-		files = append(files, RequestFile{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		})
+		files = append(files,
+			RequestFile{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			RequestFile{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			},
+		)
 	}
 
 	return files
@@ -724,7 +753,7 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 		}
 
 		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
-			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
 		}
 
 		return m
@@ -734,7 +763,7 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 		}
 
 		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
-			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
 		}
 
 		return m
@@ -744,7 +773,7 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 		}
 
 		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
-			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumbnail", idx))
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
 		}
 
 		return m
@@ -2950,10 +2979,16 @@ func (s *SetStickerSetThumbnail) Params() (Params, error) {
 }
 func (s *SetStickerSetThumbnail) Files() []RequestFile {
 	if s.Thumbnail != nil {
-		return []RequestFile{{
-			Name: "thumbnail",
-			Data: s.Thumbnail,
-		}}
+		return []RequestFile{
+			{
+				Name: "thumb",
+				Data: s.Thumbnail,
+			},
+			{
+				Name: "thumbnail",
+				Data: s.Thumbnail,
+			},
+		}
 	}
 
 	return nil
