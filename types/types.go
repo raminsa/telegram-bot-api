@@ -904,17 +904,17 @@ type InlineQueryResult struct {
 
 // InlineQueryResultArticle Represents a link to an article or web page.
 type InlineQueryResultArticle struct {
-	Type                string                `json:"type"`                   // type of the result, must be article
-	ID                  string                `json:"id"`                     // Unique identifier for this result, 1-64 Bytes
-	Title               string                `json:"title"`                  // title of the result
-	InputMessageContent interface{}           `json:"input_message_content"`  // Content of the message to be sent
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"` // Optional. Inline keyboard attached to the message
-	URL                 string                `json:"url,omitempty"`          // Optional. URL of the result
-	HideURL             bool                  `json:"hide_url,omitempty"`     // Optional. Pass True, if you don't want the URL to be shown in the message
-	Description         string                `json:"description,omitempty"`  // Optional. Short description of the result
-	ThumbnailURL        string                `json:"thumb_url,omitempty"`    // Optional. Url of the thumbnail for the result
-	ThumbnailWidth      int                   `json:"thumb_width,omitempty"`  // Optional. Thumbnail width
-	ThumbnailHeight     int                   `json:"thumb_height,omitempty"` // Optional. Thumbnail height
+	Type                string                `json:"type"`                                    // type of the result, must be article
+	ID                  string                `json:"id"`                                      // Unique identifier for this result, 1-64 Bytes
+	Title               string                `json:"title"`                                   // title of the result
+	InputMessageContent interface{}           `json:"input_message_content"`                   // Content of the message to be sent
+	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                  // Optional. Inline keyboard attached to the message
+	URL                 string                `json:"url,omitempty"`                           // Optional. URL of the result
+	HideURL             bool                  `json:"hide_url,omitempty"`                      // Optional. Pass True, if you don't want the URL to be shown in the message
+	Description         string                `json:"description,omitempty"`                   // Optional. Short description of the result
+	ThumbnailURL        string                `json:"thumb_url,thumbnail_url,omitempty"`       // Optional. Url of the thumbnail for the result
+	ThumbnailWidth      int                   `json:"thumb_width,thumbnail_width,omitempty"`   // Optional. Thumbnail width
+	ThumbnailHeight     int                   `json:"thumb_height,thumbnail_height,omitempty"` // Optional. Thumbnail height
 }
 
 // InlineQueryResultPhoto Represents a link to a photo. By default, this photo will be sent by the user with optional caption. Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
