@@ -753,7 +753,7 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 	return nil
 }
 
-// prepareInputMediaFile generates an array of RequestFile to provide for Fileable's files method. It returns an array as a single InputMedia may have multiple files, for the primary media and a thumbnail. The idx parameter is used to generate file field names. It uses the names "file-%d" for the main file and "file-%d-thumb" for the thumbnail. It is expected to be used in conjunction with prepareInputMediaParam.
+// prepareInputMediaFile generates an array of RequestFile to provide for Fileable's files method. It returns an array as a single InputMedia may have multiple files, for the primary media and a thumbnail. The idx parameter is used to generate file field names. It uses the names "file-%d" for the main file and "file-%d-thumbnail" for the thumbnail. It is expected to be used in conjunction with prepareInputMediaParam.
 func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
 	var files []RequestFile
 
