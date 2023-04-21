@@ -387,8 +387,9 @@ type ChatShared struct {
 	ChatID    int64 `json:"user_id"`    // Identifier of the shared chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
 }
 
-// WriteAccessAllowed Represents a service message about a user allowing a bot added to the attachment menu to write messages. Currently holds no information.
+// WriteAccessAllowed Represents a service message about a user allowing a bot to write messages after adding the bot to the attachment menu or launching a Web App from a link.
 type WriteAccessAllowed struct {
+	WebAppName string `json:"web_app_name,omitempty"` // Optional. Name of the Web App which was launched from a link
 }
 
 // VideoChatScheduled Represents a service message about a video chat scheduled in the chat.
@@ -491,15 +492,16 @@ type InlineKeyboardMarkup struct {
 
 // InlineKeyboardButton Represents one button of an inline keyboard. You must use exactly one of the optional fields.
 type InlineKeyboardButton struct {
-	Text                         string        `json:"text"`                                       // Label text on the button
-	URL                          string        `json:"url,omitempty"`                              // Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
-	CallbackData                 string        `json:"callback_data,omitempty"`                    // Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
-	WebApp                       *WebAppInfo   `json:"web_app,omitempty"`                          // Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
-	LoginURL                     *LoginURL     `json:"login_url,omitempty"`                        // Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
-	SwitchInlineQuery            string        `json:"switch_inline_query,omitempty"`              // Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted. Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions - in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
-	SwitchInlineQueryCurrentChat string        `json:"switch_inline_query_current_chat,omitempty"` // Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted. This offers a quick way for the user to open your bot in inline mode in the same chat - good for selecting something from multiple options.
-	CallbackGame                 *CallbackGame `json:"callback_game,omitempty"`                    // Optional. Description of the game that will be launched when the user presses the button. NOTE: This type of button must always be the first button in the first row.
-	Pay                          bool          `json:"pay,omitempty"`                              // Optional. Specify True, to send a Pay button. NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
+	Text                         string                       `json:"text"`                                       // Label text on the button
+	URL                          string                       `json:"url,omitempty"`                              // Optional. HTTP or tg:// URL to be opened when the button is pressed. Links tg://user?id=<user_id> can be used to mention a user by their ID without using a username, if this is allowed by their privacy settings.
+	CallbackData                 string                       `json:"callback_data,omitempty"`                    // Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to send an arbitrary message on behalf of the user using the method answerWebAppQuery. Available only in private chats between a user and the bot.
+	WebApp                       *WebAppInfo                  `json:"web_app,omitempty"`                          // Optional. An HTTPS URL used to automatically authorize the user. Can be used as a replacement for the Telegram Login Widget.
+	LoginURL                     *LoginURL                    `json:"login_url,omitempty"`                        // Optional. Data to be sent in a callback query to the bot when button is pressed, 1-64 bytes
+	SwitchInlineQuery            string                       `json:"switch_inline_query,omitempty"`              // Optional. If set, pressing the button will prompt the user to select one of their chats, open that chat and insert the bot's username and the specified inline query in the input field. May be empty, in which case just the bot's username will be inserted. Note: This offers an easy way for users to start using your bot in inline mode when they are currently in a private chat with it. Especially useful when combined with switch_pm… actions - in this case the user will be automatically returned to the chat they switched from, skipping the chat selection screen.
+	SwitchInlineQueryCurrentChat string                       `json:"switch_inline_query_current_chat,omitempty"` // Optional. If set, pressing the button will insert the bot's username and the specified inline query in the current chat's input field. May be empty, in which case only the bot's username will be inserted. This offers a quick way for the user to open your bot in inline mode in the same chat - good for selecting something from multiple options.
+	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`  // Optional. If set, pressing the button will prompt the user to select one of their chats of the specified type, open that chat and insert the bot's username and the specified inline query in the input field.
+	CallbackGame                 *CallbackGame                `json:"callback_game,omitempty"`                    // Optional. Description of the game that will be launched when the user presses the button. NOTE: This type of button must always be the first button in the first row.
+	Pay                          bool                         `json:"pay,omitempty"`                              // Optional. Specify True, to send a Pay button. NOTE: This type of button must always be the first button in the first row and can only be used in invoice messages.
 }
 
 // LoginURL Represents a parameter of the inline keyboard button used to automatically authorize a user. Serves as a great replacement for the Telegram Login Widget when the user is coming from Telegram. All the user needs to do is tap/click a button and confirm that they want to log in: Telegram apps support these buttons as of version 5.7. Sample bot: @discussbot
@@ -508,6 +510,15 @@ type LoginURL struct {
 	ForwardText        string `json:"forward_text,omitempty"`         // Optional. New text of the button in forwarded messages.
 	BotUsername        string `json:"bot_username,omitempty"`         // Optional. Username of a bot, which will be used for user authorization. See Setting up a bot for more details. If not specified, the current bot's username will be assumed. The url's domain must be the same as the domain linked with the bot. See Linking your domain to the bot for more details.
 	RequestWriteAccess bool   `json:"request_write_access,omitempty"` // Optional. Pass True to request the permission for your bot to send messages to the user.
+}
+
+// SwitchInlineQueryChosenChat Represents an inline button that switches the current user to inline mode in a chosen chat, with an optional default inline query.
+type SwitchInlineQueryChosenChat struct {
+	Query             string `json:"query,omitempty"`               // Optional. The default inline query to be inserted in the input field. If left empty, only the bot's username will be inserted
+	AllowUserChats    bool   `json:"allow_user_chats,omitempty"`    // Optional. True, if private chats with users can be chosen
+	AllowBotChats     bool   `json:"allow_bot_chats,omitempty"`     // Optional. True, if private chats with bots can be chosen
+	AllowGroupChats   bool   `json:"allow_group_chats,omitempty"`   // Optional. True, if group and supergroup chats can be chosen
+	AllowChannelChats bool   `json:"allow_channel_chats,omitempty"` // Optional. True, if channel chats can be chosen
 }
 
 // CallbackQuery Represents an incoming callback query from a callback button in an inline keyboard. If the button that originated the query was attached to a message sent by the bot, the field message will be present. If the button was attached to a message sent via the bot (in inline mode), the field inline_message_id will be present. Exactly one of the fields data or game_short_name will be present.
@@ -605,12 +616,13 @@ type ChatMember struct {
 
 // ChatMemberUpdated Represents changes in the status of a chat member.
 type ChatMemberUpdated struct {
-	Chat          Chat            `json:"chat"`                  // the user belongs to
-	From          User            `json:"from"`                  // Performer of the action, which resulted in the change
-	Date          int             `json:"date"`                  // the change was done in Unix time
-	OldChatMember ChatMember      `json:"old_chat_member"`       // Previous information about the chat member
-	NewChatMember ChatMember      `json:"new_chat_member"`       // New information about the chat member
-	InviteLink    *ChatInviteLink `json:"invite_link,omitempty"` // Optional. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
+	Chat                    Chat            `json:"chat"`                                  // the user belongs to
+	From                    User            `json:"from"`                                  // Performer of the action, which resulted in the change
+	Date                    int             `json:"date"`                                  // the change was done in Unix time
+	OldChatMember           ChatMember      `json:"old_chat_member"`                       // Previous information about the chat member
+	NewChatMember           ChatMember      `json:"new_chat_member"`                       // New information about the chat member
+	InviteLink              *ChatInviteLink `json:"invite_link,omitempty"`                 // Optional. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
+	ViaChatFolderInviteLink bool            `json:"via_chat_folder_invite_link,omitempty"` // Optional. True, if the user joined the chat via a chat folder invite link
 }
 
 // ChatJoinRequest Represents a join request sent to a chat.
@@ -700,6 +712,11 @@ type BotCommandScopeChatMember struct {
 	Type   string `json:"type"`    // Scope type, must be chat_member
 	ChatID string `json:"chat_id"` // Unique identifier for the target chat or username of the target supergroup (in the format @supergroupusername)
 	UserID int64  `json:"user_id"` // Unique identifier of the target user
+}
+
+// BotName represents the bot's name.
+type BotName struct {
+	Name string `json:"name"` // The bot's name
 }
 
 // BotDescription represents the bot's description.
@@ -875,6 +892,13 @@ type InlineQuery struct {
 	Offset   string    `json:"offset"`              // offset of the results to be returned, can be controlled by the bot
 	ChatType string    `json:"chat_type,omitempty"` // Optional. Type of the chat from which the inline query was sent. Can be either “sender” for a private chat with the inline query sender, “private”, “group”, “supergroup”, or “channel”. The chat type should be always known for requests sent from official clients and most third-party clients, unless the request was sent from a secret chat
 	Location *Location `json:"location,omitempty"`  // Optional. Sender location, only for bots that request user location
+}
+
+// InlineQueryResultsButton Represents a button to be shown above inline query results. You must use exactly one of the optional fields.
+type InlineQueryResultsButton struct {
+	Text           string      `json:"text"`                      // Label text on the button
+	WebApp         *WebAppInfo `json:"web_app,omitempty"`         // Optional. Description of the Web App that will be launched when the user presses the button. The Web App will be able to switch back to the inline mode using the method web_app_switch_inline_query inside the Web App.
+	StartParameter string      `json:"start_parameter,omitempty"` // Optional. Deep-linking parameter for the /start message sent to the bot when a user presses the button. 1-64 characters, only A-Z, a-z, 0-9, _ and - are allowed. Example: An inline bot that sends YouTube videos can ask the user to connect the bot to their YouTube account to adapt search results accordingly. To do this, it displays a 'Connect your YouTube account' button above the results, or even before showing any. The user presses the button, switches to a private chat with the bot and, in doing so, passes a start parameter that instructs the bot to return an OAuth link. Once done, the bot can offer a switch_inline button so that the user can easily return to the chat where they wanted to use the bot's inline capabilities.
 }
 
 // InlineQueryResult Represents one result of an inline query. Telegram clients currently support results of the following 20 types

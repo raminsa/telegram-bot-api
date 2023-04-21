@@ -737,6 +737,16 @@ func (t *Api) NewBotCommandScopeChatMember(chatID, userID int64) *types.BotComma
 	}
 }
 
+// NewSetMyName creates a set my name message.
+func (t *Api) NewSetMyName() *types.SetMyName {
+	return &types.SetMyName{}
+}
+
+// NewGetMyName creates a get my name message.
+func (t *Api) NewGetMyName() *types.GetMyName {
+	return &types.GetMyName{}
+}
+
 // NewSetMyDescription creates a set my description message.
 func (t *Api) NewSetMyDescription() *types.SetMyDescription {
 	return &types.SetMyDescription{}

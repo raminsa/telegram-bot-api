@@ -1389,6 +1389,32 @@ func (t *Api) GetMyCommands(c *types.GetMyCommands) ([]types.BotCommand, error) 
 	return commands, err
 }
 
+// SetMyName Use this method to change the bot's name. Returns True on success.
+func (t *Api) SetMyName(c *types.SetMyName) (bool, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+
+	return result, err
+}
+
+// GetMyName Use this method to get the current bot name for the given user language. Returns BotName on success.
+func (t *Api) GetMyName(c *types.GetMyName) (*types.BotName, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var result types.BotName
+	err = json.Unmarshal(resp.Result, &result)
+
+	return &result, err
+}
+
 // SetMyDescription Use this method to change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
 func (t *Api) SetMyDescription(c *types.SetMyDescription) (bool, error) {
 	resp, err := t.Request(c)

@@ -2292,6 +2292,40 @@ func (s *GetMyCommands) EndPoint() string {
 	return config.EndpointGetMyCommands
 }
 
+// SetMyName Change the bot's name. Returns True on success.
+type SetMyName struct {
+	Name         string
+	LanguageCode string
+}
+
+func (s *SetMyName) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddNonEmpty("name", s.Name)
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *SetMyName) EndPoint() string {
+	return config.EndpointSetMyName
+}
+
+// GetMyName Get the current bot name for the given user language. Returns BotName on success.
+type GetMyName struct {
+	LanguageCode string
+}
+
+func (s *GetMyName) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddNonEmpty("language_code", s.LanguageCode)
+
+	return params, nil
+}
+func (s *GetMyName) EndPoint() string {
+	return config.EndpointGetMyName
+}
+
 // SetMyDescription Change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
 type SetMyDescription struct {
 	Description  string
@@ -3033,13 +3067,12 @@ func (s *DeleteStickerSet) EndPoint() string {
 
 // AnswerInlineQuery Send answers to an inline query. On success, True is returned. No more than 50 results per query are allowed.
 type AnswerInlineQuery struct {
-	InlineQueryID     string        // required
-	Results           []interface{} // required
-	CacheTime         int
-	IsPersonal        bool
-	NextOffset        string
-	SwitchPMText      string
-	SwitchPMParameter string
+	InlineQueryID string        // required
+	Results       []interface{} // required
+	CacheTime     int
+	IsPersonal    bool
+	NextOffset    string
+	Button        *InlineQueryResultsButton
 }
 
 func (s *AnswerInlineQuery) Params() (Params, error) {
@@ -3049,9 +3082,11 @@ func (s *AnswerInlineQuery) Params() (Params, error) {
 	params.AddNonZero("cache_time", s.CacheTime)
 	params.AddBool("is_personal", s.IsPersonal)
 	params.AddNonEmpty("next_offset", s.NextOffset)
-	params.AddNonEmpty("switch_pm_text", s.SwitchPMText)
-	params.AddNonEmpty("switch_pm_parameter", s.SwitchPMParameter)
-	err := params.AddInterface("results", s.Results)
+	err := params.AddInterface("button", s.Button)
+	if err != nil {
+		return nil, err
+	}
+	err = params.AddInterface("results", s.Results)
 
 	return params, err
 }

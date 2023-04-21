@@ -81,6 +81,8 @@ const (
 	EndpointSetMyCommands                     = "setMyCommands"
 	EndpointDeleteMyCommands                  = "deleteMyCommands"
 	EndpointGetMyCommands                     = "getMyCommands"
+	EndpointSetMyName                         = "setMyName"
+	EndpointGetMyName                         = "getMyName"
 	EndpointSetMyDescription                  = "setMyDescription"
 	EndpointGetMyDescription                  = "getMyDescription"
 	EndpointSetMyShortDescription             = "setMyShortDescription"
