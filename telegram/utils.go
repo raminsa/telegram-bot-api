@@ -248,6 +248,14 @@ func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string
 	}
 }
 
+// NewInlineKeyboardButtonSwitchChosenChat creates an inline keyboard switch inline query chosen chat bot chat button with text
+func (t *Api) NewInlineKeyboardButtonSwitchChosenChat(text string, switchInline *types.SwitchInlineQueryChosenChat) types.InlineKeyboardButton {
+	return types.InlineKeyboardButton{
+		Text:                        text,
+		SwitchInlineQueryChosenChat: switchInline,
+	}
+}
+
 // NewInlineKeyboardRow creates an inline keyboard row with buttons.
 func (t *Api) NewInlineKeyboardRow(buttons ...types.InlineKeyboardButton) []types.InlineKeyboardButton {
 	var row []types.InlineKeyboardButton
