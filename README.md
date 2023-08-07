@@ -144,7 +144,7 @@ to generate your cert file use this. See [self-signed](https://core.telegram.org
     openssl req -newkey rsa:2048 -sha256 -nodes -keyout <file.key> -x509 -days 36500 -out <file.pem> -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=<server_address>"
 
 
-Avoid ReadTimeoutExpired error:
+use channel to handle all requests (Avoid ReadTimeoutExpired error), http.ListenAndServe() supports concurrency:
 ```go
 package main
 
