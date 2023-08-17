@@ -25,8 +25,7 @@ Bot API 6.7 Recent changes [April 21, 2023](https://core.telegram.org/bots/api#a
 ## Documentation
 See [Bots: An introduction for developers](https://core.telegram.org/bots) for a brief description of Telegram Bots and their features.
 
-See the [Telegram Bot API documentation](https://core.telegram.org/bots/api) for a description of the Bot API interface and a complete list of available classes,
-methods, and updates.
+See the [Telegram Bot API documentation](https://core.telegram.org/bots/api) for a description of the Bot API interface and a complete list of available classes, methods and updates.
 
 See the [Telegram Bot API server build instruction generator](https://tdlib.github.io/telegram-bot-api/build.html) for detailed instructions on how to build the Telegram Bot API server.
 
@@ -97,10 +96,7 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		err = telegram.HandleUpdateError(w, err)
-		if err != nil {
-			log.Fatal(err) 
-		}
+		telegram.HandleUpdateError(w, err)
 		return
 	}
 
@@ -133,10 +129,7 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		err = telegram.HandleUpdateError(w, err)
-		if err != nil {
-			log.Fatal(err)
-		}
+		telegram.HandleUpdateError(w, err)
 		return
 	}
 
@@ -146,11 +139,9 @@ func handleWebhook(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-To generate your cert file, use this. See [self-signed](https://core.telegram.org/bots/self-signed) guide for details.:
+to generate your cert file use this. See [self-signed](https://core.telegram.org/bots/self-signed) guide for details.:
 
     openssl req -newkey rsa:2048 -sha256 -nodes -keyout <file.key> -x509 -days 36500 -out <file.pem> -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=<server_address>"
-
-
 
 
 Avoid ReadTimeoutExpired error:
@@ -192,7 +183,7 @@ func listenForWebhook(maxWebhookConnections int) types.UpdatesChannel {
 
 <a name="custom-client"></a>
 ## Custom Client
-use a client with custom options:
+use client with custom options:
 ```go
 package main
 
@@ -227,7 +218,7 @@ func main() {
 <a name="debug"></a>
 ## Debug
 
-use a debug option and write to local file:
+use debug option and write to local file:
 ```go
 package main
 
