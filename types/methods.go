@@ -7,10 +7,18 @@ import (
 	"github.com/raminsa/telegram-bot-api/config"
 )
 
-// SetWebhook Specify a URL and receive incoming updates via an outgoing webhook. Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL, containing a JSON-serialized Update. In case of an unsuccessful request, we will give up after a reasonable amount of attempts. Returns True on success. If you'd like to make sure that the webhook was set by you, you can specify secret data in the parameter secret_token. If specified, the request will contain a header “X-Telegram-Bot-Api-Secret-Token” with the secret token as content.
+// SetWebhook Specify a URL and receive incoming updates via an outgoing webhook.
+//Whenever there is an update for the bot, we will send an HTTPS POST request to the specified URL,
+//containing a JSON-serialized Update.
+//In case of an unsuccessful request, we will give up after a reasonable number of attempts.
+//Returns True to success.
+//If you'd like to make sure that you set the webhook,
+//you can specify secret data in the parameter secret_token.
+//If specified, the request will contain a header “X-Telegram-Bot-Api-Secret-Token” with the secret token as content.
 // Notes:
 //1. You will not be able to receive updates using getUpdates for as long as an outgoing webhook is set up.
-//2. To use a self-signed certificate, you need to upload your public key certificate using certificate parameter. Please upload as InputFile, sending a String will not work.
+//2. To use a self-signed certificate, you need to upload your public key certificate using certificate parameter.
+//Please upload as InputFile, sending a String will not work.
 //3. Ports currently supported for webhooks: 443, 80, 88, 8443.
 //If you're having any trouble setting up webhooks, please check out this amazing guide to webhooks.
 
@@ -28,7 +36,7 @@ func (s *GetUpdates) Params() (Params, error) {
 	params.AddNonZero("offset", s.Offset)
 	params.AddNonZero("limit", s.Limit)
 	params.AddNonZero("timeout", s.Timeout)
-	err := params.AddInterface("allowed_updates", s.AllowedUpdates)
+	err := params.AddAny("allowed_updates", s.AllowedUpdates)
 
 	return params, err
 }
@@ -47,12 +55,15 @@ func (ch UpdatesChannel) Clear() {
 }
 
 type SetWebhook struct {
-	URL                *url.URL        // HTTPS URL to send updates to. Use an empty string to remove webhook integration
-	Certificate        RequestFileData // Optional. Upload your public key certificate so that the root certificate in use can be checked. See our self-signed guide for details.
-	IPAddress          string          // Optional. The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
-	MaxConnections     int             // Optional. The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot's server, and higher values to increase your bot's throughput.
-	AllowedUpdates     []string        // Optional. A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message”, “edited_channel_post”, “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member (default). If not specified, the previous setting will be used. Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
-	DropPendingUpdates bool            // Optional. Pass True to drop all pending updates
+	URL         *url.URL        // HTTPS URL to send updates to. Use an empty string to remove webhook integration
+	Certificate RequestFileData // Optional.
+	// Upload your public key certificate
+	// so that the root certificate in use can be checked.
+	// See our self-signed guide for details.
+	IPAddress          string   // Optional. The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS
+	MaxConnections     int      // Optional. The maximum allowed number of simultaneous HTTPS connections to the webhook for update delivery, 1-100. Defaults to 40. Use lower values to limit the load on your bot server, and higher values to increase your bot's throughput.
+	AllowedUpdates     []string // Optional. A JSON-serialized list of the update types you want your bot to receive. For example, specify [“message” “edited_channel_post” “callback_query”] to only receive updates of these types. See Update for a complete list of available update types. Specify an empty list to receive all update types except chat_member (default). If not specified, the previous setting will be used. Please note that this parameter doesn't affect updates created before the call to the setWebhook, so unwanted updates may be received for a short period of time.
+	DropPendingUpdates bool     // Optional. Pass True to drop all pending updates
 }
 
 func (s *SetWebhook) Params() (Params, error) {
@@ -63,7 +74,7 @@ func (s *SetWebhook) Params() (Params, error) {
 	}
 	params.AddNonEmpty("ip_address", s.IPAddress)
 	params.AddNonZero("max_connections", s.MaxConnections)
-	err := params.AddInterface("allowed_updates", s.AllowedUpdates)
+	err := params.AddAny("allowed_updates", s.AllowedUpdates)
 	if err != nil {
 		return params, err
 	}
@@ -85,7 +96,7 @@ func (s *SetWebhook) EndPoint() string {
 	return config.EndpointSetWebhook
 }
 
-// DeleteWebhook Remove webhook integration if you decide to switch back to getUpdates. Returns True on success.
+// DeleteWebhook Remove webhook integration if you decide to switch back to getUpdates. Returns True to success.
 type DeleteWebhook struct {
 	DropPendingUpdates bool // Optional. Pass True to drop all pending updates
 }
@@ -115,7 +126,7 @@ type SendMessage struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendMessage) Params() (Params, error) {
@@ -129,7 +140,7 @@ func (s *SendMessage) Params() (Params, error) {
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("text", s.Text)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("entities", s.Entities)
+	err = params.AddAny("entities", s.Entities)
 	if err != nil {
 		return params, err
 	}
@@ -138,7 +149,7 @@ func (s *SendMessage) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -146,7 +157,9 @@ func (s *SendMessage) EndPoint() string {
 	return config.EndpointSendMessage
 }
 
-// ForwardMessage Forward messages of any kind. Service messages can't be forwarded. On success, the sent Message is returned.
+// ForwardMessage Forward messages of any kind.
+// Service messages can't be forwarded.
+// On success, the sent Message is returned.
 type ForwardMessage struct {
 	ChatID              int64  // required. use for user|channel as int
 	ChatIDStr           string // required. use for user|channel as string
@@ -183,7 +196,11 @@ func (s *ForwardMessage) EndPoint() string {
 	return config.EndpointForwardMessage
 }
 
-// CopyMessage Copy messages of any kind. Service messages and invoice messages can't be copied. The method is analogous to the method forwardMessage, but the copied message doesn't have a link to the original message. Returns the MessageId of the sent message on success.
+// CopyMessage Copy messages of any kind.
+// Service messages and invoice messages can't be copied.
+// The method is analogous to the method forwardMessage,
+// but the copied message doesn't have a link to the original message.
+// Returns the MessageId of the sent message on success.
 type CopyMessage struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -200,7 +217,7 @@ type CopyMessage struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *CopyMessage) Params() (Params, error) {
@@ -219,7 +236,7 @@ func (s *CopyMessage) Params() (Params, error) {
 	params.AddNonZero("message_id", s.MessageID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -227,7 +244,7 @@ func (s *CopyMessage) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -251,7 +268,7 @@ type SendPhoto struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendPhoto) Params() (Params, error) {
@@ -265,7 +282,7 @@ func (s *SendPhoto) Params() (Params, error) {
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -274,7 +291,7 @@ func (s *SendPhoto) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -291,7 +308,11 @@ func (s *SendPhoto) EndPoint() string {
 	return config.EndpointSendPhoto
 }
 
-// SendAudio Send audio files, if you want Telegram clients to display them in the music player. Your audio must be in the .MP3 or .M4A format. On success, the sent Message is returned. Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future. For sending voice messages, use the sendVoice method instead.
+// SendAudio Send audio files if you want Telegram clients to display them in the music player.
+// Your audio must be in the .MP3 or .M4A format.
+// On success, the sent Message is returned.
+// Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
+// For sending voice messages, use the sendVoice method instead.
 type SendAudio struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -310,7 +331,7 @@ type SendAudio struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendAudio) Params() (Params, error) {
@@ -324,7 +345,7 @@ func (s *SendAudio) Params() (Params, error) {
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -335,7 +356,7 @@ func (s *SendAudio) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -364,7 +385,9 @@ func (s *SendAudio) EndPoint() string {
 	return config.EndpointSendAudio
 }
 
-// SendDocument Send general files. On success, the sent Message is returned. Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
+// SendDocument Send general files.
+// On success, the sent Message is returned.
+// Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
 type SendDocument struct {
 	ChatID                      int64  // required. use for user|channel as int
 	ChatIDStr                   string // required. use for user|channel as string
@@ -381,7 +404,7 @@ type SendDocument struct {
 	ProtectContent              bool
 	ReplyToMessageID            int
 	AllowSendingWithoutReply    bool
-	ReplyMarkup                 interface{}
+	ReplyMarkup                 any
 }
 
 func (s *SendDocument) Params() (Params, error) {
@@ -395,7 +418,7 @@ func (s *SendDocument) Params() (Params, error) {
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -404,7 +427,7 @@ func (s *SendDocument) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -433,7 +456,9 @@ func (s *SendDocument) EndPoint() string {
 	return config.EndpointSendDocument
 }
 
-// SendVideo Send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document). On success, the sent Message is returned. Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
+// SendVideo Send video files, Telegram clients support MPEG4 videos (other formats may be sent as Document).
+// On success, the sent Message is returned.
+// Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
 type SendVideo struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -454,7 +479,7 @@ type SendVideo struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendVideo) Params() (Params, error) {
@@ -471,7 +496,7 @@ func (s *SendVideo) Params() (Params, error) {
 	params.AddNonZero("height", s.Height)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -481,7 +506,7 @@ func (s *SendVideo) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -510,7 +535,9 @@ func (s *SendVideo) EndPoint() string {
 	return config.EndpointSendVideo
 }
 
-// SendAnimation Send animation files (GIF or H.264/MPEG-4 AVC video without sound). On success, the sent Message is returned. Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
+// SendAnimation Send animation files (GIF or H.264/MPEG-4 AVC video without a sound).
+// On success, the sent Message is returned.
+// Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
 type SendAnimation struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -529,7 +556,7 @@ type SendAnimation struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendAnimation) Params() (Params, error) {
@@ -546,7 +573,7 @@ func (s *SendAnimation) Params() (Params, error) {
 	params.AddNonZero("height", s.Height)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -555,7 +582,7 @@ func (s *SendAnimation) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -583,7 +610,11 @@ func (s *SendAnimation) EndPoint() string {
 	return config.EndpointSendAnimation
 }
 
-// SendVoice Send audio files, if you want Telegram clients to display the file as a playable voice message. For this to work, your audio must be in an .OGG file encoded with OPUS (other formats may be sent as Audio or Document). On success, the sent Message is returned. Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
+// SendVoice Send audio files if you want Telegram clients to display the file as a playable voice message.
+// For this to work, your audio must be in an .OGG file encoded with OPUS
+// (other formats may be sent as Audio or Document).
+// On success, the sent Message is returned.
+// Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
 type SendVoice struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -599,7 +630,7 @@ type SendVoice struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendVoice) Params() (Params, error) {
@@ -613,7 +644,7 @@ func (s *SendVoice) Params() (Params, error) {
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err = params.AddInterface("caption_entities", s.CaptionEntities)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
@@ -622,7 +653,7 @@ func (s *SendVoice) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -639,7 +670,9 @@ func (s *SendVoice) EndPoint() string {
 	return config.EndpointSendVoice
 }
 
-// SendVideoNote As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long. Use this method to send video messages. On success, the sent Message is returned.
+// SendVideoNote As of v.4.0, Telegram clients support rounded square MPEG4 videos of up to 1 minute long.
+// Use this method to send video messages.
+// On success, the sent Message is returned.
 type SendVideoNote struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -654,7 +687,7 @@ type SendVideoNote struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendVideoNote) Params() (Params, error) {
@@ -672,7 +705,7 @@ func (s *SendVideoNote) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -701,13 +734,15 @@ func (s *SendVideoNote) EndPoint() string {
 	return config.EndpointSendVideoNote
 }
 
-// SendMediaGroup Use this method to send a group of photos, videos, documents or audios as an album. Documents and audio files can be only grouped in an album with messages of the same type. On success, an array of Messages that were sent is returned.
+// SendMediaGroup Use this method to send a group of photos, videos, documents or audios as an album.
+// Documents and audio files can be only grouped on an album with messages of the same type.
+// On success, an array of Messages that were sent is returned.
 type SendMediaGroup struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
 	Username                 string // required. use for channel
 	MessageThreadID          int64
-	Media                    []interface{} // required
+	Media                    []any // required
 	DisableNotification      bool
 	ProtectContent           bool
 	ReplyToMessageID         int
@@ -727,7 +762,7 @@ func (s *SendMediaGroup) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("media", prepareInputMediaForParams(s.Media))
+	err = params.AddAny("media", prepareInputMediaForParams(s.Media))
 
 	return params, err
 }
@@ -738,8 +773,15 @@ func (s *SendMediaGroup) EndPoint() string {
 	return config.EndpointSendMediaGroup
 }
 
-// prepareInputMediaParam evaluates a single InputMedia and determines if it needs to be modified for a successful upload. If it returns nil, then the value does not need to be included in the params. Otherwise, it will return the same type as was originally provided. The idx is used to calculate the file field name. If you only have a single file, 0 may be used. It is formatted into "attach://file-%d" for the primary media and "attach://file-%d-thumbnail" for thumbnails. It is expected to be used in conjunction with prepareInputMediaFile.
-func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
+// prepareInputMediaParam evaluates a single InputMedia
+// and determines if it needs to be modified for a successful upload.
+// If it returns nil, then the value does not need to be included in the params.
+// Otherwise, it will return the same type as was originally provided.
+// The idx is used to calculate the file field name.
+// If you only have a single file, 0 may be used.
+// It is formatted into "attach://file-%d" for the primary media and "attach://file-%d-thumbnail" for thumbnails.
+// It is expected to be used in conjunction with prepareInputMediaFile.
+func prepareInputMediaParam(inputMedia any, idx int) any {
 	switch m := inputMedia.(type) {
 	case InputMediaPhoto:
 		if m.Media.NeedsUpload() {
@@ -782,8 +824,12 @@ func prepareInputMediaParam(inputMedia interface{}, idx int) interface{} {
 	return nil
 }
 
-// prepareInputMediaFile generates an array of RequestFile to provide for Fileable's files method. It returns an array as a single InputMedia may have multiple files, for the primary media and a thumbnail. The idx parameter is used to generate file field names. It uses the names "file-%d" for the main file and "file-%d-thumbnail" for the thumbnail. It is expected to be used in conjunction with prepareInputMediaParam.
-func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
+// prepareInputMediaFile generates an array of RequestFile to provide for Fileable files method.
+// It returns an array as a single InputMedia may have multiple files for the primary media and a thumbnail.
+// The idx parameter is used to generate file field names.
+// It uses the names "file-%d" for the main file and "file-%d-thumbnail" for the thumbnail.
+// It is expected to be used in conjunction with prepareInputMediaParam.
+func prepareInputMediaFile(inputMedia any, idx int) []RequestFile {
 	var files []RequestFile
 
 	switch m := inputMedia.(type) {
@@ -841,9 +887,11 @@ func prepareInputMediaFile(inputMedia interface{}, idx int) []RequestFile {
 	return files
 }
 
-// prepareInputMediaForParams calls prepareInputMediaParam for each item provided and returns a new array with the correct params for a request. It is expected that files will get data from the associated function, prepareInputMediaForFiles.
-func prepareInputMediaForParams(inputMedia []interface{}) []interface{} {
-	newMedia := make([]interface{}, len(inputMedia))
+// prepareInputMediaForParams calls prepareInputMediaParam for each item provided
+// and returns a new array with the correct params for a request.
+// It is expected that files will get data from the associated function, prepareInputMediaForFiles.
+func prepareInputMediaForParams(inputMedia []any) []any {
+	newMedia := make([]any, len(inputMedia))
 	copy(newMedia, inputMedia)
 
 	for idx, media := range inputMedia {
@@ -855,8 +903,10 @@ func prepareInputMediaForParams(inputMedia []interface{}) []interface{} {
 	return newMedia
 }
 
-// prepareInputMediaForFiles calls prepareInputMediaFile for each item provided and returns a new array with the correct files for a request. It is expected that params will get data from the associated function, prepareInputMediaForParams.
-func prepareInputMediaForFiles(inputMedia []interface{}) []RequestFile {
+// prepareInputMediaForFiles calls prepareInputMediaFile,
+// for each item provided and returns a new array with the correct files for a request.
+// It is expected that params will get data from the associated function, prepareInputMediaForParams.
+func prepareInputMediaForFiles(inputMedia []any) []RequestFile {
 	var files []RequestFile
 
 	for idx, media := range inputMedia {
@@ -884,7 +934,7 @@ type SendLocation struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendLocation) Params() (Params, error) {
@@ -906,7 +956,7 @@ func (s *SendLocation) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -914,11 +964,15 @@ func (s *SendLocation) EndPoint() string {
 	return config.EndpointSendLocation
 }
 
-// EditMessageLiveLocation Edit live location messages. A location can be edited until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
+// EditMessageLiveLocation Edit live location messages.
+// A location can be edited
+// until its live_period expires or editing is explicitly disabled by a call to stopMessageLiveLocation.
+// On success, if the edited message is not an inline message, the edited Message is returned;
+// otherwise True is returned.
 type EditMessageLiveLocation struct {
 	ChatID               int64   // required if InlineMessageID is not specified. use for user|channel as int
 	ChatIDStr            string  // required if InlineMessageID is not specified. use for user|channel as string
-	Username             string  // required if InlineMessageID is not specified. use for channel
+	Username             string  // required if InlineMessageID is not specified. use for a channel
 	MessageID            int     // required if InlineMessageID is not specified
 	InlineMessageID      string  // required if ChatID & Username & MessageID are not specified
 	Latitude             float64 // required
@@ -949,7 +1003,7 @@ func (s *EditMessageLiveLocation) Params() (Params, error) {
 	params.AddNonZero("heading", s.Heading)
 	params.AddNonZero("proximity_alert_radius", s.ProximityAlertRadius)
 
-	err := params.AddInterface("reply_markup", s.ReplyMarkup)
+	err := params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -957,11 +1011,12 @@ func (s *EditMessageLiveLocation) EndPoint() string {
 	return config.EndpointEditMessageLiveLocation
 }
 
-// StopMessageLiveLocation Stop updating a live location message before live_period expires. On success, if the message is not an inline message, the edited Message is returned, otherwise True is returned.
+// StopMessageLiveLocation Stop updating a live location message before live_period expires.
+// On success, if the message is not an inline message, the edited Message is returned, otherwise True is returned.
 type StopMessageLiveLocation struct {
 	ChatID          int64  // required if InlineMessageID is not specified. use for user|channel as int
 	ChatIDStr       string // required if InlineMessageID is not specified. use for user|channel as string
-	Username        string // required if InlineMessageID is not specified. use for channel
+	Username        string // required if InlineMessageID is not specified. use for a channel
 	MessageID       int    // required if InlineMessageID is not specified
 	InlineMessageID string // required if ChatID & Username & MessageID are not specified
 	ReplyMarkup     *InlineKeyboardMarkup
@@ -981,7 +1036,7 @@ func (s *StopMessageLiveLocation) Params() (Params, error) {
 		params.AddNonZero("message_id", s.MessageID)
 	}
 
-	err := params.AddInterface("reply_markup", s.ReplyMarkup)
+	err := params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -1007,7 +1062,7 @@ type SendVenue struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendVenue) Params() (Params, error) {
@@ -1031,7 +1086,7 @@ func (s *SendVenue) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -1053,7 +1108,7 @@ type SendContact struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendContact) Params() (Params, error) {
@@ -1073,7 +1128,7 @@ func (s *SendContact) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -1103,7 +1158,7 @@ type SendPoll struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendPoll) Params() (Params, error) {
@@ -1116,7 +1171,7 @@ func (s *SendPoll) Params() (Params, error) {
 	}
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["question"] = s.Question
-	err = params.AddInterface("options", s.Options)
+	err = params.AddAny("options", s.Options)
 	if err != nil {
 		return params, err
 	}
@@ -1129,7 +1184,7 @@ func (s *SendPoll) Params() (Params, error) {
 	params.AddNonEmpty("explanation_parse_mode", s.ExplanationParseMode)
 	params.AddNonZero("open_period", s.OpenPeriod)
 	params.AddNonZero("close_date", s.CloseDate)
-	err = params.AddInterface("explanation_entities", s.ExplanationEntities)
+	err = params.AddAny("explanation_entities", s.ExplanationEntities)
 	if err != nil {
 		return params, err
 	}
@@ -1137,7 +1192,7 @@ func (s *SendPoll) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -1156,7 +1211,7 @@ type SendDice struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendDice) Params() (Params, error) {
@@ -1173,7 +1228,7 @@ func (s *SendDice) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -1181,7 +1236,8 @@ func (s *SendDice) EndPoint() string {
 	return config.EndpointSendDice
 }
 
-// SendChatAction Send an animated emoji that will display a random value. On success, the sent Message is returned.
+// SendChatAction Send an animated emoji that will display a random value.
+// On success, the sent Message is returned.
 type SendChatAction struct {
 	ChatID          int64  // required. use for user|channel as int
 	ChatIDStr       string // required. use for user|channel as string
@@ -1234,8 +1290,15 @@ func (f *File) Link(token string) string {
 	return fmt.Sprintf(config.APIFileEndpoint, token, f.FilePath)
 }
 
-// GetFile Get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size. On success, a File object is returned. The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>, where <file_path> is taken from the response. It is guaranteed that the link will be valid for at least 1 hour. When the link expires, a new one can be requested by calling getFile again.
-// Note: This function may not preserve the original file name and MIME type. You should save the file's MIME type and name (if available) when the File object is received.
+// GetFile Get basic information about a file and prepare it for downloading.
+// For the moment, bots can download files of up to 20MB in size.
+// On success, a File object is returned.
+// The file can then be downloaded via the link https://api.telegram.org/file/bot<token>/<file_path>,
+// where <file_path> is taken from the response.
+// It is guaranteed that the link will be valid for at least 1 hour.
+// When the link expires, a new one can be requested by calling getFile again.
+// Note: This function may not preserve the original file name and MIME type.
+// You should save the file's MIME type and name (if available) when the File object is received.
 type GetFile struct {
 	FileID string // required
 }
@@ -1251,7 +1314,12 @@ func (s *GetFile) EndPoint() string {
 	return config.EndpointGetFile
 }
 
-// BanChatMember Ban a user in a group, a supergroup or a channel. In the case of supergroups and channels, the user will not be able to return to the chat on their own using invite links, etc., unless unbanned first. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
+// BanChatMember Ban a user in a group, a supergroup or a channel.
+// In the case of supergroups and channels,
+// the user will not be able to return to the chat on their own using invite links, etc.,
+// unless unbanned first.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type BanChatMember struct {
 	ChatID         int64  // required. use for group|supergroup|channel as int
 	ChatIDStr      string // required. use for group|supergroup|channel as string
@@ -1279,7 +1347,14 @@ func (s *BanChatMember) EndPoint() string {
 	return config.EndpointBanChatMember
 }
 
-// UnbanChatMember Unban a previously banned user in a supergroup or channel. The user will not return to the group or channel automatically, but will be able to join via link, etc. The bot must be an administrator for this to work. By default, this method guarantees that after the call the user is not a member of the chat, but will be able to join it. So if the user is a member of the chat they will also be removed from the chat. If you don't want this, use the parameter only_if_banned. Returns True on success.
+// UnbanChatMember Unban a previously banned user in a supergroup or channel.
+// The user will not return to the group or channel automatically,
+// but will be able to join via a link, etc. The bot must be an administrator for this to work.
+// By default, this method guarantees that after the call the user is not a member of the chat,
+// but will be able to join it.
+// So if the user is a member of the chat, they will also be removed from the chat.
+// If you don't want this, use the parameter only_if_banned.
+// Returns True to success.
 type UnbanChatMember struct {
 	ChatID       int64  // required. use for group|supergroup|channel as int
 	ChatIDStr    string // required. use for group|supergroup|channel as string
@@ -1305,7 +1380,11 @@ func (s *UnbanChatMember) EndPoint() string {
 	return config.EndpointUnbanChatMember
 }
 
-// RestrictChatMember Restrict a user in a supergroup. The bot must be an administrator in the supergroup for this to work and must have the appropriate administrator rights. Pass True for all permissions to lift restrictions from a user. Returns True on success.
+// RestrictChatMember Restrict a user in a supergroup.
+// The bot must be an administrator in the supergroup for this to work
+// and must have the appropriate administrator rights.
+// Pass True for all permissions to lift restrictions from a user.
+// Returns True to success.
 type RestrictChatMember struct {
 	ChatID                        int64           // required. use for supergroup as int
 	ChatIDStr                     string          // required. use for supergroup as string
@@ -1325,7 +1404,7 @@ func (s *RestrictChatMember) Params() (Params, error) {
 		return params, err
 	}
 	params.AddNonZero64("user_id", s.UserID)
-	err = params.AddInterface("permissions", s.Permissions)
+	err = params.AddAny("permissions", s.Permissions)
 	if err != nil {
 		return params, err
 	}
@@ -1338,7 +1417,10 @@ func (s *RestrictChatMember) EndPoint() string {
 	return config.EndpointRestrictChatMember
 }
 
-// PromoteChatMember Promote or demote a user in a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Pass False for all boolean parameters to demote a user. Returns True on success.
+// PromoteChatMember Promote or demote a user in a supergroup or a channel.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Pass False for all boolean parameters to demote a user.
+// Returns True to success.
 type PromoteChatMember struct {
 	ChatID              int64  // required. use for supergroup|channel as int
 	ChatIDStr           string // required. use for supergroup|channel as string
@@ -1386,7 +1468,8 @@ func (s *PromoteChatMember) EndPoint() string {
 	return config.EndpointPromoteChatMember
 }
 
-// SetChatAdministratorCustomTitle Set a custom title for an administrator in a supergroup promoted by the bot. Returns True on success.
+// SetChatAdministratorCustomTitle Set a custom title for an administrator in a supergroup promoted by the bot.
+// Returns True to success.
 type SetChatAdministratorCustomTitle struct {
 	ChatID      int64  // required. use for supergroup as int
 	ChatIDStr   string // required. use for supergroup as string
@@ -1412,7 +1495,12 @@ func (s *SetChatAdministratorCustomTitle) EndPoint() string {
 	return config.EndpointSetChatAdministratorCustomTitle
 }
 
-// BanChatSenderChat Ban a channel chat in a supergroup or a channel. Until the chat is unbanned, the owner of the banned chat won't be able to send messages on behalf of any of their channels. The bot must be an administrator in the supergroup or channel for this to work and must have the appropriate administrator rights. Returns True on success.
+// BanChatSenderChat Ban a channel chat in a supergroup or a channel.
+// Until the chat is unbanned,
+// the owner of the banned chat won't be able to send messages on behalf of any of their channels.
+// The bot must be an administrator in the supergroup or channel for this to work
+// and must have the appropriate administrator rights.
+// Returns True to success.
 type BanChatSenderChat struct {
 	ChatID       int64  // required. use for supergroup|channel as int
 	ChatIDStr    string // required. use for supergroup|channel as string
@@ -1436,7 +1524,9 @@ func (s *BanChatSenderChat) EndPoint() string {
 	return config.EndpointBanChatSenderChat
 }
 
-// UnbanChatSenderChat Unban a previously banned channel chat in a supergroup or channel. The bot must be an administrator for this to work and must have the appropriate administrator rights. Returns True on success.
+// UnbanChatSenderChat Unban a previously banned channel chat in a supergroup or channel.
+// The bot must be an administrator for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type UnbanChatSenderChat struct {
 	ChatID       int64  // required. use for supergroup|channel as int
 	ChatIDStr    string // required. use for supergroup|channel as string
@@ -1460,7 +1550,10 @@ func (s *UnbanChatSenderChat) EndPoint() string {
 	return config.EndpointUnbanChatSenderChat
 }
 
-// SetChatPermissions Set default chat permissions for all members. The bot must be an administrator in the group or a supergroup for this to work and must have the can_restrict_members administrator rights. Returns True on success.
+// SetChatPermissions Set default chat permissions for all members.
+// The bot must be an administrator in the group or a supergroup
+// for this to work and must have the can_restrict_members administrator rights.
+// Returns True to success.
 type SetChatPermissions struct {
 	ChatID                        int64           // required. use for group|supergroup as int
 	ChatIDStr                     string          // required. use for group|supergroup as string
@@ -1477,7 +1570,7 @@ func (s *SetChatPermissions) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
-	err = params.AddInterface("permissions", s.Permissions)
+	err = params.AddAny("permissions", s.Permissions)
 	if err != nil {
 		return params, err
 	}
@@ -1488,8 +1581,15 @@ func (s *SetChatPermissions) EndPoint() string {
 	return config.EndpointSetChatPermissions
 }
 
-// ExportChatInviteLink Generate a new primary invite link for a chat; any previously generated primary link is revoked. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the new invite link as String on success.
-// Note: Each administrator in a chat generates their own invite links. Bots can't use invite links generated by other administrators. If you want your bot to work with invite links, it will need to generate its own link using exportChatInviteLink or by calling the getChat method. If your bot needs to generate a new primary invite link replacing its previous one, use exportChatInviteLink again.
+// ExportChatInviteLink Generate a new primary invite link for a chat;
+// any previously generated primary link is revoked.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns the new invite link as String on success.
+// Note: Each administrator in a chat generates their own invite links.
+// Bots can't use invite links generated by other administrators.
+// If you want your bot to work with invite links,
+// it will need to generate its own link using exportChatInviteLink or by calling the getChat method.
+// If your bot needs to generate a new primary invite link replacing its previous one, use exportChatInviteLink again.
 type ExportChatInviteLink struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1508,7 +1608,10 @@ func (s *ExportChatInviteLink) EndPoint() string {
 	return config.EndpointExportChatInviteLink
 }
 
-// CreateChatInviteLink Create an additional invite link for a chat. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. The link can be revoked using the method revokeChatInviteLink. Returns the new invite link as ChatInviteLink object.
+// CreateChatInviteLink Create an additional invite link for a chat.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// The link can be revoked using the method revokeChatInviteLink.
+// Returns the new invite link as ChatInviteLink object.
 type CreateChatInviteLink struct {
 	ChatID             int64  // required. use for group|supergroup|channel as int
 	ChatIDStr          string // required. use for group|supergroup|channel as string
@@ -1538,7 +1641,9 @@ func (s *CreateChatInviteLink) EndPoint() string {
 	return config.EndpointCreateChatInviteLink
 }
 
-// EditChatInviteLink Edit a non-primary invite link created by the bot. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the edited invite link as a ChatInviteLink object.
+// EditChatInviteLink Edit a non-primary invite link created by the bot.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns the edited invite link as a ChatInviteLink object.
 type EditChatInviteLink struct {
 	ChatID             int64  // required. use for group|supergroup|channel as int
 	ChatIDStr          string // required. use for group|supergroup|channel as string
@@ -1570,7 +1675,10 @@ func (s *EditChatInviteLink) EndPoint() string {
 	return config.EndpointEditChatInviteLink
 }
 
-// RevokeChatInviteLink Revoke an invite link created by the bot. If the primary link is revoked, a new link is automatically generated. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns the revoked invite link as ChatInviteLink object.
+// RevokeChatInviteLink Revoke an invitation link created by the bot.
+// If the primary link is revoked, a new link is automatically generated.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns the revoked invite link as ChatInviteLink object.
 type RevokeChatInviteLink struct {
 	ChatID     int64  // required. use for group|supergroup|channel as int
 	ChatIDStr  string // required. use for group|supergroup|channel as string
@@ -1594,7 +1702,9 @@ func (s *RevokeChatInviteLink) EndPoint() string {
 	return config.EndpointRevokeChatInviteLink
 }
 
-// ApproveChatJoinRequest Approve a chat join request. The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right. Returns True on success.
+// ApproveChatJoinRequest Approve a chat join request.
+// The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right.
+// Returns True to success.
 type ApproveChatJoinRequest struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1618,7 +1728,9 @@ func (s *ApproveChatJoinRequest) EndPoint() string {
 	return config.EndpointApproveChatJoinRequest
 }
 
-// DeclineChatJoinRequest Decline a chat join request. The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right. Returns True on success.
+// DeclineChatJoinRequest Decline a chat join request.
+// The bot must be an administrator in the chat for this to work and must have the can_invite_users administrator right.
+// Returns True to success.
 type DeclineChatJoinRequest struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1642,7 +1754,10 @@ func (s *DeclineChatJoinRequest) EndPoint() string {
 	return config.EndpointDeclineChatJoinRequest
 }
 
-// SetChatPhoto Set a new profile photo for the chat. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
+// SetChatPhoto Set a new profile photo for the chat.
+// Photos can't be changed for private chats.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type SetChatPhoto struct {
 	ChatID    int64           // required. use for group|supergroup|channel as int
 	ChatIDStr string          // required. use for group|supergroup|channel as string
@@ -1668,7 +1783,10 @@ func (s *SetChatPhoto) EndPoint() string {
 	return config.EndpointSetChatPhoto
 }
 
-// DeleteChatPhoto Delete a chat photo. Photos can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
+// DeleteChatPhoto Delete a chat photo.
+// Photos can't be changed for private chats.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type DeleteChatPhoto struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1687,7 +1805,10 @@ func (s *DeleteChatPhoto) EndPoint() string {
 	return config.EndpointDeleteChatPhoto
 }
 
-// SetChatTitle Change the title of a chat. Titles can't be changed for private chats. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
+// SetChatTitle Change the title of a chat.
+// Titles can't be changed for private chats.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type SetChatTitle struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1711,7 +1832,9 @@ func (s *SetChatTitle) EndPoint() string {
 	return config.EndpointSetChatTitle
 }
 
-// SetChatDescription Change the description of a group, a supergroup or a channel. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Returns True on success.
+// SetChatDescription Change the description of a group, a supergroup or a channel.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Returns True to success.
 type SetChatDescription struct {
 	ChatID      int64  // required. use for group|supergroup|channel as int
 	ChatIDStr   string // required. use for group|supergroup|channel as string
@@ -1735,7 +1858,11 @@ func (s *SetChatDescription) EndPoint() string {
 	return config.EndpointSetChatDescription
 }
 
-// PinChatMessage Add a message to the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns True on success.
+// PinChatMessage Add a message to the list of pinned messages in a chat.
+// If the chat is not a private chat,
+// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+// Returns True to success.
 type PinChatMessage struct {
 	ChatID              int64  // required. use for group|supergroup|channel as int
 	ChatIDStr           string // required. use for group|supergroup|channel as string
@@ -1761,7 +1888,11 @@ func (s *PinChatMessage) EndPoint() string {
 	return config.EndpointPinChatMessage
 }
 
-// UnpinChatMessage Remove a message from the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns True on success.
+// UnpinChatMessage Remove a message from the list of pinned messages in a chat.
+// If the chat is not a private chat,
+// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+// Returns True to success.
 type UnpinChatMessage struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1785,7 +1916,11 @@ func (s *UnpinChatMessage) EndPoint() string {
 	return config.EndpointUnpinChatMessage
 }
 
-// UnpinAllChatMessages Clear the list of pinned messages in a chat. If the chat is not a private chat, the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages' administrator right in a supergroup or 'can_edit_messages' administrator right in a channel. Returns True on success.
+// UnpinAllChatMessages Clear the list of pinned messages in a chat.
+// If the chat is not a private chat,
+// the bot must be an administrator in the chat for this to work and must have the 'can_pin_messages'
+// administrator right in a supergroup or 'can_edit_messages' administrator right in a channel.
+// Returns True to success.
 type UnpinAllChatMessages struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1804,7 +1939,7 @@ func (s *UnpinAllChatMessages) EndPoint() string {
 	return config.EndpointUnpinAllChatMessages
 }
 
-// LeaveChat Your bot to leave a group, supergroup or channel. Returns True on success.
+// LeaveChat Your bot to leave a group, supergroup or channel. Returns True to success.
 type LeaveChat struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1823,7 +1958,9 @@ func (s *LeaveChat) EndPoint() string {
 	return config.EndpointLeaveChat
 }
 
-// GetChat Use this method to get up to date information about the chat (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.). Returns a Chat object on success.
+// GetChat Use this method to get up-to-date information about the chat
+// (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.).
+// Returns a Chat object on success.
 type GetChat struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1842,7 +1979,10 @@ func (s *GetChat) EndPoint() string {
 	return config.EndpointGetChat
 }
 
-// GetChatAdministrators Get a list of administrators in a chat. On success, returns an Array of ChatMember objects that contains information about all chat administrators except other bots. If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
+// GetChatAdministrators Get a list of administrators in a chat.
+// On success,
+// returns an Array of ChatMember objects that contains information about all chat administrators except other bots.
+// If the chat is a group or a supergroup and no administrators were appointed, only the creator will be returned.
 type GetChatAdministrators struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1861,7 +2001,7 @@ func (s *GetChatAdministrators) EndPoint() string {
 	return config.EndpointGetChatAdministrators
 }
 
-// GetChatMemberCount Get the number of members in a chat. Returns Int on success.
+// GetChatMemberCount Get the number of members in a chat. Returns Int to success.
 type GetChatMemberCount struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1880,7 +2020,8 @@ func (s *GetChatMemberCount) EndPoint() string {
 	return config.EndpointGetChatMemberCount
 }
 
-// GetChatMember Use this method to get information about a member of a chat. Returns a ChatMember object on success.
+// GetChatMember Use this method to get information about a member of a chat.
+// Returns a ChatMember object on success.
 type GetChatMember struct {
 	ChatID    int64  // required. use for group|supergroup|channel as int
 	ChatIDStr string // required. use for group|supergroup|channel as string
@@ -1904,7 +2045,10 @@ func (s *GetChatMember) EndPoint() string {
 	return config.EndpointGetChatMember
 }
 
-// SetChatStickerSet Set a new group sticker set for a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
+// SetChatStickerSet Set a new group sticker set for a supergroup.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method.
+// Returns True to success.
 type SetChatStickerSet struct {
 	ChatID         int64  // required. use for supergroup as int
 	ChatIDStr      string // required. use for supergroup as string
@@ -1928,7 +2072,10 @@ func (s *SetChatStickerSet) EndPoint() string {
 	return config.EndpointSetChatStickerSet
 }
 
-// DeleteChatStickerSet Delete a group sticker set from a supergroup. The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights. Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method. Returns True on success.
+// DeleteChatStickerSet Delete a group sticker set from a supergroup.
+// The bot must be an administrator in the chat for this to work and must have the appropriate administrator rights.
+// Use the field can_set_sticker_set optionally returned in getChat requests to check if the bot can use this method.
+// Returns True to success.
 type DeleteChatStickerSet struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
@@ -1947,19 +2094,25 @@ func (s *DeleteChatStickerSet) EndPoint() string {
 	return config.EndpointDeleteChatStickerSet
 }
 
-// GetForumTopicIconStickers Use this method to get custom emoji stickers, which can be used as a forum topic icon by any user. Requires no parameters. Returns an Array of Sticker objects.
+// GetForumTopicIconStickers Use this method to get custom emoji stickers,
+// which can be used as a forum topic icon by any user.
+// Requires no parameters.
+// Returns an Array of Sticker objects.
 type GetForumTopicIconStickers struct {
 }
 
 func (s *GetForumTopicIconStickers) Params() (Params, error) {
-	params := make(Params, 0)
+	params := make(Params)
 	return params, nil
 }
 func (s *GetForumTopicIconStickers) EndPoint() string {
 	return config.EndpointGetForumTopicIconStickers
 }
 
-// CreateForumTopic Use this method to create a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns information about the created topic as a ForumTopic object.
+// CreateForumTopic Use this method to create a topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights.
+// Returns information about the created topic as a ForumTopic object.
 type CreateForumTopic struct {
 	ChatID            int64  // required. use for supergroup as int
 	ChatIDStr         string // required. use for supergroup as string
@@ -1986,12 +2139,15 @@ func (s *CreateForumTopic) EndPoint() string {
 	return config.EndpointCreateForumTopic
 }
 
-// EditForumTopic Use this method to edit name and icon of a topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+// EditForumTopic Use this method to edit the name and icon of a topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights,
+// unless it is the creator of the topic.
+// Returns True to success.
 type EditForumTopic struct {
 	ChatID            int64  // required. use for supergroup as int
 	ChatIDStr         string // required. use for supergroup as string
 	Username          string // required. use for supergroup
-	MessageThreadID   int64  // required. Unique identifier for the target message thread of the forum topic
+	MessageThreadID   int64  // Required. Unique identifier for the target message thread of the forum topic
 	Name              string // New topic name, 0-128 characters. If not specified or empty, the current name of the topic will be kept
 	IconCustomEmojiID string // New unique identifier of the custom emoji shown as the topic icon. Use getForumTopicIconStickers to get all allowed custom emoji identifiers. Pass an empty string to remove the icon. If not specified, the current icon will be kept
 }
@@ -2013,12 +2169,16 @@ func (s *EditForumTopic) EndPoint() string {
 	return config.EndpointEditForumTopic
 }
 
-// CloseForumTopic Use this method to close an open topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+// CloseForumTopic Use this method to close an open topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights,
+// unless it is the creator of the topic.
+// Returns True to success.
 type CloseForumTopic struct {
 	ChatID          int64  // required. use for supergroup as int
 	ChatIDStr       string // required. use for supergroup as string
 	Username        string // required. use for supergroup
-	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+	MessageThreadID int64  // Required. Unique identifier for the target message thread of the forum topic
 }
 
 func (s *CloseForumTopic) Params() (Params, error) {
@@ -2036,12 +2196,16 @@ func (s *CloseForumTopic) EndPoint() string {
 	return config.EndpointCloseForumTopic
 }
 
-// ReopenForumTopic Use this method to reopen a closed topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights, unless it is the creator of the topic. Returns True on success.
+// ReopenForumTopic Use this method to reopen a closed topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights,
+// unless it is the creator of the topic.
+// Returns True to success.
 type ReopenForumTopic struct {
 	ChatID          int64  // required. use for supergroup as int
 	ChatIDStr       string // required. use for supergroup as string
 	Username        string // required. use for supergroup
-	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+	MessageThreadID int64  // Required. Unique identifier for the target message thread of the forum topic
 }
 
 func (s *ReopenForumTopic) Params() (Params, error) {
@@ -2059,12 +2223,15 @@ func (s *ReopenForumTopic) EndPoint() string {
 	return config.EndpointReopenForumTopic
 }
 
-// DeleteForumTopic Use this method to delete a forum topic along with all its messages in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_delete_messages administrator rights. Returns True on success.
+// DeleteForumTopic Use this method to delete a forum topic along with all its messages in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_delete_messages administrator rights.
+// Returns True to success.
 type DeleteForumTopic struct {
 	ChatID          int64  // required. use for supergroup as int
 	ChatIDStr       string // required. use for supergroup as string
 	Username        string // required. use for supergroup
-	MessageThreadID int64  // required. Unique identifier for the target message thread of the forum topic
+	MessageThreadID int64  // Required. Unique identifier for the target message thread of the forum topic
 }
 
 func (s *DeleteForumTopic) Params() (Params, error) {
@@ -2082,7 +2249,10 @@ func (s *DeleteForumTopic) EndPoint() string {
 	return config.EndpointDeleteForumTopic
 }
 
-// UnpinAllForumTopicMessages Use this method to clear the list of pinned messages in a forum topic. The bot must be an administrator in the chat for this to work and must have the can_pin_messages administrator right in the supergroup. Returns True on success.
+// UnpinAllForumTopicMessages Use this method to clear the list of pinned messages in a forum topic.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_pin_messages administrator right in the supergroup.
+// Returns True to success.
 type UnpinAllForumTopicMessages struct {
 	ChatID          int64  // required. use for supergroup as int
 	ChatIDStr       string // required. use for supergroup as string
@@ -2105,12 +2275,14 @@ func (s *UnpinAllForumTopicMessages) EndPoint() string {
 	return config.EndpointUnpinAllForumTopicMessages
 }
 
-// EditGeneralForumTopic Use this method to edit the name of the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights. Returns True on success.
+// EditGeneralForumTopic Use this method to edit the name of the 'General' topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work and must have can_manage_topics administrator rights.
+// Returns True to success.
 type EditGeneralForumTopic struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
 	Username  string // required. use for supergroup
-	Name      string // required. New topic name, 1-128 characters
+	Name      string // Required. New topic name, 1-128 characters
 }
 
 func (s *EditGeneralForumTopic) Params() (Params, error) {
@@ -2128,7 +2300,10 @@ func (s *EditGeneralForumTopic) EndPoint() string {
 	return config.EndpointEditGeneralForumTopic
 }
 
-// CloseGeneralForumTopic Use this method to close an open 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+// CloseGeneralForumTopic Use this method to close an open 'General' topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights.
+// Returns True to success.
 type CloseGeneralForumTopic struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
@@ -2146,7 +2321,11 @@ func (s *CloseGeneralForumTopic) EndPoint() string {
 	return config.EndpointCloseGeneralForumTopic
 }
 
-// ReopenGeneralForumTopic Use this method to reopen a closed 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically unhidden if it was hidden. Returns True on success.
+// ReopenGeneralForumTopic Use this method to reopen a closed 'General' topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights.
+// The topic will be automatically unhidden if it was hidden.
+// Returns True to success.
 type ReopenGeneralForumTopic struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
@@ -2164,7 +2343,11 @@ func (s *ReopenGeneralForumTopic) EndPoint() string {
 	return config.EndpointReopenGeneralForumTopic
 }
 
-// HideGeneralForumTopic Use this method to hide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. The topic will be automatically closed if it was open. Returns True on success.
+// HideGeneralForumTopic Use this method to hide the 'General' topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights.
+// The topic will be automatically closed if it is open.
+// Returns True to success.
 type HideGeneralForumTopic struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
@@ -2182,7 +2365,10 @@ func (s *HideGeneralForumTopic) EndPoint() string {
 	return config.EndpointHideGeneralForumTopic
 }
 
-// UnHideGeneralForumTopic Use this method to unhide the 'General' topic in a forum supergroup chat. The bot must be an administrator in the chat for this to work and must have the can_manage_topics administrator rights. Returns True on success.
+// UnHideGeneralForumTopic Use this method to unhide the 'General' topic in a forum supergroup chat.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_manage_topics administrator rights.
+// Returns True to success.
 type UnHideGeneralForumTopic struct {
 	ChatID    int64  // required. use for supergroup as int
 	ChatIDStr string // required. use for supergroup as string
@@ -2200,7 +2386,12 @@ func (s *UnHideGeneralForumTopic) EndPoint() string {
 	return config.EndpointUnHideGeneralForumTopic
 }
 
-// AnswerCallbackQuery Send answers to callback queries sent from inline keyboards. The answer will be displayed to the user as a notification at the top of the chat screen or as an alert. On success, True is returned. Alternatively, the user can be redirected to the specified Game URL. For this option to work, you must first create a game for your bot via @BotFather and accept the terms. Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
+// AnswerCallbackQuery Send answers to callback queries sent from inline keyboards.
+// The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
+// On success, True is returned.
+// Alternatively, the user can be redirected to the specified Game URL.
+// For this option to work, you must first create a game for your bot via @BotFather and accept the terms.
+// Otherwise, you may use links like t.me/your_bot?start=XXXX that open your bot with a parameter.
 type AnswerCallbackQuery struct {
 	CallbackQueryID string // required
 	Text            string
@@ -2224,7 +2415,9 @@ func (s *AnswerCallbackQuery) EndPoint() string {
 	return config.EndpointAnswerCallbackQuery
 }
 
-// SetMyCommands Change the list of the bot's commands. See https://core.telegram.org/bots#commands for more details about bot commands. Returns True on success.
+// SetMyCommands Change the list of the bot's commands.
+// See https://core.telegram.org/bots#commands for more details about bot commands.
+// Returns True to success.
 type SetMyCommands struct {
 	Commands     []BotCommand // required
 	Scope        *BotCommandScope
@@ -2234,11 +2427,11 @@ type SetMyCommands struct {
 func (s *SetMyCommands) Params() (Params, error) {
 	params := make(Params, 3)
 
-	err := params.AddInterface("commands", s.Commands)
+	err := params.AddAny("commands", s.Commands)
 	if err != nil {
 		return params, err
 	}
-	err = params.AddInterface("scope", s.Scope)
+	err = params.AddAny("scope", s.Scope)
 	if err != nil {
 		return params, err
 	}
@@ -2250,7 +2443,9 @@ func (s *SetMyCommands) EndPoint() string {
 	return config.EndpointSetMyCommands
 }
 
-// DeleteMyCommands Delete the list of the bot's commands for the given scope and user language. After deletion, higher level commands will be shown to affected users. Returns True on success.
+// DeleteMyCommands Delete the list of the bot's commands for the given scope and user language.
+// After deletion, higher level commands will be shown to affected users.
+// Returns True to success.
 type DeleteMyCommands struct {
 	Scope        *BotCommandScope
 	LanguageCode string
@@ -2259,7 +2454,7 @@ type DeleteMyCommands struct {
 func (s *DeleteMyCommands) Params() (Params, error) {
 	params := make(Params, 2)
 
-	err := params.AddInterface("scope", s.Scope)
+	err := params.AddAny("scope", s.Scope)
 	if err != nil {
 		return params, err
 	}
@@ -2271,7 +2466,9 @@ func (s *DeleteMyCommands) EndPoint() string {
 	return config.EndpointDeleteMyCommands
 }
 
-// GetMyCommands Get the current list of the bot's commands for the given scope and user language. Returns Array of BotCommand on success. If commands aren't set, an empty list is returned.
+// GetMyCommands Get the current list of the bot's commands for the given scope and user language.
+// Returns Array of BotCommand on success.
+// If commands aren't set, an empty list is returned.
 type GetMyCommands struct {
 	Scope        *BotCommandScope
 	LanguageCode string
@@ -2280,7 +2477,7 @@ type GetMyCommands struct {
 func (s *GetMyCommands) Params() (Params, error) {
 	params := make(Params, 2)
 
-	err := params.AddInterface("scope", s.Scope)
+	err := params.AddAny("scope", s.Scope)
 	if err != nil {
 		return params, err
 	}
@@ -2292,7 +2489,7 @@ func (s *GetMyCommands) EndPoint() string {
 	return config.EndpointGetMyCommands
 }
 
-// SetMyName Change the bot's name. Returns True on success.
+// SetMyName Change the bot's name. Returns True to success.
 type SetMyName struct {
 	Name         string
 	LanguageCode string
@@ -2326,7 +2523,8 @@ func (s *GetMyName) EndPoint() string {
 	return config.EndpointGetMyName
 }
 
-// SetMyDescription Change the bot's description, which is shown in the chat with the bot if the chat is empty. Returns True on success.
+// SetMyDescription Change the bot's description, which is shown in the chat with the bot if the chat is empty.
+// Returns True to success.
 type SetMyDescription struct {
 	Description  string
 	LanguageCode string
@@ -2344,7 +2542,8 @@ func (s *SetMyDescription) EndPoint() string {
 	return config.EndpointSetMyDescription
 }
 
-// GetMyDescription Get the current bot description for the given user language. Returns BotDescription on success.
+// GetMyDescription Get the current bot description for the given user language.
+// Returns BotDescription on success.
 type GetMyDescription struct {
 	LanguageCode string
 }
@@ -2360,7 +2559,9 @@ func (s *GetMyDescription) EndPoint() string {
 	return config.EndpointGetMyDescription
 }
 
-// SetMyShortDescription Change the bot's short description, which is shown on the bot's profile page and is sent together with the link when users share the bot. Returns True on success.
+// SetMyShortDescription Change the bot's short description,
+// which is shown on the bot's profile page and is sent together with the link when users share the bot.
+// Returns True to success.
 type SetMyShortDescription struct {
 	ShortDescription string
 	LanguageCode     string
@@ -2378,7 +2579,8 @@ func (s *SetMyShortDescription) EndPoint() string {
 	return config.EndpointSetMyShortDescription
 }
 
-// GetMyShortDescription Get the current bot short description for the given user language. Returns BotShortDescription on success.
+// GetMyShortDescription Get the current bot short description for the given user language.
+// Returns BotShortDescription on success.
 type GetMyShortDescription struct {
 	LanguageCode string
 }
@@ -2394,7 +2596,8 @@ func (s *GetMyShortDescription) EndPoint() string {
 	return config.EndpointGetMyShortDescription
 }
 
-// SetChatMenuButton Change the bot's menu button in a private chat, or the default menu button. Returns True on success.
+// SetChatMenuButton Change the bot's menu button in a private chat, or the default menu button.
+// Returns True to success.
 type SetChatMenuButton struct {
 	ChatID    int64  // required. use for chat|channel as int
 	ChatIDStr string // required. use for chat|channel as string
@@ -2410,7 +2613,7 @@ func (s *SetChatMenuButton) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
-	err = params.AddInterface("menu_button", s.MenuButton)
+	err = params.AddAny("menu_button", s.MenuButton)
 
 	return params, err
 }
@@ -2418,7 +2621,9 @@ func (s *SetChatMenuButton) EndPoint() string {
 	return config.EndpointSetChatMenuButton
 }
 
-// GetChatMenuButton Get the current value of the bot's menu button in a private chat, or the default menu button. Returns MenuButton on success.
+// GetChatMenuButton Get the current value of the bot's menu button in a private chat,
+// or the default menu button.
+// Returns MenuButton on success.
 type GetChatMenuButton struct {
 	ChatID    int64  // required. use for chat|channel as int
 	ChatIDStr string // required. use for chat|channel as string
@@ -2436,7 +2641,10 @@ func (s *GetChatMenuButton) EndPoint() string {
 	return config.EndpointGetChatMenuButton
 }
 
-// SetMyDefaultAdministratorRights Change the default administrator rights requested by the bot when it's added as an administrator to groups or channels. These rights will be suggested to users, but they are are free to modify the list before adding the bot. Returns True on success.
+// SetMyDefaultAdministratorRights Change the default administrator rights requested by the bot
+// when it's added as an administrator to groups or channels.
+// These rights will be suggested to users, but they are free to modify the list before adding the bot.
+// Returns True to success.
 type SetMyDefaultAdministratorRights struct {
 	Rights      *ChatAdministratorRights
 	ForChannels bool
@@ -2445,7 +2653,7 @@ type SetMyDefaultAdministratorRights struct {
 func (s *SetMyDefaultAdministratorRights) Params() (Params, error) {
 	params := make(Params, 2)
 
-	err := params.AddInterface("rights", s.Rights)
+	err := params.AddAny("rights", s.Rights)
 	if err != nil {
 		return params, err
 	}
@@ -2457,7 +2665,8 @@ func (s *SetMyDefaultAdministratorRights) EndPoint() string {
 	return config.EndpointSetMyDefaultAdministratorRights
 }
 
-// GetMyDefaultAdministratorRights Get the current default administrator rights of the bot. Returns ChatAdministratorRights on success.
+// GetMyDefaultAdministratorRights Get the current default administrator rights of the bot.
+// Returns ChatAdministratorRights on success.
 type GetMyDefaultAdministratorRights struct {
 	ForChannels bool
 }
@@ -2473,7 +2682,9 @@ func (s *GetMyDefaultAdministratorRights) EndPoint() string {
 	return config.EndpointGetMyDefaultAdministratorRights
 }
 
-// EditMessageText Edit text and game messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
+// EditMessageText Edit text and game messages.
+// On success, if the edited message is not an inline message, the edited Message is returned;
+// otherwise True is returned.
 type EditMessageText struct {
 	ChatID                int64  // required if InlineMessageID is not specified. use for chat|channel as int
 	ChatIDStr             string // required if InlineMessageID is not specified. use for chat|channel as string
@@ -2484,7 +2695,7 @@ type EditMessageText struct {
 	ParseMode             string
 	Entities              []MessageEntity
 	DisableWebPagePreview bool
-	ReplyMarkup           interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
+	ReplyMarkup           any // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageText) Params() (Params, error) {
@@ -2500,12 +2711,12 @@ func (s *EditMessageText) Params() (Params, error) {
 	params.AddNonEmpty("inline_message_id", s.InlineMessageID)
 	params["text"] = s.Text
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err := params.AddInterface("entities", s.Entities)
+	err := params.AddAny("entities", s.Entities)
 	if err != nil {
 		return params, err
 	}
 	params.AddBool("disable_web_page_preview", s.DisableWebPagePreview)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -2513,7 +2724,9 @@ func (s *EditMessageText) EndPoint() string {
 	return config.EndpointEditMessageText
 }
 
-// EditMessageCaption Edit captions of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
+// EditMessageCaption Edit captions of messages.
+// On success, if the edited message is not an inline message, the edited Message is returned;
+// otherwise True is returned.
 type EditMessageCaption struct {
 	ChatID          int64  // required if InlineMessageID is not specified. use for chat|channel as int
 	ChatIDStr       string // required if InlineMessageID is not specified. use for chat|channel as string
@@ -2523,7 +2736,7 @@ type EditMessageCaption struct {
 	Caption         string
 	ParseMode       string
 	CaptionEntities []MessageEntity
-	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
+	ReplyMarkup     any // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageCaption) Params() (Params, error) {
@@ -2539,11 +2752,11 @@ func (s *EditMessageCaption) Params() (Params, error) {
 	params.AddNonEmpty("inline_message_id", s.InlineMessageID)
 	params.AddNonEmpty("caption", s.Caption)
 	params.AddNonEmpty("parse_mode", s.ParseMode)
-	err := params.AddInterface("caption_entities", s.CaptionEntities)
+	err := params.AddAny("caption_entities", s.CaptionEntities)
 	if err != nil {
 		return params, err
 	}
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -2551,15 +2764,21 @@ func (s *EditMessageCaption) EndPoint() string {
 	return config.EndpointEditMessageCaption
 }
 
-// EditMessageMedia Edit animation, audio, document, photo, or video messages. If a message is part of a message album, then it can be edited only to an audio for audio albums, only to a document for document albums and to a photo or a video otherwise. When an inline message is edited, a new file can't be uploaded; use a previously uploaded file via its file_id or specify a URL. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
+// EditMessageMedia Edit animation, audio, document, photo, or video messages.
+// If a message is part of a message album, then it can be edited only to an audio for audio albums,
+// only to a document for document albums and to a photo or a video otherwise.
+// When an inline message is edited, a new file can't be uploaded;
+// use a previously uploaded file via its file_id or specify a URL.
+// On success, if the edited message is not an inline message, the edited Message is returned;
+// otherwise True is returned.
 type EditMessageMedia struct {
-	ChatID          int64       // required if InlineMessageID is not specified. use for chat|channel as int
-	ChatIDStr       string      // required if InlineMessageID is not specified. use for chat|channel as string
-	Username        string      // required if InlineMessageID is not specified. use for chat|channel
-	MessageID       int         // required if InlineMessageID is not specified
-	InlineMessageID string      // required if ChatID|Username & MessageID are not specified
-	Media           interface{} // required
-	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
+	ChatID          int64  // required if InlineMessageID is not specified. use for chat|channel as int
+	ChatIDStr       string // required if InlineMessageID is not specified. use for chat|channel as string
+	Username        string // required if InlineMessageID is not specified. use for chat|channel
+	MessageID       int    // required if InlineMessageID is not specified
+	InlineMessageID string // required if ChatID|Username & MessageID are not specified
+	Media           any    // required
+	ReplyMarkup     any    // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageMedia) Params() (Params, error) {
@@ -2573,11 +2792,11 @@ func (s *EditMessageMedia) Params() (Params, error) {
 		params.AddNonZero("message_id", s.MessageID)
 	}
 	params.AddNonEmpty("inline_message_id", s.InlineMessageID)
-	err := params.AddInterface("media", prepareInputMediaParam(s.Media, 0))
+	err := params.AddAny("media", prepareInputMediaParam(s.Media, 0))
 	if err != nil {
 		return params, err
 	}
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -2588,14 +2807,16 @@ func (s *EditMessageMedia) EndPoint() string {
 	return config.EndpointEditMessageMedia
 }
 
-// EditMessageReplyMarkup Edit only the reply markup of messages. On success, if the edited message is not an inline message, the edited Message is returned, otherwise True is returned.
+// EditMessageReplyMarkup Edit only the reply markup of messages.
+// On success, if the edited message is not an inline message, the edited Message is returned;
+// otherwise True is returned.
 type EditMessageReplyMarkup struct {
-	ChatID          int64       // required if InlineMessageID is not specified. use for chat|channel as int
-	ChatIDStr       string      // required if InlineMessageID is not specified. use for chat|channel as string
-	Username        string      // required if InlineMessageID is not specified. use for chat|channel
-	MessageID       int         // required if InlineMessageID is not specified
-	InlineMessageID string      // required if ChatID|Username & MessageID are not specified
-	ReplyMarkup     interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
+	ChatID          int64  // required if InlineMessageID is not specified. use for chat|channel as int
+	ChatIDStr       string // required if InlineMessageID is not specified. use for chat|channel as string
+	Username        string // required if InlineMessageID is not specified. use for chat|channel
+	MessageID       int    // required if InlineMessageID is not specified
+	InlineMessageID string // required if ChatID|Username & MessageID are not specified
+	ReplyMarkup     any    // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageReplyMarkup) Params() (Params, error) {
@@ -2609,7 +2830,7 @@ func (s *EditMessageReplyMarkup) Params() (Params, error) {
 		params.AddNonZero("message_id", s.MessageID)
 	}
 	params.AddNonEmpty("inline_message_id", s.InlineMessageID)
-	err := params.AddInterface("reply_markup", s.ReplyMarkup)
+	err := params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -2619,11 +2840,11 @@ func (s *EditMessageReplyMarkup) EndPoint() string {
 
 // StopPoll Stop a poll which was sent by the bot. On success, the stopped Poll is returned
 type StopPoll struct {
-	ChatID      int64       // required. use for chat|channel as int
-	ChatIDStr   string      // required. use for chat|channel as string
-	Username    string      // required. use for chat|channel
-	MessageID   int         // required
-	ReplyMarkup interface{} // only InlineKeyboardMarkup TODO UPDATE 	ReplyMarkup     *InlineKeyboardMarkup
+	ChatID      int64  // required. use for chat|channel as int
+	ChatIDStr   string // required. use for chat|channel as string
+	Username    string // required. use for chat|channel
+	MessageID   int    // required
+	ReplyMarkup any    // only InlineKeyboardMarkup
 }
 
 func (s *StopPoll) Params() (Params, error) {
@@ -2634,7 +2855,7 @@ func (s *StopPoll) Params() (Params, error) {
 		return params, err
 	}
 	params.AddNonZero("message_id", s.MessageID)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, err
 }
@@ -2651,7 +2872,7 @@ func (s *StopPoll) EndPoint() string {
 // 6. Bots granted can_post_messages permissions can delete outgoing messages in channels.
 // 7. If the bot is an administrator of a group, it can delete any message there.
 // 8. If the bot has can_delete_messages permission in a supergroup or a channel, it can delete any message there.
-// Returns True on success.
+// Returns True to success.
 type DeleteMessage struct {
 	ChatID    int64  // required. use for chat|channel as int
 	ChatIDStr string // required. use for chat|channel as string
@@ -2674,7 +2895,8 @@ func (s *DeleteMessage) EndPoint() string {
 	return config.EndpointDeleteMessage
 }
 
-// SendSticker Send static .WEBP, animated .TGS, or video .WEBM stickers. On success, the sent Message is returned.
+// SendSticker Send static .WEBP, animated .TGS, or video .WEBM stickers.
+// On success, the sent Message is returned.
 type SendSticker struct {
 	ChatID                   int64  // required. use for user|channel as int
 	ChatIDStr                string // required. use for user|channel as string
@@ -2686,7 +2908,7 @@ type SendSticker struct {
 	ProtectContent           bool
 	ReplyToMessageID         int
 	AllowSendingWithoutReply bool
-	ReplyMarkup              interface{}
+	ReplyMarkup              any
 }
 
 func (s *SendSticker) Params() (Params, error) {
@@ -2702,7 +2924,7 @@ func (s *SendSticker) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 
 	return params, nil
 }
@@ -2734,7 +2956,8 @@ func (s *GetStickerSet) EndPoint() string {
 	return config.EndpointGetStickerSet
 }
 
-// GetCustomEmojiStickers Get information about custom emoji stickers by their identifiers. Returns an Array of Sticker objects.
+// GetCustomEmojiStickers Get information about custom emoji stickers by their identifiers.
+// Returns an Array of Sticker objects.
 type GetCustomEmojiStickers struct {
 	CustomEmojiIds []string // required
 }
@@ -2742,7 +2965,7 @@ type GetCustomEmojiStickers struct {
 func (s *GetCustomEmojiStickers) Params() (Params, error) {
 	params := make(Params, 1)
 
-	err := params.AddInterface("custom_emoji_ids", s.CustomEmojiIds)
+	err := params.AddAny("custom_emoji_ids", s.CustomEmojiIds)
 
 	return params, err
 }
@@ -2750,7 +2973,9 @@ func (s *GetCustomEmojiStickers) EndPoint() string {
 	return config.EndpointGetCustomEmojiStickers
 }
 
-// UploadStickerFile Upload a file with a sticker for later use in the createNewStickerSet and addStickerToSet methods (the file can be used multiple times). Returns the uploaded File on success.
+// UploadStickerFile Upload a file with a sticker for later use in the createNewStickerSet
+// and addStickerToSet methods (the file can be used multiple times).
+// Returns the uploaded File on success.
 type UploadStickerFile struct {
 	UserID        int64           // required
 	Sticker       RequestFileData // required
@@ -2775,13 +3000,15 @@ func (s *UploadStickerFile) EndPoint() string {
 	return config.EndpointUploadStickerFile
 }
 
-// CreateNewStickerSet Create a new sticker set owned by a user. The bot will be able to edit the sticker set thus created. Returns True on success.
+// CreateNewStickerSet Create a new sticker set owned by a user.
+// The bot will be able to edit the sticker set thus created.
+// Returns True to success.
 type CreateNewStickerSet struct {
-	UserID          int64         // required
-	Name            string        // required
-	Title           string        // required
-	Stickers        []interface{} // required
-	StickerFormat   string        // required
+	UserID          int64  // required
+	Name            string // required
+	Title           string // required
+	Stickers        []any  // required
+	StickerFormat   string // required
 	StickerType     string
 	NeedsRepainting bool
 }
@@ -2792,7 +3019,7 @@ func (s *CreateNewStickerSet) Params() (Params, error) {
 	params.AddNonZero64("user_id", s.UserID)
 	params["name"] = s.Name
 	params["title"] = s.Title
-	err := params.AddInterface("stickers", prepareInputStickerForParams(s.Stickers))
+	err := params.AddAny("stickers", prepareInputStickerForParams(s.Stickers))
 	if err != nil {
 		return nil, err
 	}
@@ -2809,8 +3036,14 @@ func (s *CreateNewStickerSet) EndPoint() string {
 	return config.EndpointCreateNewStickerSet
 }
 
-// prepareInputStickerParam evaluates a InputSticker and determines if it needs to be modified for a successful upload. If it returns nil, then the value does not need to be included in the params. Otherwise, it will return the same type as was originally provided. The idx is used to calculate the file field name. If you only have a single file, 0 may be used. It is formatted into "attach://file-%d" for the primary sticker. It is expected to be used in conjunction with prepareInputStickerFile.
-func prepareInputStickerParam(inputSticker interface{}, idx int) interface{} {
+// prepareInputStickerParam evaluates a InputSticker and determines if it needs to be modified for a successful upload.
+// If it returns nil, then the value does not need to be included in the params.
+// Otherwise, it will return the same type as was originally provided.
+// The idx is used to calculate the file field name.
+// If you only have a single file, 0 may be used.
+// It is formatted into "attach://file-%d" for the primary sticker.
+// It is expected to be used in conjunction with prepareInputStickerFile.
+func prepareInputStickerParam(inputSticker any, idx int) any {
 	switch m := inputSticker.(type) {
 	case InputSticker:
 		if m.Sticker.NeedsUpload() {
@@ -2823,8 +3056,12 @@ func prepareInputStickerParam(inputSticker interface{}, idx int) interface{} {
 	return nil
 }
 
-// prepareInputStickerFile generates an array of RequestFile to provide for Fileable's files method. It returns an array as a InputSticker may have multiple files, for the primary sticker. The idx parameter is used to generate file field names. It uses the names "file-%d" for the main file. It is expected to be used in conjunction with prepareInputStickerParam.
-func prepareInputStickerFile(inputSticker interface{}, idx int) []RequestFile {
+// prepareInputStickerFile generates an array of RequestFile to provide for Fileable files method.
+// It returns an array as an InputSticker may have multiple files for the primary sticker.
+// The idx parameter is used to generate file field names.
+// It uses the names "file-%d" for the main file.
+// It is expected to be used in conjunction with prepareInputStickerParam.
+func prepareInputStickerFile(inputSticker any, idx int) []RequestFile {
 	var files []RequestFile
 
 	switch m := inputSticker.(type) {
@@ -2840,9 +3077,11 @@ func prepareInputStickerFile(inputSticker interface{}, idx int) []RequestFile {
 	return files
 }
 
-// prepareInputStickerForParams calls prepareInputStickerParam for each item provided and returns a new array with the correct params for a request. It is expected that files will get data from the associated function, prepareInputStickerForFiles.
-func prepareInputStickerForParams(inputSticker []interface{}) []interface{} {
-	newSticker := make([]interface{}, len(inputSticker))
+// prepareInputStickerForParams calls prepareInputStickerParam for each item provided
+// and returns a new array with the correct params for a request.
+// It is expected that files will get data from the associated function, prepareInputStickerForFiles.
+func prepareInputStickerForParams(inputSticker []any) []any {
+	newSticker := make([]any, len(inputSticker))
 	copy(newSticker, inputSticker)
 
 	for idx, sticker := range inputSticker {
@@ -2854,8 +3093,10 @@ func prepareInputStickerForParams(inputSticker []interface{}) []interface{} {
 	return newSticker
 }
 
-// prepareInputStickerForFiles calls prepareInputStickerFile for each item provided and returns a new array with the correct files for a request. It is expected that params will get data from the associated function, prepareInputStickerForParams.
-func prepareInputStickerForFiles(inputSticker []interface{}) []RequestFile {
+// prepareInputStickerForFiles calls prepareInputStickerFile for each item provided
+// and returns a new array with the correct files for a request.
+// It is expected that params will get data from the associated function, prepareInputStickerForParams.
+func prepareInputStickerForFiles(inputSticker []any) []RequestFile {
 	var files []RequestFile
 
 	for idx, sticker := range inputSticker {
@@ -2867,7 +3108,12 @@ func prepareInputStickerForFiles(inputSticker []interface{}) []RequestFile {
 	return files
 }
 
-// AddStickerToSet Add a new sticker to a set created by the bot. The format of the added sticker must match the format of the other stickers in the set. Emoji sticker sets can have up to 200 stickers. Animated and video sticker sets can have up to 50 stickers. Static sticker sets can have up to 120 stickers. Returns True on success.
+// AddStickerToSet Add a new sticker to a set created by the bot.
+// The format of the added sticker must match the format of the other stickers in the set.
+// Emoji sticker sets can have up to 200 stickers.
+// Animated and video sticker sets can have up to 50 stickers.
+// Static sticker sets can have up to 120 stickers.
+// Returns True to success.
 type AddStickerToSet struct {
 	UserID   int64        // required
 	Name     string       // required
@@ -2879,7 +3125,7 @@ func (s *AddStickerToSet) Params() (Params, error) {
 
 	params.AddNonZero64("user_id", s.UserID)
 	params["name"] = s.Name
-	err := params.AddInterface("stickers", prepareInputStickerParam(s.Stickers, 0))
+	err := params.AddAny("stickers", prepareInputStickerParam(s.Stickers, 0))
 
 	return params, err
 }
@@ -2890,7 +3136,8 @@ func (s *AddStickerToSet) EndPoint() string {
 	return config.EndpointAddStickerToSet
 }
 
-// SetStickerPositionInSet Move a sticker in a set created by the bot to a specific position. Returns True on success.
+// SetStickerPositionInSet Move a sticker in a set created by the bot to a specific position.
+// Returns True to success.
 type SetStickerPositionInSet struct {
 	Sticker  string // required
 	Position int    // required
@@ -2908,7 +3155,8 @@ func (s *SetStickerPositionInSet) EndPoint() string {
 	return config.EndpointSetStickerPositionInSet
 }
 
-// DeleteStickerFromSet Delete a sticker from a set created by the bot. Returns True on success.
+// DeleteStickerFromSet Delete a sticker from a set created by the bot.
+// Returns True to success.
 type DeleteStickerFromSet struct {
 	Sticker string // required
 }
@@ -2924,7 +3172,9 @@ func (s *DeleteStickerFromSet) EndPoint() string {
 	return config.EndpointDeleteStickerFromSet
 }
 
-// SetStickerEmojiList Change the list of emoji assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+// SetStickerEmojiList Change the list of emoji assigned to a regular or custom emoji sticker.
+// The sticker must belong to a sticker set created by the bot.
+// Returns True to success.
 type SetStickerEmojiList struct {
 	Sticker   string   // required
 	EmojiList []string // required
@@ -2934,7 +3184,7 @@ func (s *SetStickerEmojiList) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["sticker"] = s.Sticker
-	err := params.AddInterface("emoji_list", s.EmojiList)
+	err := params.AddAny("emoji_list", s.EmojiList)
 
 	return params, err
 }
@@ -2942,7 +3192,9 @@ func (s *SetStickerEmojiList) EndPoint() string {
 	return config.EndpointSetStickerEmojiList
 }
 
-// SetStickerKeywords Change search keywords assigned to a regular or custom emoji sticker. The sticker must belong to a sticker set created by the bot. Returns True on success.
+// SetStickerKeywords Change search keywords assigned to a regular or custom emoji sticker.
+// The sticker must belong to a sticker set created by the bot.
+// Returns True to success.
 type SetStickerKeywords struct {
 	Sticker  string   // required
 	Keywords []string // required
@@ -2952,7 +3204,7 @@ func (s *SetStickerKeywords) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["sticker"] = s.Sticker
-	err := params.AddInterface("keywords", s.Keywords)
+	err := params.AddAny("keywords", s.Keywords)
 
 	return params, err
 }
@@ -2960,7 +3212,9 @@ func (s *SetStickerKeywords) EndPoint() string {
 	return config.EndpointSetStickerKeywords
 }
 
-// SetStickerMaskPosition Change the mask position of a mask sticker. The sticker must belong to a sticker set that was created by the bot. Returns True on success.
+// SetStickerMaskPosition Change the mask position of a mask sticker.
+// The sticker must belong to a sticker set that was created by the bot.
+// Returns True to success.
 type SetStickerMaskPosition struct {
 	Sticker      string // required
 	MaskPosition *MaskPosition
@@ -2970,7 +3224,7 @@ func (s *SetStickerMaskPosition) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["sticker"] = s.Sticker
-	err := params.AddInterface("mask_position", s.MaskPosition)
+	err := params.AddAny("mask_position", s.MaskPosition)
 
 	return params, err
 }
@@ -2978,7 +3232,7 @@ func (s *SetStickerMaskPosition) EndPoint() string {
 	return config.EndpointSetStickerMaskPosition
 }
 
-// SetStickerSetTitle Set the title of a created sticker set. Returns True on success.
+// SetStickerSetTitle Set the title of a created sticker set. Returns True to success.
 type SetStickerSetTitle struct {
 	Name  string // required
 	Title string // required
@@ -2996,7 +3250,9 @@ func (s *SetStickerSetTitle) EndPoint() string {
 	return config.EndpointSetStickerSetTitle
 }
 
-// SetStickerSetThumbnail Set the thumbnail of a regular or mask sticker set. The format of the thumbnail file must match the format of the stickers in the set. Returns True on success.
+// SetStickerSetThumbnail Set the thumbnail of a regular or mask sticker set.
+// The format of the thumbnail file must match the format of the stickers in the set.
+// Returns True to success.
 type SetStickerSetThumbnail struct {
 	Name      string // required
 	UserID    int64  // required
@@ -3031,7 +3287,8 @@ func (s *SetStickerSetThumbnail) EndPoint() string {
 	return config.EndpointSetStickerSetThumbnail
 }
 
-// SetCustomEmojiStickerSetThumbnail Set the thumbnail of a custom emoji sticker set. Returns True on success.
+// SetCustomEmojiStickerSetThumbnail Set the thumbnail of a custom emoji sticker set.
+// Returns True to success.
 type SetCustomEmojiStickerSetThumbnail struct {
 	Name          string // required
 	CustomEmojiId string
@@ -3049,7 +3306,8 @@ func (s *SetCustomEmojiStickerSetThumbnail) EndPoint() string {
 	return config.EndpointSetCustomEmojiStickerSetThumbnail
 }
 
-// DeleteStickerSet Delete a sticker set that was created by the bot. Returns True on success.
+// DeleteStickerSet Delete a sticker set that was created by the bot.
+// Returns True to success.
 type DeleteStickerSet struct {
 	Name string // required
 }
@@ -3065,10 +3323,12 @@ func (s *DeleteStickerSet) EndPoint() string {
 	return config.EndpointDeleteStickerSet
 }
 
-// AnswerInlineQuery Send answers to an inline query. On success, True is returned. No more than 50 results per query are allowed.
+// AnswerInlineQuery Send answers to an inline query.
+// On success, True is returned.
+// No more than 50 results per query are allowed.
 type AnswerInlineQuery struct {
-	InlineQueryID string        // required
-	Results       []interface{} // required
+	InlineQueryID string // required
+	Results       []any  // required
 	CacheTime     int
 	IsPersonal    bool
 	NextOffset    string
@@ -3082,11 +3342,11 @@ func (s *AnswerInlineQuery) Params() (Params, error) {
 	params.AddNonZero("cache_time", s.CacheTime)
 	params.AddBool("is_personal", s.IsPersonal)
 	params.AddNonEmpty("next_offset", s.NextOffset)
-	err := params.AddInterface("button", s.Button)
+	err := params.AddAny("button", s.Button)
 	if err != nil {
 		return nil, err
 	}
-	err = params.AddInterface("results", s.Results)
+	err = params.AddAny("results", s.Results)
 
 	return params, err
 }
@@ -3094,17 +3354,19 @@ func (s *AnswerInlineQuery) EndPoint() string {
 	return config.EndpointAnswerInlineQuery
 }
 
-// AnswerWebAppQuery Set the result of an interaction with a Web App and send a corresponding message on behalf of the user to the chat from which the query originated. On success, a SentWebAppMessage object is returned.
+// AnswerWebAppQuery Set the result of an interaction with a Web App
+// and send a corresponding message on behalf of the user to the chat from which the query originated.
+// On success, a SentWebAppMessage object is returned.
 type AnswerWebAppQuery struct {
-	WebAppQueryID string      // required
-	Result        interface{} // required
+	WebAppQueryID string // required
+	Result        any    // required
 }
 
 func (s *AnswerWebAppQuery) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params["web_app_query_id"] = s.WebAppQueryID
-	err := params.AddInterface("result", s.Result)
+	err := params.AddAny("result", s.Result)
 
 	return params, err
 }
@@ -3143,7 +3405,7 @@ type SendInvoice struct {
 	ProtectContent            bool
 	ReplyToMessageID          int
 	AllowSendingWithoutReply  bool
-	ReplyMarkup               interface{}
+	ReplyMarkup               any
 }
 
 func (s *SendInvoice) Params() (Params, error) {
@@ -3159,12 +3421,12 @@ func (s *SendInvoice) Params() (Params, error) {
 	params["payload"] = s.Payload
 	params["provider_token"] = s.ProviderToken
 	params["currency"] = s.Currency
-	err = params.AddInterface("prices", s.Prices)
+	err = params.AddAny("prices", s.Prices)
 	if err != nil {
 		return params, err
 	}
 	params.AddNonZero("max_tip_amount", s.MaxTipAmount)
-	err = params.AddInterface("suggested_tip_amounts", s.SuggestedTipAmounts)
+	err = params.AddAny("suggested_tip_amounts", s.SuggestedTipAmounts)
 	if err != nil {
 		return params, err
 	}
@@ -3185,14 +3447,15 @@ func (s *SendInvoice) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err = params.AddInterface("reply_markup", s.ReplyMarkup)
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
 	return params, nil
 }
 func (s *SendInvoice) EndPoint() string {
 	return config.EndpointSendInvoice
 }
 
-// CreateInvoiceLink Create a link for an invoice. Returns the created invoice link as String on success.
+// CreateInvoiceLink Create a link for an invoice.
+// Returns the created invoice link as String on success.
 type CreateInvoiceLink struct {
 	Title                     string         // required
 	Description               string         // required
@@ -3224,12 +3487,12 @@ func (s *CreateInvoiceLink) Params() (Params, error) {
 	params["payload"] = s.Payload
 	params["provider_token"] = s.ProviderToken
 	params["currency"] = s.Currency
-	err := params.AddInterface("prices", s.Prices)
+	err := params.AddAny("prices", s.Prices)
 	if err != nil {
 		return params, err
 	}
 	params.AddNonZero("max_tip_amount", s.MaxTipAmount)
-	err = params.AddInterface("suggested_tip_amounts", s.SuggestedTipAmounts)
+	err = params.AddAny("suggested_tip_amounts", s.SuggestedTipAmounts)
 	if err != nil {
 		return params, err
 	}
@@ -3265,7 +3528,7 @@ func (s *AnswerShippingQuery) Params() (Params, error) {
 
 	params["shipping_query_id"] = s.ShippingQueryID
 	params.AddBool("ok", s.OK)
-	err := params.AddInterface("shipping_options", s.ShippingOptions)
+	err := params.AddAny("shipping_options", s.ShippingOptions)
 	if err != nil {
 		return params, err
 	}
@@ -3277,7 +3540,9 @@ func (s *AnswerShippingQuery) EndPoint() string {
 	return config.EndpointAnswerShippingQuery
 }
 
-// AnswerPreCheckoutQuery Respond to such pre-checkout queries. On success, True is returned. Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
+// AnswerPreCheckoutQuery Respond to such pre-checkout queries.
+// On success, True is returned.
+// Note: The Bot API must receive an answer within 10 seconds after the pre-checkout query was sent.
 type AnswerPreCheckoutQuery struct {
 	PreCheckoutQueryID string // required
 	OK                 bool   // required
@@ -3297,17 +3562,20 @@ func (s *AnswerPreCheckoutQuery) EndPoint() string {
 	return config.EndpointAnswerPreCheckoutQuery
 }
 
-// SetPassportDataErrors Informs a user that some of the Telegram Passport elements they provided contains errors. The user will not be able to re-submit their Passport to you until the errors are fixed (the contents of the field for which you returned the error must change). Returns True on success.
+// SetPassportDataErrors Informs a user that some of the Telegram Passport elements they provided contains errors.
+// The user will not be able to re-submit their Passport to you until the errors are fixed
+// (the contents of the field for which you returned the error must change).
+// Returns True to success.
 type SetPassportDataErrors struct {
-	UserID int64         // required
-	Errors []interface{} // required
+	UserID int64 // required
+	Errors []any // required
 }
 
 func (s *SetPassportDataErrors) Params() (Params, error) {
 	params := make(Params, 2)
 
 	params.AddNonZero64("user_id", s.UserID)
-	err := params.AddInterface("errors", s.Errors)
+	err := params.AddAny("errors", s.Errors)
 
 	return params, err
 }
@@ -3337,14 +3605,16 @@ func (s *SendGame) Params() (Params, error) {
 	params.AddBool("protect_content", s.ProtectContent)
 	params.AddNonZero("reply_to_message_id", s.ReplyToMessageID)
 	params.AddBool("allow_sending_without_reply", s.AllowSendingWithoutReply)
-	err := params.AddInterface("reply_markup", s.ReplyMarkup)
+	err := params.AddAny("reply_markup", s.ReplyMarkup)
 	return params, err
 }
 func (s *SendGame) EndPoint() string {
 	return config.EndpointSendGame
 }
 
-// SetGameScore Set the score of the specified user in a game message. On success, if the message is not an inline message, the Message is returned, otherwise True is returned. Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
+// SetGameScore Set the score of the specified user in a game message.
+// On success, if the message is not an inline message, the Message is returned, otherwise True is returned.
+// Returns an error, if the new score is not greater than the user's current score in the chat and force is False.
 type SetGameScore struct {
 	UserID             int64 // required
 	Score              int   // required
@@ -3359,7 +3629,7 @@ func (s *SetGameScore) Params() (Params, error) {
 	params := make(Params, 5)
 
 	params.AddNonZero64("user_id", s.UserID)
-	params.AddNonZero("scrore", s.Score)
+	params.AddNonZero("score", s.Score)
 	params.AddBool("disable_edit_message", s.DisableEditMessage)
 	if s.InlineMessageID != "" {
 		params["inline_message_id"] = s.InlineMessageID
@@ -3374,7 +3644,12 @@ func (s *SetGameScore) EndPoint() string {
 	return config.EndpointSetGameScore
 }
 
-// GetGameHighScores Use this method to get data for high score tables. Will return the score of the specified user and several of their neighbors in a game. On success, returns an Array of GameHighScore objects. This method will currently return scores for the target user, plus two of their closest neighbors on each side. Will also return the top three users if the user and their neighbors are not among them. Please note that this behavior is subject to change.
+// GetGameHighScores Use this method to get data for high-score tables.
+// Will return the score of the specified user and several of their neighbors in a game.
+// On success, returns an Array of GameHighScore objects.
+// This method will currently return scores for the target user, plus two of their closest neighbors on each side.
+// Will also return the top three users if the user and their neighbors are not among them.
+// Please note that this behavior is subject to change.
 type GetGameHighScores struct {
 	UserID          int64  // required
 	ChatID          int64  // required if inline_message_id is not specified

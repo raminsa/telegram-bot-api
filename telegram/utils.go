@@ -13,7 +13,7 @@ func (t *Api) ModeMarkdown() string {
 	return config.ModeMarkdown
 }
 
-// ModeMarkdownV2 return markdownv2 mode
+// ModeMarkdownV2 return markdown2 mode
 func (t *Api) ModeMarkdownV2() string {
 	return config.ModeMarkdownV2
 }
@@ -23,7 +23,10 @@ func (t *Api) ModeHTML() string {
 	return config.ModeHTML
 }
 
-// EscapeText takes an input text and escape Telegram markup symbols. In this way we can send a text without being afraid of having to escape the characters manually. Note that you don't have to include the formatting style in the input text, or it will be escaped too. If there is an error, an empty string will be returned.
+// EscapeText takes an input text and escapes Telegram markup symbols.
+// In this way, we can send a text without being afraid of having to escape the characters manually.
+// Note that you don't have to include the formatting style in the input text, or it will be escaped too.
+// If there is an error, an empty string will be returned.
 func (t *Api) EscapeText(parseMode, text string) string {
 	var replacer *strings.Replacer
 
@@ -76,7 +79,7 @@ func (t *Api) FileID(ID string) types.FileID {
 	return types.FileID(ID)
 }
 
-// FileAttach return file attach style used for processed media groups.
+// FileAttach return file attaches style used for processed media groups.
 func (t *Api) FileAttach(Attach string) types.FileAttach {
 	return types.FileAttach(Attach)
 }
@@ -106,7 +109,7 @@ func (t *Api) NewDeleteWebhook() *types.DeleteWebhook {
 	return &types.DeleteWebhook{}
 }
 
-// NewReplyKeyboardMarkup creates a new regular keyboard with sane defaults.
+// NewReplyKeyboardMarkup creates a new regular keyboard with correct defaults.
 func (t *Api) NewReplyKeyboardMarkup(rows ...[]types.KeyboardButton) types.ReplyKeyboardMarkup {
 	var keyboard [][]types.KeyboardButton
 
@@ -141,7 +144,9 @@ func (t *Api) NewKeyboardButtonLocation(text string) types.KeyboardButton {
 	}
 }
 
-// NewKeyboardButtonPool creates a keyboard button that requests. For pool, if `quiz` is passed, the user will be allowed to create only polls in the quiz mode. If `regular` is passed, only regular polls will be allowed.
+// NewKeyboardButtonPool creates a keyboard button that requests.
+// For pool, if `quiz` is passed, the user will be allowed to create only polls in the quiz mode.
+// If `regular` is passed, only regular polls will be allowed.
 func (t *Api) NewKeyboardButtonPool(text, pool string) types.KeyboardButton {
 	return types.KeyboardButton{
 		Text: text,
@@ -248,7 +253,7 @@ func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string
 	}
 }
 
-// NewInlineKeyboardButtonSwitchChosenChat creates an inline keyboard switch inline query chosen chat bot chat button with text
+// NewInlineKeyboardButtonSwitchChosenChat creates an inline keyboard switch inline query chosen chat-bot chat button with text
 func (t *Api) NewInlineKeyboardButtonSwitchChosenChat(text string, switchInline *types.SwitchInlineQueryChosenChat) types.InlineKeyboardButton {
 	return types.InlineKeyboardButton{
 		Text:                        text,
@@ -265,7 +270,7 @@ func (t *Api) NewInlineKeyboardRow(buttons ...types.InlineKeyboardButton) []type
 	return row
 }
 
-// NewSendMessage create a new send message.
+// NewSendMessage create a new sent message.
 func (t *Api) NewSendMessage() *types.SendMessage {
 	return &types.SendMessage{}
 }
@@ -615,7 +620,7 @@ func (t *Api) NewDeleteForumTopic() *types.DeleteForumTopic {
 	return &types.DeleteForumTopic{}
 }
 
-// NewUnpinAllForumTopicMessages creates a new unpin all forum topic messages message.
+// NewUnpinAllForumTopicMessages creates a new unpinned all forum topic messages.
 func (t *Api) NewUnpinAllForumTopicMessages() *types.UnpinAllForumTopicMessages {
 	return &types.UnpinAllForumTopicMessages{}
 }
@@ -630,7 +635,7 @@ func (t *Api) NewCloseGeneralForumTopic() *types.CloseGeneralForumTopic {
 	return &types.CloseGeneralForumTopic{}
 }
 
-// NewReopenGeneralForumTopic creates a new reopen general forum topic message.
+// NewReopenGeneralForumTopic creates a new reopened general forum topic message.
 func (t *Api) NewReopenGeneralForumTopic() *types.ReopenGeneralForumTopic {
 	return &types.ReopenGeneralForumTopic{}
 }
@@ -655,7 +660,7 @@ func (t *Api) NewSetMyCommands(commands ...types.BotCommand) *types.SetMyCommand
 	return &types.SetMyCommands{Commands: commands}
 }
 
-// NewSetMyCommandsWithScope creates a set my commands with scope message.
+// NewSetMyCommandsWithScope creates a set my commands with a scope message.
 func (t *Api) NewSetMyCommandsWithScope(scope *types.BotCommandScope, commands ...types.BotCommand) *types.SetMyCommands {
 	return &types.SetMyCommands{Commands: commands, Scope: scope}
 }
@@ -665,7 +670,7 @@ func (t *Api) NewSetMyCommandsWithScopeAndLanguage(scope *types.BotCommandScope,
 	return &types.SetMyCommands{Commands: commands, Scope: scope, LanguageCode: languageCode}
 }
 
-// NewGetMyCommandsWithScope creates a get my commands with scope message.
+// NewGetMyCommandsWithScope creates a get my commands with a scope message.
 func (t *Api) NewGetMyCommandsWithScope(scope *types.BotCommandScope) *types.GetMyCommands {
 	return &types.GetMyCommands{Scope: scope}
 }
@@ -675,17 +680,17 @@ func (t *Api) NewGetMyCommandsWithScopeAndLanguage(scope *types.BotCommandScope,
 	return &types.GetMyCommands{Scope: scope, LanguageCode: languageCode}
 }
 
-// NewDeleteMyCommands creates a new delete my commands message.
+// NewDeleteMyCommands creates a new deleted my commands message.
 func (t *Api) NewDeleteMyCommands() *types.DeleteMyCommands {
 	return &types.DeleteMyCommands{}
 }
 
-// NewDeleteMyCommandsWithScope creates a new delete my commands with scope message.
+// NewDeleteMyCommandsWithScope creates a new delete my commands with a scope message.
 func (t *Api) NewDeleteMyCommandsWithScope(scope *types.BotCommandScope) *types.DeleteMyCommands {
 	return &types.DeleteMyCommands{Scope: scope}
 }
 
-// NewDeleteMyCommandsWithScopeAndLanguage  creates a new delete my commands with scope and language message.
+// NewDeleteMyCommandsWithScopeAndLanguage creates a new delete my commands with a scope and language message.
 func (t *Api) NewDeleteMyCommandsWithScopeAndLanguage(scope *types.BotCommandScope, languageCode string) *types.DeleteMyCommands {
 	return &types.DeleteMyCommands{Scope: scope, LanguageCode: languageCode}
 }
@@ -728,7 +733,8 @@ func (t *Api) NewBotCommandScopeChat(chatID int64) *types.BotCommandScope {
 	}
 }
 
-// NewBotCommandScopeChatAdministrators represents the scope of bot commands, covering all administrators of a specific group or supergroup chat.
+// NewBotCommandScopeChatAdministrators represents the scope of bot commands,
+// covering all administrators of a specific group or supergroup chat.
 func (t *Api) NewBotCommandScopeChatAdministrators(chatID int64) *types.BotCommandScope {
 	return &types.BotCommandScope{
 		Type:   "chat_administrators",
@@ -780,14 +786,14 @@ func (t *Api) NewSetChatMenuButton() *types.SetChatMenuButton {
 	return &types.SetChatMenuButton{}
 }
 
-// NewMenuButtonCommands represents the menu button of bot menu.
+// NewMenuButtonCommands represents the menu button of a bot menu.
 func (t *Api) NewMenuButtonCommands(command string) *types.MenuButton {
 	return &types.MenuButton{
 		Type: command,
 	}
 }
 
-// NewMenuButtonWebApp represents the menu button of bot menu.
+// NewMenuButtonWebApp represents the menu button of a bot menu.
 func (t *Api) NewMenuButtonWebApp(text, Url string) *types.MenuButton {
 	return &types.MenuButton{
 		Type: "web_app",
@@ -798,7 +804,7 @@ func (t *Api) NewMenuButtonWebApp(text, Url string) *types.MenuButton {
 	}
 }
 
-// NewMenuButtonDefault represents the menu button of bot menu.
+// NewMenuButtonDefault represents the menu button of a bot menu.
 func (t *Api) NewMenuButtonDefault() *types.MenuButton {
 	return &types.MenuButton{
 		Type: "default",
@@ -810,7 +816,7 @@ func (t *Api) NewGetChatMenuButton() *types.GetChatMenuButton {
 	return &types.GetChatMenuButton{}
 }
 
-// NewSetMyDefaultAdministratorRights creates a new set my default administrator rights message.
+// NewSetMyDefaultAdministratorRights creates a new a set my default administrator rights message.
 func (t *Api) NewSetMyDefaultAdministratorRights() *types.SetMyDefaultAdministratorRights {
 	return &types.SetMyDefaultAdministratorRights{}
 }
@@ -880,12 +886,12 @@ func (t *Api) NewUploadStickerFile() *types.UploadStickerFile {
 	return &types.UploadStickerFile{}
 }
 
-// NewCreateNewStickerSet creates a new create new sticker set message.
+// NewCreateNewStickerSet creates a new creation new sticker set message.
 func (t *Api) NewCreateNewStickerSet() *types.CreateNewStickerSet {
 	return &types.CreateNewStickerSet{}
 }
 
-// NewAddStickerToSet creates a new add sticker to set message.
+// NewAddStickerToSet creates a new added sticker to set a message.
 func (t *Api) NewAddStickerToSet() *types.AddStickerToSet {
 	return &types.AddStickerToSet{}
 }
@@ -900,7 +906,7 @@ func (t *Api) NewMaskPosition() *types.MaskPosition {
 	return &types.MaskPosition{}
 }
 
-// NewSetStickerPositionInSet creates a new set sticker position in set message.
+// NewSetStickerPositionInSet creates a new set sticker position in a set message.
 func (t *Api) NewSetStickerPositionInSet() *types.SetStickerPositionInSet {
 	return &types.SetStickerPositionInSet{}
 }
@@ -993,7 +999,7 @@ func (t *Api) NewInlineQueryResultGIF(id, url string) *types.InlineQueryResultGI
 	}
 }
 
-// NewInlineQueryResultCachedGIF create a new inline query with cached photo.
+// NewInlineQueryResultCachedGIF create a new inline query with a cached photo.
 func (t *Api) NewInlineQueryResultCachedGIF(id, gifID string) *types.InlineQueryResultCachedGIF {
 	return &types.InlineQueryResultCachedGIF{
 		Type:  "gif",
@@ -1012,11 +1018,11 @@ func (t *Api) NewInlineQueryResultMPEG4GIF(id, url string) *types.InlineQueryRes
 }
 
 // NewInlineQueryResultCachedMPEG4GIF create a new inline query with cached MPEG4 GIF.
-func (t *Api) NewInlineQueryResultCachedMPEG4GIF(id, MPEG4GIFID string) *types.InlineQueryResultCachedMPEG4GIF {
+func (t *Api) NewInlineQueryResultCachedMPEG4GIF(id, MPEG4GifID string) *types.InlineQueryResultCachedMPEG4GIF {
 	return &types.InlineQueryResultCachedMPEG4GIF{
 		Type:        "mpeg4_gif",
 		ID:          id,
-		MPEG4FileID: MPEG4GIFID,
+		MPEG4FileID: MPEG4GifID,
 	}
 }
 
@@ -1039,7 +1045,7 @@ func (t *Api) NewInlineQueryResultPhotoWithThumbnail(id, url, thumbnail string) 
 	}
 }
 
-// NewInlineQueryResultCachedPhoto create a new inline query with cached photo.
+// NewInlineQueryResultCachedPhoto create a new inline query with a cached photo.
 func (t *Api) NewInlineQueryResultCachedPhoto(id, photoID string) *types.InlineQueryResultCachedPhoto {
 	return &types.InlineQueryResultCachedPhoto{
 		Type:    "photo",
@@ -1086,7 +1092,7 @@ func (t *Api) NewInlineQueryResultAudio(id, url, title string) *types.InlineQuer
 	}
 }
 
-// NewInlineQueryResultCachedAudio create a new inline query with cached photo.
+// NewInlineQueryResultCachedAudio create a new inline query with a cached photo.
 func (t *Api) NewInlineQueryResultCachedAudio(id, audioID string) *types.InlineQueryResultCachedAudio {
 	return &types.InlineQueryResultCachedAudio{
 		Type:    "audio",
@@ -1105,7 +1111,7 @@ func (t *Api) NewInlineQueryResultVoice(id, url, title string) *types.InlineQuer
 	}
 }
 
-// NewInlineQueryResultCachedVoice create a new inline query with cached photo.
+// NewInlineQueryResultCachedVoice create a new inline query with a cached photo.
 func (t *Api) NewInlineQueryResultCachedVoice(id, voiceID, title string) *types.InlineQueryResultCachedVoice {
 	return &types.InlineQueryResultCachedVoice{
 		Type:    "voice",
@@ -1126,7 +1132,7 @@ func (t *Api) NewInlineQueryResultDocument(id, url, title, mimeType string) *typ
 	}
 }
 
-// NewInlineQueryResultCachedDocument create a new inline query with cached photo.
+// NewInlineQueryResultCachedDocument create a new inline query with a cached photo.
 func (t *Api) NewInlineQueryResultCachedDocument(id, documentID, title string) *types.InlineQueryResultCachedDocument {
 	return &types.InlineQueryResultCachedDocument{
 		Type:       "document",
@@ -1164,7 +1170,7 @@ func (t *Api) NewAnswerWebAppQuery() *types.AnswerWebAppQuery {
 	return &types.AnswerWebAppQuery{}
 }
 
-// NewSendInvoice creates a new send invoice message.
+// NewSendInvoice creates a new sent invoice message.
 func (t *Api) NewSendInvoice() *types.SendInvoice {
 	return &types.SendInvoice{}
 }
@@ -1196,7 +1202,7 @@ func (t *Api) NewAnswerShippingQuery() *types.AnswerShippingQuery {
 	return &types.AnswerShippingQuery{}
 }
 
-// NewAnswerPreCheckoutQuery creates a new answer pre checkout query.
+// NewAnswerPreCheckoutQuery creates a new answer pre-checkout query.
 func (t *Api) NewAnswerPreCheckoutQuery() *types.AnswerPreCheckoutQuery {
 	return &types.AnswerPreCheckoutQuery{}
 }

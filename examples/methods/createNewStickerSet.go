@@ -26,7 +26,7 @@ func main() {
 
 	stickers2 := tg.NewInputSticker()
 
-	msg.Stickers = []interface{}{stickers1, stickers2}
+	msg.Stickers = []any{stickers1, stickers2}
 	msg.StickerFormat = "static" // “static”, “animated”, “video”
 
 	_, err = tg.CreateNewStickerSet(msg)

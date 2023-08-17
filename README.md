@@ -25,9 +25,10 @@ Bot API 6.7 Recent changes [April 21, 2023](https://core.telegram.org/bots/api#a
 ## Documentation
 See [Bots: An introduction for developers](https://core.telegram.org/bots) for a brief description of Telegram Bots and their features.
 
-See the [Telegram Bot API documentation](https://core.telegram.org/bots/api) for a description of the Bot API interface and a complete list of available classes, methods and updates.
+See the [Telegram Bot API documentation](https://core.telegram.org/bots/api) for a description of the Bot API interface and a complete list of available classes,
+methods, and updates.
 
-See the [Telegram Bot API server build instructions generator](https://tdlib.github.io/telegram-bot-api/build.html) for detailed instructions on how to build the Telegram Bot API server.
+See the [Telegram Bot API server build instruction generator](https://tdlib.github.io/telegram-bot-api/build.html) for detailed instructions on how to build the Telegram Bot API server.
 
 Subscribe to [@BotNews](https://t.me/botnews) to be the first to know about the latest updates and join the discussion in [@BotTalk](https://t.me/bottalk).
 
@@ -96,7 +97,10 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err = telegram.HandleUpdateError(w, err)
+		if err != nil {
+			log.Fatal(err) 
+		}
 		return
 	}
 
@@ -129,7 +133,10 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err = telegram.HandleUpdateError(w, err)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 
@@ -139,9 +146,11 @@ func handleWebhook(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-to generate your cert file use this. See [self-signed](https://core.telegram.org/bots/self-signed) guide for details.:
+To generate your cert file, use this. See [self-signed](https://core.telegram.org/bots/self-signed) guide for details.:
 
     openssl req -newkey rsa:2048 -sha256 -nodes -keyout <file.key> -x509 -days 36500 -out <file.pem> -subj "/C=US/ST=New York/L=Brooklyn/O=Example Brooklyn Company/CN=<server_address>"
+
+
 
 
 Avoid ReadTimeoutExpired error:
@@ -183,7 +192,7 @@ func listenForWebhook(maxWebhookConnections int) types.UpdatesChannel {
 
 <a name="custom-client"></a>
 ## Custom Client
-use client with custom options:
+use a client with custom options:
 ```go
 package main
 
@@ -218,7 +227,7 @@ func main() {
 <a name="debug"></a>
 ## Debug
 
-use debug option and write to local file:
+use a debug option and write to local file:
 ```go
 package main
 

@@ -124,8 +124,8 @@ func (p Params) AddNonZeroFloat(key string, value float64) {
 	}
 }
 
-// AddInterface adds an interface if it is not nil and can be JSON marshalled.
-func (p Params) AddInterface(key string, value interface{}) error {
+// AddAny adds an any if it is not nil and can be JSON marshaled.
+func (p Params) AddAny(key string, value any) error {
 	if value == nil || (reflect.ValueOf(value).Kind() == reflect.Ptr && reflect.ValueOf(value).IsNil()) {
 		return nil
 	}
@@ -147,8 +147,9 @@ func (p Params) AddAt(value string) {
 	}
 }
 
-// AddFirstValid attempts to add the first item that is not a default value. For example, AddFirstValid(0, "", "test") would add "test".
-func (p Params) AddFirstValid(key string, args ...interface{}) error {
+// AddFirstValid attempts to add the first item that is not a default value.
+// For example, AddFirstValid(0, "", "test") would add "test".
+func (p Params) AddFirstValid(key string, args ...any) error {
 	for _, arg := range args {
 		switch v := arg.(type) {
 		case int:
@@ -186,7 +187,8 @@ func (e *Error) Error() string {
 	return e.Message
 }
 
-// SentFrom returns the user who sent an update. Can be nil, if Telegram did not provide information about the user in the update object.
+// SentFrom returns the user who sent an update.
+// Can be nil if Telegram did not provide information about the user in the update object.
 func (u *Update) SentFrom() *User {
 	switch {
 	case u.Message != nil:
@@ -208,7 +210,7 @@ func (u *Update) SentFrom() *User {
 	}
 }
 
-// CallbackData returns the callback query data, if it exists.
+// CallbackData returns the callback query data if it exists.
 func (u *Update) CallbackData() string {
 	if u.CallbackQuery != nil {
 		return u.CallbackQuery.Data
@@ -234,7 +236,8 @@ func (u *Update) FromChat() Chat {
 	}
 }
 
-// String displays a simple text version of a user. It is normally a user's username, but falls back to a first/last, name as available.
+// String displays a simple text version of a user.
+// It is normally a user's username, but falls back to a first/last name as available.
 func (u *User) String() string {
 	if u == nil {
 		return ""
@@ -271,7 +274,7 @@ func (c *Chat) IsChannel() bool {
 	return c.Type == "channel"
 }
 
-// IsCommand returns true if message starts with a "bot_command" entity.
+// IsCommand returns true if a message starts with a "bot_command" entity.
 func (m *Message) IsCommand() bool {
 	if m.Entities == nil || len(m.Entities) == 0 {
 		return false
@@ -281,8 +284,10 @@ func (m *Message) IsCommand() bool {
 	return entity.Offset == 0 && entity.IsCommand()
 }
 
-// Command checks if the message was a command and if it was, returns the command. If the Message was not a command, it returns an empty string.
-// If the command contains the at name syntax, it is removed. Use CommandWithAt() if you do not want that.
+// Command checks if the message was a command and if it was, returns the command.
+// If the Message was not a command, it returns an empty string.
+// If the command contains the at name syntax, it is removed.
+// Use CommandWithAt() if you do not want that.
 func (m *Message) Command() string {
 	command := m.CommandWithAt()
 
@@ -293,8 +298,10 @@ func (m *Message) Command() string {
 	return command
 }
 
-// CommandWithAt checks if the message was a command and if it was, returns the command. If the Message was not a command, it returns an empty string.
-// If the command contains the at name syntax, it is not removed. Use Command() if you want that.
+// CommandWithAt checks if the message was a command and if it was, returns the command.
+// If the Message was not a command, it returns an empty string.
+// If the command contains the at name syntax, it is not removed.
+// Use Command() if you want that.
 func (m *Message) CommandWithAt() string {
 	if !m.IsCommand() {
 		return ""

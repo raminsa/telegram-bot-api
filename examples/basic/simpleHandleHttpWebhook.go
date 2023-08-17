@@ -20,7 +20,10 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err = telegram.HandleUpdateError(w, err)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 	if update.Message != nil {

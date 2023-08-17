@@ -22,10 +22,11 @@ func (t *Api) SetSecretToken(secretToken string) {
 	Core.Bot.SecretToken = secretToken
 }
 
+// WriteDebugLog write debug log to bot log interface
 func (t *Api) WriteDebugLog(msg string) {
 	logger := log.New(&t.Bot.Log, "Debug: ", log.LstdFlags|log.Llongfile)
 	Info := func(info string) {
-		logger.Output(2, info)
+		_ = logger.Output(2, info)
 	}
 	Info(msg)
 }
@@ -69,14 +70,18 @@ func (t *Api) MakeRequest(endpoint string, params types.Params) (*types.APIRespo
 		req.Header.Set("X-Telegram-Bot-Api-Secret-Token", t.Bot.SecretToken)
 	}
 
-	resp, err := t.Bot.Client.Do(req)
+	var resp *http.Response
+	resp, err = t.Bot.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	var apiResp types.APIResponse
-	bytes, err := t.decodeAPIResponse(resp.Body, &apiResp)
+	var bytes []byte
+	bytes, err = t.decodeAPIResponse(resp.Body, &apiResp)
 	if err != nil {
 		return &apiResp, err
 	}
@@ -106,12 +111,16 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 	m := multipart.NewWriter(w)
 
 	go func() {
-		defer w.Close()
-		defer m.Close()
+		defer func(w *io.PipeWriter) {
+			_ = w.Close()
+		}(w)
+		defer func(m *multipart.Writer) {
+			_ = m.Close()
+		}(m)
 
 		for field, value := range params {
 			if err := m.WriteField(field, value); err != nil {
-				w.CloseWithError(err)
+				_ = w.CloseWithError(err)
 				return
 			}
 		}
@@ -120,7 +129,7 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 			if file.Data.NeedsUpload() {
 				name, reader, err := file.Data.UploadData()
 				if err != nil {
-					w.CloseWithError(err)
+					_ = w.CloseWithError(err)
 					return
 				}
 				if file.FileName != "" {
@@ -129,18 +138,18 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 
 				part, err := m.CreateFormFile(file.Name, name)
 				if err != nil {
-					w.CloseWithError(err)
+					_ = w.CloseWithError(err)
 					return
 				}
 
-				if _, err := io.Copy(part, reader); err != nil {
-					w.CloseWithError(err)
+				if _, err = io.Copy(part, reader); err != nil {
+					_ = w.CloseWithError(err)
 					return
 				}
 
 				if closer, ok := reader.(io.ReadCloser); ok {
 					if err = closer.Close(); err != nil {
-						w.CloseWithError(err)
+						_ = w.CloseWithError(err)
 						return
 					}
 				}
@@ -148,7 +157,7 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 				value := file.Data.SendData()
 
 				if err := m.WriteField(file.Name, value); err != nil {
-					w.CloseWithError(err)
+					_ = w.CloseWithError(err)
 					return
 				}
 			}
@@ -180,14 +189,18 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 		req.Header.Set("X-Telegram-Bot-Api-Secret-Token", t.Bot.SecretToken)
 	}
 
-	resp, err := t.Bot.Client.Do(req)
+	var resp *http.Response
+	resp, err = t.Bot.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(resp.Body)
 
 	var apiResp types.APIResponse
-	bytes, err := t.decodeAPIResponse(resp.Body, &apiResp)
+	var bytes []byte
+	bytes, err = t.decodeAPIResponse(resp.Body, &apiResp)
 	if err != nil {
 		return &apiResp, err
 	}
@@ -227,7 +240,7 @@ func (t *Api) Request(c types.Chattable) (*types.APIResponse, error) {
 			return t.UploadFiles(f.EndPoint(), params, files)
 		}
 
-		// However, if there are no files to be uploaded, there's likely things
+		// However, if there are no files to be uploaded, there are likely things
 		// that need to be turned into params instead.
 		for _, file := range files {
 			params[file.Name] = file.Data.SendData()

@@ -15,7 +15,7 @@ func main() {
 	message := tg.NewAnswerInlineQuery()
 	message.InlineQueryID = "id"
 
-	var ResultArticle []interface{}
+	var ResultArticle []any
 
 	article := tg.NewInlineQueryResultArticle("1234", "title")
 	article.Description = "description"

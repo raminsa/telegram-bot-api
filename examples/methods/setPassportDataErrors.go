@@ -15,7 +15,7 @@ func main() {
 	message := tg.NewSetPassportDataErrors()
 	message.UserID = 1234
 
-	var Errors []interface{}
+	var Errors []any
 
 	passportElementErrorDataField := tg.PassportElementErrorDataField()
 	passportElementErrorDataField.Source = "source"

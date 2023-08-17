@@ -3,6 +3,7 @@ package telegram
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/raminsa/telegram-bot-api/client"
@@ -72,7 +73,7 @@ func NewWithBaseUrl(token, baseUrl string) (Core Api, err error) {
 	return
 }
 
-// NewWithCustomClient make new telegram bot api response with custom client.
+// NewWithCustomClient make new telegram bot api response with a custom client.
 func NewWithCustomClient(token string, Client *client.Client) (Core Api, err error) {
 	if token == "" {
 		err = errors.New("bot token missed")
@@ -93,14 +94,16 @@ func NewWithCustomClient(token string, Client *client.Client) (Core Api, err err
 	return
 }
 
-// HandleUpdate parses and returns update received via webhook
+// HandleUpdate parses and return update received via webhook
 func HandleUpdate(r *http.Request) (types.Update, error) {
 	var update types.Update
 
 	if r.Method != http.MethodPost {
 		return update, errors.New("wrong HTTP method required POST")
 	}
-	defer r.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(r.Body)
 
 	err := json.NewDecoder(r.Body).Decode(&update)
 	if err != nil {

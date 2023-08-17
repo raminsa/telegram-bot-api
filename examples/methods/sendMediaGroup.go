@@ -15,7 +15,7 @@ func main() {
 	msg := tg.NewSendMediaGroup()
 	msg.ChatID = 1234
 
-	var medias []interface{}
+	var medias []any
 
 	media := tg.NewInputMediaPhoto()
 
