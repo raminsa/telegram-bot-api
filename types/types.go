@@ -74,6 +74,7 @@ type Chat struct {
 	Photo                              *ChatPhoto       `json:"photo,omitempty"`                                   // Optional. Chat photo. Returned only in getChat.
 	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`                        // Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
 	EmojiStatusCustomEmojiID           string           `json:"emoji_status_custom_emoji_id,omitempty"`            // Optional. Custom emoji identifier of emoji status of the other party in a private chat. Returned only in getChat.
+	EmojiStatusExpirationDate          int64            `json:"emoji_status_expiration_date,omitempty"`            // Optional. Expiration date of the emoji status of the other party in a private chat, if any. Returned only in getChat.
 	Bio                                string           `json:"bio,omitempty"`                                     // Optional. Bio of the other party in a private chat. Returned only in getChat.
 	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`                    // Optional. True, if privacy settings of the other party in the private chat allow to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
 	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"` // Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
@@ -123,6 +124,7 @@ type Message struct {
 	Document                      *Document                      `json:"document,omitempty"`                          // Optional. Message is a general file, information about the file
 	Photo                         []*PhotoSize                   `json:"photo,omitempty"`                             // Optional. Message is a photo, available sizes of the photo
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`                           // Optional. Message is a sticker, information about the sticker
+	Story                         *Story                         `json:"story,omitempty"`                             // Optional. Message is a forwarded story
 	Video                         *Video                         `json:"video,omitempty"`                             // Optional. Message is a video, information about the video
 	VideoNote                     *VideoNote                     `json:"video_note,omitempty"`                        // Optional. Message is a video note, information about the video message
 	Voice                         *Voice                         `json:"voice,omitempty"`                             // Optional. Message is a voice message, information about the file
@@ -230,6 +232,9 @@ type Document struct {
 	FileSize     int        `json:"file_size,omitempty"`       //	Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 }
 
+// Story Represents a message about a forwarded story in the chat. Currently, holds no information.
+type Story any
+
 // Video Represents a video file.
 type Video struct {
 	FileID       string     `json:"file_id"`                   // Identifier for this file, which can be used to download or reuse the file
@@ -286,7 +291,8 @@ type PollOption struct {
 // PollAnswer Represents an answer of a user in a non-anonymous poll.
 type PollAnswer struct {
 	PollID    string `json:"poll_id"`    // Unique poll identifier
-	User      User   `json:"user"`       // The user, who changed the answer to the poll
+	VoterChat *Chat  `json:"voter_chat"` // Optional. The chat that changed the answer to the poll if the voter is anonymous
+	User      *User  `json:"user"`       // Optional. The user that changed the answer to the poll if the voter isn't anonymous
 	OptionIDs []int  `json:"option_ids"` // 0-based identifiers of answer options, chosen by the user. Maybe empty if the user retracted their vote.
 }
 

@@ -650,6 +650,11 @@ func (t *Api) NewUnHideGeneralForumTopic() *types.UnHideGeneralForumTopic {
 	return &types.UnHideGeneralForumTopic{}
 }
 
+// NewUnpinAllGeneralForumTopicMessages creates a new unpin all general forum topic message.
+func (t *Api) NewUnpinAllGeneralForumTopicMessages() *types.UnpinAllGeneralForumTopicMessages {
+	return &types.UnpinAllGeneralForumTopicMessages{}
+}
+
 // NewAnswerCallbackQuery creates a new answer callback query message.
 func (t *Api) NewAnswerCallbackQuery() *types.AnswerCallbackQuery {
 	return &types.AnswerCallbackQuery{}

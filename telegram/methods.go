@@ -1513,6 +1513,29 @@ func (t *Api) UnHideGeneralForumTopic(c *types.UnHideGeneralForumTopic) (bool, e
 	return result, err
 }
 
+// UnpinAllGeneralForumTopicMessages Use this method to clear the list of pinned messages in a General forum topic.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_pin_messages administrator right in the supergroup.
+// Returns True to success.
+func (t *Api) UnpinAllGeneralForumTopicMessages(c *types.UnpinAllGeneralForumTopicMessages) (bool, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return false, errors.New("ChatID or Username Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
 // AnswerCallbackQuery Use this method to send answers to callback queries sent from inline keyboards.
 // The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
 // On success, True is returned.

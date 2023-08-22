@@ -2386,6 +2386,27 @@ func (s *UnHideGeneralForumTopic) EndPoint() string {
 	return config.EndpointUnHideGeneralForumTopic
 }
 
+// UnpinAllGeneralForumTopicMessages Use this method to clear the list of pinned messages in a General forum topic.
+// The bot must be an administrator in the chat for this to work
+// and must have the can_pin_messages administrator right in the supergroup.
+// Returns True to success.
+type UnpinAllGeneralForumTopicMessages struct {
+	ChatID    int64  // required. use for supergroup as int
+	ChatIDStr string // required. use for supergroup as string
+	Username  string // required. use for supergroup
+}
+
+func (s *UnpinAllGeneralForumTopicMessages) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	return params, err
+}
+func (s *UnpinAllGeneralForumTopicMessages) EndPoint() string {
+	return config.EndpointUnpinAllGeneralForumTopicMessages
+}
+
 // AnswerCallbackQuery Send answers to callback queries sent from inline keyboards.
 // The answer will be displayed to the user as a notification at the top of the chat screen or as an alert.
 // On success, True is returned.

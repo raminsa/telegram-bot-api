@@ -77,6 +77,7 @@ const (
 	EndpointReopenGeneralForumTopic           = "reopenGeneralForumTopic"
 	EndpointHideGeneralForumTopic             = "hideGeneralForumTopic"
 	EndpointUnHideGeneralForumTopic           = "unhideGeneralForumTopic"
+	EndpointUnpinAllGeneralForumTopicMessages = "unpinAllGeneralForumTopicMessages"
 	EndpointAnswerCallbackQuery               = "answerCallbackQuery"
 	EndpointSetMyCommands                     = "setMyCommands"
 	EndpointDeleteMyCommands                  = "deleteMyCommands"
