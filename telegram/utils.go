@@ -1,9 +1,7 @@
 package telegram
 
 import (
-	"fmt"
 	"io"
-	"reflect"
 	"strings"
 
 	"github.com/raminsa/telegram-bot-api/config"
@@ -241,40 +239,18 @@ func (t *Api) NewInlineKeyboardButtonLoginURL(text string, loginURL types.LoginU
 
 // NewInlineKeyboardButtonSwitch creates an inline keyboard switch inline query button with text
 func (t *Api) NewInlineKeyboardButtonSwitch(text, switchInline string) types.InlineKeyboardButton {
-	inlineKeyboardButton := types.InlineKeyboardButton{
+	return types.InlineKeyboardButton{
 		Text:              text,
-		SwitchInlineQuery: switchInline,
+		SwitchInlineQuery: &switchInline,
 	}
-
-	f, exist := reflect.ValueOf(&inlineKeyboardButton).Elem().Type().FieldByName("SwitchInlineQuery")
-	if exist {
-		tag := f.Tag.Get("json")
-		if tag != "" {
-			tag = strings.Replace(tag, ",omitempty", "", 1)
-			f.Tag = reflect.StructTag(fmt.Sprintf(`json:"%s"`, tag))
-		}
-	}
-
-	return inlineKeyboardButton
 }
 
 // NewInlineKeyboardButtonSwitchCurrentChat creates an inline keyboard switch inline query bot chat button with text
 func (t *Api) NewInlineKeyboardButtonSwitchCurrentChat(text, switchInline string) types.InlineKeyboardButton {
-	inlineKeyboardButton := types.InlineKeyboardButton{
+	return types.InlineKeyboardButton{
 		Text:                         text,
-		SwitchInlineQueryCurrentChat: switchInline,
+		SwitchInlineQueryCurrentChat: &switchInline,
 	}
-
-	f, exist := reflect.ValueOf(&inlineKeyboardButton).Elem().Type().FieldByName("SwitchInlineQueryCurrentChat")
-	if exist {
-		tag := f.Tag.Get("json")
-		if tag != "" {
-			tag = strings.Replace(tag, ",omitempty", "", 1)
-			f.Tag = reflect.StructTag(fmt.Sprintf(`json:"%s"`, tag))
-		}
-	}
-
-	return inlineKeyboardButton
 }
 
 // NewInlineKeyboardButtonSwitchChosenChat creates an inline keyboard switch inline query chosen chat-bot chat button with text
