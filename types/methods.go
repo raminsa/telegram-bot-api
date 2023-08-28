@@ -3354,10 +3354,13 @@ type AnswerInlineQuery struct {
 	IsPersonal    bool
 	NextOffset    string
 	Button        *InlineQueryResultsButton
+
+	SwitchPMText      string `json:"switch_pm_text"`
+	SwitchPMParameter string `json:"switch_pm_parameter"`
 }
 
 func (s *AnswerInlineQuery) Params() (Params, error) {
-	params := make(Params, 7)
+	params := make(Params, 8)
 
 	params["inline_query_id"] = s.InlineQueryID
 	params.AddNonZero("cache_time", s.CacheTime)
@@ -3368,6 +3371,9 @@ func (s *AnswerInlineQuery) Params() (Params, error) {
 		return nil, err
 	}
 	err = params.AddAny("results", s.Results)
+
+	params.AddNonEmpty("switch_pm_text", s.SwitchPMText)
+	params.AddNonEmpty("switch_pm_parameter", s.SwitchPMParameter)
 
 	return params, err
 }

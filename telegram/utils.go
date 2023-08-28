@@ -956,9 +956,20 @@ func (t *Api) NewDeleteStickerSet() *types.DeleteStickerSet {
 	return &types.DeleteStickerSet{}
 }
 
-// NewInlineQueryResultsButton creates a new inlineQueryResults button.
-func (t *Api) NewInlineQueryResultsButton() *types.InlineQueryResultsButton {
-	return &types.InlineQueryResultsButton{}
+// NewInlineQueryResultsButtonStartParameter creates a new inline query results button startParameter.
+func (t *Api) NewInlineQueryResultsButtonStartParameter(title, startParameter string) *types.InlineQueryResultsButton {
+	return &types.InlineQueryResultsButton{
+		Text:           title,
+		StartParameter: &startParameter,
+	}
+}
+
+// NewInlineQueryResultsButtonWebApp creates a new inline query results button webApp.
+func (t *Api) NewInlineQueryResultsButtonWebApp(title string, webApp *types.WebAppInfo) *types.InlineQueryResultsButton {
+	return &types.InlineQueryResultsButton{
+		Text:   title,
+		WebApp: webApp,
+	}
 }
 
 // NewAnswerInlineQuery creates a new answer inline query message.
