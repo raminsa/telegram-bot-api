@@ -956,6 +956,11 @@ func (t *Api) NewDeleteStickerSet() *types.DeleteStickerSet {
 	return &types.DeleteStickerSet{}
 }
 
+// NewInlineQueryResultsButton creates a new inlineQueryResults button.
+func (t *Api) NewInlineQueryResultsButton() *types.InlineQueryResultsButton {
+	return &types.InlineQueryResultsButton{}
+}
+
 // NewAnswerInlineQuery creates a new answer inline query message.
 func (t *Api) NewAnswerInlineQuery() *types.AnswerInlineQuery {
 	return &types.AnswerInlineQuery{}
