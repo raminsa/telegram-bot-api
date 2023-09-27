@@ -396,7 +396,9 @@ type ChatShared struct {
 // WriteAccessAllowed Represents a service message about a user allowing a bot to write messages
 // after adding the bot to the attachment menu or launching a Web App from a link.
 type WriteAccessAllowed struct {
-	WebAppName string `json:"web_app_name,omitempty"` // Optional. Name of the Web App which was launched from a link
+	FromRequest        bool   `json:"from_request,omitempty"`         // Optional. True, if the access was granted after the user accepted an explicit request from a Web App sent by the method requestWriteAccess
+	WebAppName         string `json:"web_app_name,omitempty"`         // Optional. Name of the Web App which was launched from a link
+	FromAttachmentMenu bool   `json:"from_attachment_menu,omitempty"` // Optional. True, if the access was granted when the bot was added to the attachment or side menu
 }
 
 // VideoChatScheduled Represents a service message about a video chat scheduled in the chat.
@@ -614,18 +616,21 @@ type ChatInviteLink struct {
 
 // ChatAdministratorRights Represents the rights of an administrator in a chat.
 type ChatAdministratorRights struct {
-	IsAnonymous         bool `json:"is_anonymous"`                // True, if the user's presence in the chat is hidden
-	CanManageChat       bool `json:"can_manage_chat"`             // True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
-	CanDeleteMessages   bool `json:"can_delete_messages"`         // True, if the administrator can delete messages of other users
-	CanManageVideoChats bool `json:"can_manage_video_chats"`      // True, if the administrator can manage video chats
-	CanRestrictMembers  bool `json:"can_restrict_members"`        // True, if the administrator can restrict, ban or unban chat members
-	CanPromoteMembers   bool `json:"can_promote_members"`         // True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
-	CanChangeInfo       bool `json:"can_change_info"`             //	True, if the user is allowed to change the chat title, photo and other settings
-	CanInviteUsers      bool `json:"can_invite_users"`            // True, if the user is allowed to invite new users to the chat
-	CanPostMessages     bool `json:"can_post_messages,omitempty"` // Optional. True, if the administrator can post in the channel; channels only
-	CanEditMessages     bool `json:"can_edit_messages,omitempty"` // Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
-	CanPinMessages      bool `json:"can_pin_messages,omitempty"`  // Optional. True, if the user is allowed to pin messages, groups and supergroups only
-	CanManageTopics     bool `json:"can_manage_topics,omitempty"` // Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
+	IsAnonymous         bool `json:"is_anonymous"`                 // True, if the user's presence in the chat is hidden
+	CanManageChat       bool `json:"can_manage_chat"`              // True, if the administrator can access the chat event log, chat statistics, message statistics in channels, see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other administrator privilege
+	CanDeleteMessages   bool `json:"can_delete_messages"`          // True, if the administrator can delete messages of other users
+	CanManageVideoChats bool `json:"can_manage_video_chats"`       // True, if the administrator can manage video chats
+	CanRestrictMembers  bool `json:"can_restrict_members"`         // True, if the administrator can restrict, ban or unban chat members
+	CanPromoteMembers   bool `json:"can_promote_members"`          // True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user)
+	CanChangeInfo       bool `json:"can_change_info"`              //	True, if the user is allowed to change the chat title, photo and other settings
+	CanInviteUsers      bool `json:"can_invite_users"`             // True, if the user is allowed to invite new users to the chat
+	CanPostMessages     bool `json:"can_post_messages,omitempty"`  // Optional. True, if the administrator can post in the channel; channels only
+	CanEditMessages     bool `json:"can_edit_messages,omitempty"`  // Optional. True, if the administrator can edit messages of other users and can pin messages; channels only
+	CanPinMessages      bool `json:"can_pin_messages,omitempty"`   // Optional. True, if the user is allowed to pin messages, groups and supergroups only
+	CanPostStories      bool `json:"can_post_stories,omitempty"`   // Optional. True, if the administrator can post stories in the channel; channels only
+	CanEditStories      bool `json:"can_edit_stories,omitempty"`   // Optional. True, if the administrator can edit stories posted by other users; channels only
+	CanDeleteStories    bool `json:"can_delete_stories,omitempty"` // Optional. True, if the administrator can delete stories posted by other users; channels only
+	CanManageTopics     bool `json:"can_manage_topics,omitempty"`  // Optional. True, if the user is allowed to create, rename, close, and reopen forum topics; supergroups only
 }
 
 // ChatMember Contains information about one member of a chat. Currently, the following six types of chat members are supported:
@@ -640,6 +645,9 @@ type ChatMember struct {
 	CanPostMessages       bool   `json:"can_post_messages,omitempty"`         // Optional. administrators only. True, if the administrator can post in the channel; channels only.
 	CanEditMessages       bool   `json:"can_edit_messages,omitempty"`         // Optional. administrators only. True, if the administrator can edit messages of other users and can pin messages; channels only.
 	CanDeleteMessages     bool   `json:"can_delete_messages,omitempty"`       // Optional. administrators only. True, if the administrator can delete messages of other users.
+	CanPostStories        bool   `json:"can_post_stories,omitempty"`          // Optional. True, if the administrator can post stories in the channel; channels only
+	CanEditStories        bool   `json:"can_edit_stories,omitempty"`          // Optional. True, if the administrator can edit stories posted by other users; channels only
+	CanDeleteStories      bool   `json:"can_delete_stories,omitempty"`        // Optional. True, if the administrator can delete stories posted by other users; channels only
 	CanManageVideoChats   bool   `json:"can_manage_video_chats,omitempty"`    // Optional. administrators only. True, if the administrator can manage video chats.
 	CanRestrictMembers    bool   `json:"can_restrict_members,omitempty"`      // Optional. administrators only. True, if the administrator can restrict, ban or unban chat members.
 	CanPromoteMembers     bool   `json:"can_promote_members,omitempty"`       // Optional. administrators only. True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that he has promoted, directly or indirectly (promoted by administrators that were appointed by the user).

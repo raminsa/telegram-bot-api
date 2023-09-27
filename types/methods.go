@@ -1432,6 +1432,9 @@ type PromoteChatMember struct {
 	CanPostMessages     bool
 	CanEditMessages     bool
 	CanDeleteMessages   bool
+	CanPostStories      bool
+	CanEditStories      bool
+	CanDeleteStories    bool
 	CanManageVideoChats bool
 	CanInviteUsers      bool
 	CanRestrictMembers  bool
@@ -1441,7 +1444,7 @@ type PromoteChatMember struct {
 }
 
 func (s *PromoteChatMember) Params() (Params, error) {
-	params := make(Params, 13)
+	params := make(Params, 16)
 
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
@@ -1455,6 +1458,9 @@ func (s *PromoteChatMember) Params() (Params, error) {
 	params.AddBool("can_post_messages", s.CanPostMessages)
 	params.AddBool("can_edit_messages", s.CanEditMessages)
 	params.AddBool("can_delete_messages", s.CanDeleteMessages)
+	params.AddBool("can_post_stories", s.CanPostStories)
+	params.AddBool("can_edit_stories", s.CanEditStories)
+	params.AddBool("can_delete_stories", s.CanDeleteStories)
 	params.AddBool("can_manage_video_chats", s.CanManageVideoChats)
 	params.AddBool("can_invite_users", s.CanInviteUsers)
 	params.AddBool("can_restrict_members", s.CanRestrictMembers)
