@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 	permissions.CanChangeInfo = false
 	permissions.CanSendMessages = true
 
-	msg.Permissions = permissions
+	msg.Permissions = &permissions
 
 	_, err = tg.RestrictChatMember(msg)
 	if err != nil {

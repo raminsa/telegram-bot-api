@@ -5,28 +5,27 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
-	"github.com/raminsa/telegram-bot-api/config"
-	"github.com/raminsa/telegram-bot-api/types"
+	"github.com/Raminsa/Telegram_API/config"
+	"github.com/Raminsa/Telegram_API/types"
 )
 
 // SetSecretToken parse secret token for very webhook request
 func (t *Api) SetSecretToken(secretToken string) {
-	Core.Bot.SecretToken = secretToken
+	telegram.Bot.SecretToken = secretToken
 }
 
-// WriteDebugLog write debug log to bot log interface
 func (t *Api) WriteDebugLog(msg string) {
 	logger := log.New(&t.Bot.Log, "Debug: ", log.LstdFlags|log.Llongfile)
 	Info := func(info string) {
-		_ = logger.Output(2, info)
+		logger.Output(2, info)
 	}
 	Info(msg)
 }
@@ -38,7 +37,7 @@ func (t *Api) GetLoggerFile() string {
 
 // WriteLoggerFile write debug to file
 func (t *Api) WriteLoggerFile(fileName string) error {
-	return os.WriteFile(fileName, t.Bot.Log.Bytes(), 0666)
+	return ioutil.WriteFile(fileName, t.Bot.Log.Bytes(), 0644)
 }
 
 // MakeRequest makes a request to a specific endpoint with our token.
@@ -54,8 +53,6 @@ func (t *Api) MakeRequest(endpoint string, params types.Params) (*types.APIRespo
 	var timeout time.Duration
 	if t.Bot.RequestTimeout == 0 {
 		timeout = 2 * time.Minute
-	} else {
-		timeout = t.Bot.RequestTimeout
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -70,18 +67,14 @@ func (t *Api) MakeRequest(endpoint string, params types.Params) (*types.APIRespo
 		req.Header.Set("X-Telegram-Bot-Api-Secret-Token", t.Bot.SecretToken)
 	}
 
-	var resp *http.Response
-	resp, err = t.Bot.Client.Do(req)
+	resp, err := t.Bot.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(resp.Body)
+	defer resp.Body.Close()
 
 	var apiResp types.APIResponse
-	var bytes []byte
-	bytes, err = t.decodeAPIResponse(resp.Body, &apiResp)
+	bytes, err := t.decodeAPIResponse(resp.Body, &apiResp)
 	if err != nil {
 		return &apiResp, err
 	}
@@ -111,16 +104,12 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 	m := multipart.NewWriter(w)
 
 	go func() {
-		defer func(w *io.PipeWriter) {
-			_ = w.Close()
-		}(w)
-		defer func(m *multipart.Writer) {
-			_ = m.Close()
-		}(m)
+		defer w.Close()
+		defer m.Close()
 
 		for field, value := range params {
 			if err := m.WriteField(field, value); err != nil {
-				_ = w.CloseWithError(err)
+				w.CloseWithError(err)
 				return
 			}
 		}
@@ -129,7 +118,7 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 			if file.Data.NeedsUpload() {
 				name, reader, err := file.Data.UploadData()
 				if err != nil {
-					_ = w.CloseWithError(err)
+					w.CloseWithError(err)
 					return
 				}
 				if file.FileName != "" {
@@ -138,18 +127,18 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 
 				part, err := m.CreateFormFile(file.Name, name)
 				if err != nil {
-					_ = w.CloseWithError(err)
+					w.CloseWithError(err)
 					return
 				}
 
-				if _, err = io.Copy(part, reader); err != nil {
-					_ = w.CloseWithError(err)
+				if _, err := io.Copy(part, reader); err != nil {
+					w.CloseWithError(err)
 					return
 				}
 
 				if closer, ok := reader.(io.ReadCloser); ok {
 					if err = closer.Close(); err != nil {
-						_ = w.CloseWithError(err)
+						w.CloseWithError(err)
 						return
 					}
 				}
@@ -157,7 +146,7 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 				value := file.Data.SendData()
 
 				if err := m.WriteField(file.Name, value); err != nil {
-					_ = w.CloseWithError(err)
+					w.CloseWithError(err)
 					return
 				}
 			}
@@ -173,8 +162,6 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 	var timeout time.Duration
 	if t.Bot.RequestTimeout == 0 {
 		timeout = 2 * time.Minute
-	} else {
-		timeout = t.Bot.RequestTimeout
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
@@ -189,18 +176,14 @@ func (t *Api) UploadFiles(endpoint string, params types.Params, files []types.Re
 		req.Header.Set("X-Telegram-Bot-Api-Secret-Token", t.Bot.SecretToken)
 	}
 
-	var resp *http.Response
-	resp, err = t.Bot.Client.Do(req)
+	resp, err := t.Bot.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	defer func(Body io.ReadCloser) {
-		_ = Body.Close()
-	}(resp.Body)
+	defer resp.Body.Close()
 
 	var apiResp types.APIResponse
-	var bytes []byte
-	bytes, err = t.decodeAPIResponse(resp.Body, &apiResp)
+	bytes, err := t.decodeAPIResponse(resp.Body, &apiResp)
 	if err != nil {
 		return &apiResp, err
 	}
@@ -240,7 +223,7 @@ func (t *Api) Request(c types.Chattable) (*types.APIResponse, error) {
 			return t.UploadFiles(f.EndPoint(), params, files)
 		}
 
-		// However, if there are no files to be uploaded, there are likely things
+		// However, if there are no files to be uploaded, there's likely things
 		// that need to be turned into params instead.
 		for _, file := range files {
 			params[file.Name] = file.Data.SendData()
@@ -271,7 +254,7 @@ func (t *Api) decodeAPIResponse(responseBody io.Reader, resp *types.APIResponse)
 		return nil, err
 	}
 
-	data, err := io.ReadAll(responseBody)
+	data, err := ioutil.ReadAll(responseBody)
 	if err != nil {
 		return nil, err
 	}

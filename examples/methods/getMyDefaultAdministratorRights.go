@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,9 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	getDefaultAdministratorRights := tg.NewGetMyDefaultAdministratorRights()
+	getMyDefaultAdministratorRights := tg.NewGetMyDefaultAdministratorRights()
+	getMyDefaultAdministratorRights.ForChannels = true
 
-	_, err = tg.GetMyDefaultAdministratorRights(getDefaultAdministratorRights)
+	_, err = tg.GetMyDefaultAdministratorRights(getMyDefaultAdministratorRights)
 	if err != nil {
 		log.Fatal(err)
 	}

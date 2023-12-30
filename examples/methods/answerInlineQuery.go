@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	message := tg.NewAnswerInlineQuery()
 	message.InlineQueryID = "id"
 
-	var ResultArticle []any
+	var ResultArticle []interface{}
 
 	article := tg.NewInlineQueryResultArticle("1234", "title")
 	article.Description = "description"

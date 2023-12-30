@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	message := tg.NewSetPassportDataErrors()
 	message.UserID = 1234
 
-	var Errors []any
+	var Errors []interface{}
 
 	passportElementErrorDataField := tg.PassportElementErrorDataField()
 	passportElementErrorDataField.Source = "source"

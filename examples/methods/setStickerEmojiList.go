@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,11 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	msg := tg.NewSetStickerEmojiList()
-	msg.Sticker = "1234"
-	msg.EmojiList = []string{"🏀"}
+	message := tg.NewSetStickerEmojiList()
+	message.Sticker = "1234"
+	message.EmojiList = []string{"😀", "☺️"}
 
-	_, err = tg.SetStickerEmojiList(msg)
+	_, err = tg.SetStickerEmojiList(message)
 	if err != nil {
 		log.Fatal(err)
 	}

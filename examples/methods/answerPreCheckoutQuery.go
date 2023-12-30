@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,12 +12,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewAnswerPreCheckoutQuery()
-	message.PreCheckoutQueryID = "id"
+	message := tg.NewAnswerShippingQuery()
+	message.ShippingQueryID = "id"
 	message.OK = false
 	message.ErrorMessage = "err"
 
-	_, err = tg.AnswerPreCheckoutQuery(message)
+	_, err = tg.AnswerShippingQuery(message)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -17,7 +17,7 @@ type Client struct {
 	BaseUrl           string
 }
 
-// MakeClient make a new client to use telegram api
+// MakeClient make new client to use telegram api
 func (c Client) MakeClient() (*http.Client, error) {
 	var proxy func(*http.Request) (*url.URL, error)
 	var myDC func(ctx context.Context, network, addr string) (net.Conn, error)

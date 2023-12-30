@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -15,7 +15,7 @@ func main() {
 	msg := tg.NewSendMediaGroup()
 	msg.ChatID = 1234
 
-	var medias []any
+	var medias []interface{}
 
 	media := tg.NewInputMediaPhoto()
 

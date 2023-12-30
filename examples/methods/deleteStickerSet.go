@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,10 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	msg := tg.NewDeleteStickerSet()
-	msg.Name = "name"
+	message := tg.NewDeleteStickerSet()
+	message.Name = "name"
 
-	_, err = tg.DeleteStickerSet(msg)
+	_, err = tg.DeleteStickerSet(message)
 	if err != nil {
 		log.Fatal(err)
 	}

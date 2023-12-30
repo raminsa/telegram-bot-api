@@ -1,9 +1,10 @@
 package main
 
 import (
+	"github.com/Raminsa/Telegram_API/types"
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -15,17 +16,10 @@ func main() {
 	message := tg.NewAddStickerToSet()
 	message.UserID = 1234
 	message.Name = "myName_by_<bot_username>"
-
-	stickers := tg.NewInputSticker()
-	stickers.EmojiList = []string{"🏀"}
-
-	maskPosition := tg.NewMaskPosition()
-
-	stickers.MaskPosition = maskPosition
-	stickers.Keywords = []string{"ball"}
-	stickers.Sticker = tg.FileURL("url")
-
-	message.Stickers = stickers
+	message.Sticker = &types.InputSticker{
+		Sticker:   tg.FileURL("url"),
+		EmojiList: []string{"😀", "☺️"},
+	}
 
 	_, err = tg.AddStickerToSet(message)
 	if err != nil {

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -14,7 +14,7 @@ func main() {
 
 	msg := tg.NewUnpinAllForumTopicMessages()
 	msg.Username = "username"
-	msg.MessageThreadID = 1234
+	msg.MessageThreadId = 1234
 
 	_, err = tg.UnpinAllForumTopicMessages(msg)
 	if err != nil {

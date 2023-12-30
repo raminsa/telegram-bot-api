@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -20,10 +20,7 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		err = telegram.HandleUpdateError(w, err)
-		if err != nil {
-			log.Fatal(err)
-		}
+		telegram.HandleUpdateError(w, err)
 		return
 	}
 	if update.Message != nil {

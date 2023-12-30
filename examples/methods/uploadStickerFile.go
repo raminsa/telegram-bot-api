@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -14,8 +14,8 @@ func main() {
 
 	message := tg.NewUploadStickerFile()
 	message.UserID = 1234
-	message.Sticker = tg.FilePath("path")
-	message.StickerFormat = "static" // “static”, “animated”, “video”
+	message.Sticker = tg.FileURL("url")
+	message.StickerFormat = "animated"
 
 	_, err = tg.UploadStickerFile(message)
 	if err != nil {

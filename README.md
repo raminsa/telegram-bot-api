@@ -8,7 +8,7 @@ Please note that only global Bot API issues that affect all bots are suitable fo
 
 To learn how to use it, please see our [examples](https://github.com/raminsa/telegram-bot-api/tree/main/examples).
 
-Bot API 6.9 Recent changes [September 22, 2023](https://core.telegram.org/bots/api#september-22-2023).
+Bot API 7.0 Recent changes [December 29, 2023](https://core.telegram.org/bots/api#december-29-2023).
 
 ## Table of Contents
 - [Installation](#installation)

@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,11 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	msg := tg.NewSetStickerKeywords()
-	msg.Sticker = "1234"
-	msg.Keywords = []string{"ball"}
+	message := tg.NewSetStickerKeywords()
+	message.Sticker = "1234"
+	message.Keywords = []string{"keyword 1", "keyword 2"}
 
-	_, err = tg.SetStickerKeywords(msg)
+	_, err = tg.SetStickerKeywords(message)
 	if err != nil {
 		log.Fatal(err)
 	}

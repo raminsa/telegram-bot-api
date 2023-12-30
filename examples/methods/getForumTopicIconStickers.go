@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/Raminsa/Telegram_API/telegram"
 )
 
 func main() {
@@ -12,8 +12,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	msg := tg.NewGetForumTopicIconStickers()
-	_, err = tg.GetForumTopicIconStickers(msg)
+	message := tg.NewGetForumTopicIconStickers()
+
+	_, err = tg.GetForumTopicIconStickers(message)
 	if err != nil {
 		log.Fatal(err)
 	}
