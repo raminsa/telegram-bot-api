@@ -99,6 +99,11 @@ func (t *Api) NewLinkPreviewOptions() *types.LinkPreviewOptions {
 	return &types.LinkPreviewOptions{}
 }
 
+// NewReplyParameters a new reply parameters message.
+func (t *Api) NewReplyParameters() *types.ReplyParameters {
+	return &types.ReplyParameters{}
+}
+
 // NewGetUpdates create a new get updates message.
 func (t *Api) NewGetUpdates() *types.GetUpdates {
 	return &types.GetUpdates{}

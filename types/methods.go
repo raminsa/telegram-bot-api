@@ -127,7 +127,7 @@ type SendMessage struct {
 	LinkPreviewOptions  *LinkPreviewOptions
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 }
 
@@ -264,7 +264,7 @@ type CopyMessage struct {
 	CaptionEntities     []MessageEntity
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 }
 
@@ -322,7 +322,7 @@ type CopyMessages struct {
 	CaptionEntities     []MessageEntity
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         interface{}
 }
 
@@ -376,7 +376,7 @@ type SendPhoto struct {
 	HasSpoiler          bool
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 }
@@ -440,7 +440,7 @@ type SendAudio struct {
 	Thumbnail           RequestFileData
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 	ThumbCustomFileName string
@@ -518,7 +518,7 @@ type SendDocument struct {
 	DisableContentTypeDetection bool
 	DisableNotification         bool
 	ProtectContent              bool
-	ReplyParameters             ReplyParameters
+	ReplyParameters             *ReplyParameters
 	ReplyMarkup                 any
 	CustomFileName              string
 	ThumbCustomFileName         string
@@ -597,7 +597,7 @@ type SendVideo struct {
 	SupportsStreaming   bool
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 	ThumbCustomFileName string
@@ -679,7 +679,7 @@ type SendAnimation struct {
 	HasSpoiler          bool
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 	ThumbCustomFileName string
@@ -758,7 +758,7 @@ type SendVoice struct {
 	Duration            int
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 }
@@ -816,7 +816,7 @@ type SendVideoNote struct {
 	Thumbnail           RequestFileData
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 	ThumbCustomFileName string
@@ -881,7 +881,7 @@ type SendMediaGroup struct {
 	Media               []any // required
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 }
 
 func (s *SendMediaGroup) Params() (Params, error) {
@@ -1069,7 +1069,7 @@ type SendLocation struct {
 	ProximityAlertRadius int
 	DisableNotification  bool
 	ProtectContent       bool
-	ReplyParameters      ReplyParameters
+	ReplyParameters      *ReplyParameters
 	ReplyMarkup          any
 }
 
@@ -1202,7 +1202,7 @@ type SendVenue struct {
 	GooglePlaceType     string
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 }
 
@@ -1249,7 +1249,7 @@ type SendContact struct {
 	VCard               string
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 }
 
@@ -1300,7 +1300,7 @@ type SendPoll struct {
 	IsClosed              bool
 	DisableNotification   bool
 	ProtectContent        bool
-	ReplyParameters       ReplyParameters
+	ReplyParameters       *ReplyParameters
 	ReplyMarkup           any
 }
 
@@ -1354,7 +1354,7 @@ type SendDice struct {
 	Emoji               string // Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 }
 
@@ -3182,7 +3182,7 @@ type SendSticker struct {
 	Emoji               string
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         any
 	CustomFileName      string
 }
@@ -3694,7 +3694,7 @@ type SendInvoice struct {
 	IsFlexible                bool
 	DisableNotification       bool
 	ProtectContent            bool
-	ReplyParameters           ReplyParameters
+	ReplyParameters           *ReplyParameters
 	ReplyMarkup               any
 }
 
@@ -3882,7 +3882,7 @@ type SendGame struct {
 	GameShortName       string // required
 	DisableNotification bool
 	ProtectContent      bool
-	ReplyParameters     ReplyParameters
+	ReplyParameters     *ReplyParameters
 	ReplyMarkup         *InlineKeyboardMarkup
 }
 
