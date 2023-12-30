@@ -80,7 +80,7 @@ type Chat struct {
 	AvailableReactions                 []ReactionType   `json:"available_reactions,omitempty"`                     // Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
 	AccentColorId                      int              `json:"accent_color_id,omitempty"`                         // Optional. Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details. Returned only in getChat. Always returned in getChat.
 	BackgroundCustomEmojiId            string           `json:"background_custom_emoji_id,omitempty"`              // Optional. Custom emoji identifier of emoji chosen by the chat for the reply header and link preview background. Returned only in getChat.
-	ProfileAccentColorId               int              `json:"profile_accent_color_id,omitempty"`                 // OOptional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details. Returned only in getChat.
+	ProfileAccentColorId               int              `json:"profile_accent_color_id,omitempty"`                 // Optional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details. Returned only in getChat.
 	ProfileBackgroundCustomEmojiId     string           `json:"profile_background_custom_emoji_id,omitempty"`      // Optional. Custom emoji identifier of the emoji chosen by the chat for its profile background. Returned only in getChat.
 	EmojiStatusCustomEmojiId           string           `json:"emoji_status_custom_emoji_id,omitempty"`            // Optional. Custom emoji identifier of the emoji status of the chat or the other party in a private chat. Returned only in getChat.
 	EmojiStatusExpirationDate          int64            `json:"emoji_status_expiration_date,omitempty"`            // Optional. Expiration date of the emoji status of the chat or the other party in a private chat, in Unix time, if any. Returned only in getChat.
@@ -322,14 +322,14 @@ type Animation struct {
 // Audio Represents an audio file to be treated as music by the Telegram clients.
 type Audio struct {
 	FileID       string     `json:"file_id"`                   // Identifier for this file, which can be used to download or reuse the file
-	FileUniqueID string     `json:"file_unique_id"`            //	Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-	Duration     int        `json:"duration"`                  //	Duration of the audio in seconds as defined by sender
-	Performer    string     `json:"performer,omitempty"`       //	Optional. Performer of the audio as defined by sender or by audio tags
+	FileUniqueID string     `json:"file_unique_id"`            // Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	Duration     int        `json:"duration"`                  // Duration of the audio in seconds as defined by sender
+	Performer    string     `json:"performer,omitempty"`       // Optional. Performer of the audio as defined by sender or by audio tags
 	Title        string     `json:"title,omitempty"`           // Optional. Title of the audio as defined by sender or by audio tags
-	FileName     string     `json:"file_name,omitempty"`       //	Optional. Original filename as defined by sender
+	FileName     string     `json:"file_name,omitempty"`       // Optional. Original filename as defined by sender
 	MimeType     string     `json:"mime_type,omitempty"`       // Optional. MIME type of the file as defined by sender
-	FileSize     int64      `json:"file_size,omitempty"`       //	Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
-	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` //	Optional. Thumbnail of the album cover to which the music file belongs
+	FileSize     int64      `json:"file_size,omitempty"`       // Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
+	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` // Optional. Thumbnail of the album cover to which the music file belongs
 }
 
 // The Document Represents a general file (as opposed to photos, voice messages and audio files).
@@ -337,9 +337,9 @@ type Document struct {
 	FileID       string     `json:"file_id"`                   // Identifier for this file, which can be used to download or reuse the file
 	FileUniqueID string     `json:"file_unique_id"`            // Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
 	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` // Optional. Document thumbnail as defined by sender
-	FileName     string     `json:"file_name,omitempty"`       //	Optional. Original filename as defined by sender
-	MimeType     string     `json:"mime_type,omitempty"`       //	Optional. MIME type of the file as defined by sender
-	FileSize     int64      `json:"file_size,omitempty"`       //	Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
+	FileName     string     `json:"file_name,omitempty"`       // Optional. Original filename as defined by sender
+	MimeType     string     `json:"mime_type,omitempty"`       // Optional. MIME type of the file as defined by sender
+	FileSize     int64      `json:"file_size,omitempty"`       // Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 }
 
 // Story Represents a message about a forwarded story in the chat. Currently, holds no information.
@@ -348,24 +348,24 @@ type Story any
 // Video Represents a video file.
 type Video struct {
 	FileID       string     `json:"file_id"`                   // Identifier for this file, which can be used to download or reuse the file
-	FileUniqueID string     `json:"file_unique_id"`            //	Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-	Width        int        `json:"width"`                     //	Video width as defined by sender
-	Height       int        `json:"height"`                    //	Video height as defined by sender
-	Duration     int        `json:"duration"`                  //	Duration of the video in seconds as defined by sender
-	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` //	Optional. Video thumbnail
-	FileName     string     `json:"file_name,omitempty"`       //	Optional. Original filename as defined by sender
-	MimeType     string     `json:"mime_type,omitempty"`       //	Optional. MIME type of the file as defined by sender
-	FileSize     int64      `json:"file_size,omitempty"`       //	Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
+	FileUniqueID string     `json:"file_unique_id"`            // Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	Width        int        `json:"width"`                     // Video width as defined by sender
+	Height       int        `json:"height"`                    // Video height as defined by sender
+	Duration     int        `json:"duration"`                  // Duration of the video in seconds as defined by sender
+	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` // Optional. Video thumbnail
+	FileName     string     `json:"file_name,omitempty"`       // Optional. Original filename as defined by sender
+	MimeType     string     `json:"mime_type,omitempty"`       // Optional. MIME type of the file as defined by sender
+	FileSize     int64      `json:"file_size,omitempty"`       // Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
 }
 
 // VideoNote Represents a video message (available in Telegram apps as of v.4.0).
 type VideoNote struct {
 	FileID       string     `json:"file_id"`                   // Identifier for this file, which can be used to download or reuse the file
-	FileUniqueID string     `json:"file_unique_id"`            //	Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
-	Length       int        `json:"length"`                    //	Video width and height (diameter of the video message) as defined by sender
-	Duration     int        `json:"duration"`                  //	Duration of the video in seconds as defined by sender
-	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` //	Optional. Video thumbnail
-	FileSize     int64      `json:"file_size,omitempty"`       //	Optional. File size in bytes
+	FileUniqueID string     `json:"file_unique_id"`            // Unique identifier for this file, which is supposed to be the same over time and for different bots. Can't be used to download or reuse the file.
+	Length       int        `json:"length"`                    // Video width and height (diameter of the video message) as defined by sender
+	Duration     int        `json:"duration"`                  // Duration of the video in seconds as defined by sender
+	Thumbnail    *PhotoSize `json:"thumb,thumbnail,omitempty"` // Optional. Video thumbnail
+	FileSize     int64      `json:"file_size,omitempty"`       // Optional. File size in bytes
 }
 
 // Voice Represents a voice note.
@@ -1050,7 +1050,7 @@ type ChatBoostSourceGiftCode struct {
 type ChatBoostSourceGiveaway struct {
 	Source            string `json:"source"`                 // Source of the boost, always “giveaway”
 	GiveawayMessageId int    `json:"giveaway_message_id"`    // Identifier of a message in the chat with the giveaway; the message could have been deleted already. May be 0 if the message isn't sent yet.
-	User              User   `json:"user,omitempty"`         // Optional. User that won the prize in the giveaway if any
+	User              *User  `json:"user,omitempty"`         // Optional. User that won the prize in the giveaway if any
 	IsUnclaimed       bool   `json:"is_unclaimed,omitempty"` // Optional. True, if the giveaway was completed, but there was no user to win the prize
 }
 
@@ -1624,10 +1624,10 @@ type InputMessageContent struct {
 }
 
 type InputTextMessageContent struct {
-	Text               string             `json:"message_text"`                   // text of the message to be sent, 1-4096 characters
-	ParseMode          string             `json:"parse_mode,omitempty"`           // Optional. Mode for parsing entities in the message text. See formatting options for more details.
-	Entities           []MessageEntity    `json:"entities,omitempty"`             // Optional. List of special entities that appear in message text, which can be specified instead of parse_mode
-	LinkPreviewOptions LinkPreviewOptions `json:"link_preview_options,omitempty"` // Optional. Link preview generation options for the message
+	Text               string              `json:"message_text"`                   // text of the message to be sent, 1-4096 characters
+	ParseMode          string              `json:"parse_mode,omitempty"`           // Optional. Mode for parsing entities in the message text. See formatting options for more details.
+	Entities           []MessageEntity     `json:"entities,omitempty"`             // Optional. List of special entities that appear in message text, which can be specified instead of parse_mode
+	LinkPreviewOptions *LinkPreviewOptions `json:"link_preview_options,omitempty"` // Optional. Link preview generation options for the message
 }
 
 // InputLocationMessageContent Represents the content of a location message to be sent as the result of an inline query.

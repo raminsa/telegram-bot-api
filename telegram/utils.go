@@ -94,6 +94,11 @@ func (t *Api) GetFileDirectURL(fileID string) (string, error) {
 	return file.Link(t.Bot.Token), nil
 }
 
+// NewLinkPreviewOptions create a new link preview options message.
+func (t *Api) NewLinkPreviewOptions() *types.LinkPreviewOptions {
+	return &types.LinkPreviewOptions{}
+}
+
 // NewGetUpdates create a new get updates message.
 func (t *Api) NewGetUpdates() *types.GetUpdates {
 	return &types.GetUpdates{}
