@@ -146,7 +146,7 @@ func (s *SendMessage) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
-	err = params.AddAny("link_preview_options ", s.LinkPreviewOptions)
+	err = params.AddAny("link_preview_options", s.LinkPreviewOptions)
 	if err != nil {
 		return params, err
 	}
@@ -2956,7 +2956,7 @@ func (s *EditMessageText) Params() (Params, error) {
 	if err != nil {
 		return params, err
 	}
-	err = params.AddAny("link_preview_options ", s.LinkPreviewOptions)
+	err = params.AddAny("link_preview_options", s.LinkPreviewOptions)
 	if err != nil {
 		return params, err
 	}
