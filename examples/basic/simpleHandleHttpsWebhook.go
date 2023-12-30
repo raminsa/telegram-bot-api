@@ -5,22 +5,25 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
 	fmt.Println("start at port:", "BotPortNumber")
 
-	err := http.ListenAndServeTLS("BotPortNumber", "BotCertFile", "BotKeyFile", http.HandlerFunc(handleWebhook))
+	err := http.ListenAndServeTLS("BotPortNumber", "BotCertFile", "BotKeyFile", http.HandlerFunc(handleWebhookTLS))
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func handleWebhook(w http.ResponseWriter, r *http.Request) {
+func handleWebhookTLS(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err = telegram.HandleUpdateError(w, err)
+		if err != nil {
+			log.Fatal(err)
+		}
 		return
 	}
 	if update.Message != nil {

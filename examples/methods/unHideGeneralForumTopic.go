@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -12,10 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	getMyName := tg.NewGetMyName()
-	getMyName.LanguageCode = "en"
+	msg := tg.NewUnHideGeneralForumTopic()
+	msg.Username = "username"
 
-	_, err = tg.GetMyName(getMyName)
+	_, err = tg.UnHideGeneralForumTopic(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

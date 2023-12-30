@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -12,8 +12,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	deleteCommands := tg.NewDeleteMyCommandsScopeDefault()
-	deleteCommands.LanguageCode = "en"
+	deleteCommands := tg.NewDeleteMyCommands()
 
 	_, err = tg.DeleteMyCommands(deleteCommands)
 	if err != nil {

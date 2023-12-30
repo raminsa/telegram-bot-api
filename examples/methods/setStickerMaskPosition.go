@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/Raminsa/Telegram_API/types"
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -13,16 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewSetStickerMaskPosition()
-	message.Sticker = "1234"
-	message.MaskPosition = types.MaskPosition{
-		Point:  "forehead",
-		XShift: -1.0,
-		YShift: 1.0,
-		Scale:  2.0,
-	}
+	msg := tg.NewSetStickerMaskPosition()
+	msg.Sticker = "1234"
 
-	_, err = tg.SetStickerMaskPosition(message)
+	_, err = tg.SetStickerMaskPosition(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

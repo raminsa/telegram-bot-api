@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -18,15 +18,10 @@ func main() {
 	message.Payload = "payload"
 	message.ProviderToken = "provider token"
 	message.Currency = "currency"
-
-	labeledPrices := tg.NewLabeledPrices()
-	labeledPrice := tg.NewLabeledPrice()
-
-	labeledPrice.Label = "label"
-	labeledPrice.Amount = 123
-	labeledPrices = append(labeledPrices, labeledPrice)
-
-	message.Prices = labeledPrices
+	message.Prices = tg.NewLabeledPrices(
+		tg.NewLabeledPrice("title1", 1234),
+		tg.NewLabeledPrice("title2", 1234),
+	)
 
 	_, err = tg.CreateInvoiceLink(message)
 	if err != nil {

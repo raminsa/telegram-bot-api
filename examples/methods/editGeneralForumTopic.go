@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
 )
 
 func main() {
@@ -12,11 +12,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewEditGeneralForumTopic()
-	message.ChatID = 1234
-	message.Name = "name"
+	msg := tg.NewEditGeneralForumTopic()
+	msg.Username = "username"
+	msg.Name = "name"
 
-	_, err = tg.EditGeneralForumTopic(message)
+	_, err = tg.EditGeneralForumTopic(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

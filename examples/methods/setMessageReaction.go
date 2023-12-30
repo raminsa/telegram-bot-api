@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/Raminsa/Telegram_API/types"
 	"log"
 
-	"github.com/Raminsa/Telegram_API/telegram"
+	"github.com/raminsa/telegram-bot-api/telegram"
+	"github.com/raminsa/telegram-bot-api/types"
 )
 
 func main() {
