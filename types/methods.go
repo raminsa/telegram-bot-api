@@ -124,7 +124,7 @@ type SendMessage struct {
 	Text                string // required
 	ParseMode           string
 	Entities            []MessageEntity
-	LinkPreviewOptions  LinkPreviewOptions
+	LinkPreviewOptions  *LinkPreviewOptions
 	DisableNotification bool
 	ProtectContent      bool
 	ReplyParameters     ReplyParameters
@@ -2932,7 +2932,7 @@ type EditMessageText struct {
 	Text               string // required
 	ParseMode          string
 	Entities           []MessageEntity
-	LinkPreviewOptions LinkPreviewOptions
+	LinkPreviewOptions *LinkPreviewOptions
 	ReplyMarkup        any // only InlineKeyboardMarkup
 }
 
