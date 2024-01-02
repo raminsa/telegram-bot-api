@@ -1278,7 +1278,7 @@ type InlineQueryResultPhoto struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
 }
 
 // InlineQueryResultGIF Represents a link to an animated GIF file.
@@ -1299,7 +1299,7 @@ type InlineQueryResultGIF struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the GIF animation
+	InputMessageContent any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the GIF animation
 }
 
 // InlineQueryResultMPEG4GIF Represents a link to a video animation (H.264/MPEG-4 AVC video without a sound).
@@ -1320,7 +1320,7 @@ type InlineQueryResultMPEG4GIF struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the video animation
+	InputMessageContent any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the video animation
 }
 
 // InlineQueryResultVideo Represents a link to a page containing an embedded video player or a video file.
@@ -1343,7 +1343,7 @@ type InlineQueryResultVideo struct {
 	Duration            int                   `json:"video_duration,omitempty"`        // Optional. Video duration in seconds
 	Description         string                `json:"description,omitempty"`           // Optional. Short description of the result
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
 }
 
 // InlineQueryResultAudio Represents a link to an MP3 audio file.
@@ -1362,7 +1362,7 @@ type InlineQueryResultAudio struct {
 	Performer           string                `json:"performer,omitempty"`             // Optional. Performer
 	Duration            int                   `json:"audio_duration,omitempty"`        // Optional. Audio duration in seconds
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the audio
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the audio
 }
 
 // InlineQueryResultVoice Represents a link to a voice recording in an .OGG container encoded with OPUS.
@@ -1381,7 +1381,7 @@ type InlineQueryResultVoice struct {
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	Duration            int                   `json:"voice_duration,omitempty"`        // Optional. Recording duration in seconds
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the voice recording
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the voice recording
 }
 
 // InlineQueryResultDocument Represents a link to a file.
@@ -1401,7 +1401,7 @@ type InlineQueryResultDocument struct {
 	MimeType            string                `json:"mime_type"`                               // MIME type of the content of the file, either “application/pdf” or “application/zip”
 	Description         string                `json:"description,omitempty"`                   // Optional. Short description of the result
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                  // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the file
+	InputMessageContent any                   `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the file
 	ThumbnailURL        string                `json:"thumb_url,thumbnail_url,omitempty"`       // Optional. URL of the thumbnail (JPEG only) for the file
 	ThumbnailWidth      int                   `json:"thumb_width,thumbnail_width,omitempty"`   // Optional. Thumbnail width
 	ThumbnailHeight     int                   `json:"thumb_height,thumbnail_height,omitempty"` // Optional. Thumbnail height
@@ -1424,7 +1424,7 @@ type InlineQueryResultLocation struct {
 	Heading              int                   `json:"heading,omitempty"`                       // Optional. For live locations, the direction in which the user is moving in degrees. It Must be between 1 and 360 if specified.
 	ProximityAlertRadius int                   `json:"proximity_alert_radius,omitempty"`        // Optional. For live locations, a maximum distance for proximity alerts about approaching another chat member, in meters. It Must be between 1 and 100000 if specified.
 	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                  // Optional. Inline keyboard attached to the message
-	InputMessageContent  *InputMessageContent  `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the location
+	InputMessageContent  any                   `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the location
 	ThumbnailURL         string                `json:"thumb_url,thumbnail_url,omitempty"`       // Optional. Url of the thumbnail for the result
 	ThumbnailWidth       int                   `json:"thumb_width,thumbnail_width,omitempty"`   // Optional. Thumbnail width
 	ThumbnailHeight      int                   `json:"thumb_height,thumbnail_height,omitempty"` // Optional. Thumbnail height
@@ -1447,7 +1447,7 @@ type InlineQueryResultVenue struct {
 	GooglePlaceID       string                `json:"google_place_id,omitempty"`               // Optional. Google Places identifier of the venue
 	GooglePlaceType     string                `json:"google_place_type,omitempty"`             // Optional. Google Places a type of the venue. See [supported types](https://developers.google.com/places/web-service/supported_types).
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                  // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the venue
+	InputMessageContent any                   `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the venue
 	ThumbnailURL        string                `json:"thumb_url,thumbnail_url,omitempty"`       // Optional. Url of the thumbnail for the result
 	ThumbnailWidth      int                   `json:"thumb_width,thumbnail_width,omitempty"`   // Optional. Thumbnail width
 	ThumbnailHeight     int                   `json:"thumb_height,thumbnail_height,omitempty"` // Optional. Thumbnail height
@@ -1466,7 +1466,7 @@ type InlineQueryResultContact struct {
 	LastName            string                `json:"last_name,omitempty"`                     // Optional. Contact's last name
 	VCard               string                `json:"vcard,omitempty"`                         // Optional. Additional data about the contact in the form of a vCard, 0-2048 bytes
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                  // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the contact
+	InputMessageContent any                   `json:"input_message_content,omitempty"`         // Optional. Content of the message to be sent instead of the contact
 	ThumbnailURL        string                `json:"thumb_url,thumbnail_url,omitempty"`       // Optional. Url of the thumbnail for the result
 	ThumbnailWidth      int                   `json:"thumb_width,thumbnail_width,omitempty"`   // Optional. Thumbnail width
 	ThumbnailHeight     int                   `json:"thumb_height,thumbnail_height,omitempty"` // Optional. Thumbnail height
@@ -1495,7 +1495,7 @@ type InlineQueryResultCachedPhoto struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
 }
 
 // InlineQueryResultCachedGIF Represents a link to an animated GIF file stored on the Telegram servers.
@@ -1510,7 +1510,7 @@ type InlineQueryResultCachedGIF struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the GIF animation
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the GIF animation
 }
 
 // InlineQueryResultCachedMPEG4GIF Represents a link to a video animation
@@ -1527,7 +1527,7 @@ type InlineQueryResultCachedMPEG4GIF struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video animation
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video animation
 }
 
 // InlineQueryResultCachedSticker Represents a link to a sticker stored on the Telegram servers.
@@ -1542,7 +1542,7 @@ type InlineQueryResultCachedSticker struct {
 	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
 	StickerID           string                `json:"sticker_file_id"`                 // A valid file identifier of the sticker
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the sticker
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the sticker
 }
 
 // InlineQueryResultCachedDocument Represents a link to a file stored on the Telegram servers.
@@ -1560,7 +1560,7 @@ type InlineQueryResultCachedDocument struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the document caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the file
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the file
 }
 
 // InlineQueryResultCachedVideo Represents a link to a video file stored on the Telegram servers.
@@ -1576,7 +1576,7 @@ type InlineQueryResultCachedVideo struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video
 }
 
 // InlineQueryResultCachedVoice Represents a link to a voice message stored on the Telegram servers.
@@ -1594,7 +1594,7 @@ type InlineQueryResultCachedVoice struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the voice message caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the voice message
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the voice message
 }
 
 // InlineQueryResultCachedAudio Represents a link to an MP3 audio file stored on the Telegram servers.
@@ -1610,7 +1610,7 @@ type InlineQueryResultCachedAudio struct {
 	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the audio caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
 	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the audio
+	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the audio
 }
 
 // InputMessageContent Represents the content of a message to be sent as a result of an inline query.
