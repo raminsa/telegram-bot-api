@@ -538,7 +538,7 @@ func (t *Api) SendChatAction(c *types.SendChatAction) (bool, error) {
 		return false, errors.New("ChatID or Username Required")
 	}
 	if c.Action == "" {
-		return false, errors.New("Action Required")
+		return false, errors.New("action Required")
 	}
 
 	_, err := t.Request(c)

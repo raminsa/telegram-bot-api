@@ -94,6 +94,7 @@ type Chat struct {
 	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`                          // Optional. The most recent pinned message (by sending date). Returned only in getChat.
 	Permissions                        *ChatPermissions `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
 	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in getChat.
+	UnRestrictBoostCount               int              `json:"unrestrict_boost_count,omitempty"`                  // Optional. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in getChat.
 	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted in seconds. Returned only in getChat.
 	HasAggressiveAntiSpamEnabled       bool             `json:"has_aggressive_anti_spam_enabled,omitempty"`        // Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
 	HasHiddenMembers                   bool             `json:"has_hidden_members,omitempty"`                      // Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
@@ -101,6 +102,7 @@ type Chat struct {
 	HasVisibleHistory                  bool             `json:"has_visible_history,omitempty"`                     // Optional. True, if new chat members will have access to old messages; available only to chat administrators. Returned only in getChat.
 	StickerSetName                     string           `json:"sticker_set_name,omitempty"`                        // Optional. For supergroups, the name of a group sticker set. Returned only in getChat.
 	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`                     // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
+	CustomEmojiStickerSetName          string           `json:"custom_emoji_sticker_set_name,omitempty"`           // Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group. Returned only in getChat.
 	LinkedChatID                       int64            `json:"linked_chat_id,omitempty"`                          // Optional. Unique identifier for the linked chat, i.e., the discussion group identifier for a channel and vice versa, for supergroups and channel chats. This identifier may be greater than 32 bits, and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier. Returned only in getChat.
 	Location                           *ChatLocation    `json:"location,omitempty"`                                // Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
 }
@@ -111,6 +113,7 @@ type Message struct {
 	MessageThreadID               int                            `json:"message_thread_id,omitempty"`                 // Optional. Unique identifier of a message thread to which the message belongs; for supergroups only
 	From                          *User                          `json:"from,omitempty"`                              // Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats if the message was sent on behalf of a chat.
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`                       // Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field contains a fake sender user in non-channel chats if the message was sent on behalf of a chat.
+	SenderBoostCount              int                            `json:"sender_boost_count,omitempty"`                // Optional. If the sender of the message boosted the chat, the number of boosts added by the user
 	Date                          int64                          `json:"date"`                                        // date the message was sent in Unix time
 	Chat                          Chat                           `json:"chat"`                                        // The Conversation the message belongs to
 	ForwardOrigin                 *MessageOrigin                 `json:"forward_origin,omitempty"`                    // Optional. Information about the original message for forwarded messages
@@ -119,6 +122,7 @@ type Message struct {
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`                  // Optional. For replies, the original message. Note that the Message object in this field will not contain further reply_to_message fields even if it itself is a reply.
 	ExternalReply                 *ExternalReplyInfo             `json:"external_reply,omitempty"`                    // Optional. Information about the message that is being replied to, which may come from another chat or forum topic
 	Quote                         *TextQuote                     `json:"quote,omitempty"`                             // Optional. For replies that quote part of the original message, the quoted part of the message
+	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`                    // Optional. For replies to a story, the original story
 	ViaBot                        *User                          `json:"via_bot,omitempty"`                           // Optional. Bot through which the message was sent
 	EditDate                      int64                          `json:"edit_date,omitempty"`                         // Optional. Date the message was last edited in Unix time
 	HasProtectedContent           bool                           `json:"has_protected_content,omitempty"`             // Optional. True, if the message can't be forwarded
@@ -165,6 +169,7 @@ type Message struct {
 	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`              // Optional. Service message: the user allowed the bot added to the attachment menu to write messages
 	PassportData                  *PassportData                  `json:"passport_data,omitempty"`                     // Optional. Telegram Passport data
 	ProximityAlertTriggered       *ProximityAlertTriggered       `json:"proximity_alert_triggered,omitempty"`         // Optional. Service message. A user in the chat triggered another user's proximity alert while sharing a Live Location.
+	BoostAdded                    *ChatBoostAdded                `json:"boost_added,omitempty"`                       // Optional. Service message: user boosted the chat
 	ForumTopicCreated             *ForumTopicCreated             `json:"forum_topic_created,omitempty"`               // Optional. Service message: forum topic created
 	ForumTopicEdited              *ForumTopicEdited              `json:"forum_topic_edited,omitempty"`                // Optional. Service message: forum topic edited
 	ForumTopicClosed              *ForumTopicClosed              `json:"forum_topic_closed,omitempty"`                // Optional. Service message: a forum topic closed
@@ -343,7 +348,10 @@ type Document struct {
 }
 
 // Story Represents a message about a forwarded story in the chat. Currently, holds no information.
-type Story any
+type Story struct {
+	Chat Chat  `json:"chat"` // Chat that posted the story
+	ID   int64 `json:"id"`   // Unique identifier for the story in the chat
+}
 
 // Video Represents a video file.
 type Video struct {
@@ -460,6 +468,11 @@ type ProximityAlertTriggered struct {
 // MessageAutoDeleteTimerChanged Represents a service message about a change in auto-delete timer settings.
 type MessageAutoDeleteTimerChanged struct {
 	MessageAutoDeleteTime int `json:"message_auto_delete_time"` // New auto-delete time for messages in the chat; in seconds
+}
+
+// ChatBoostAdded Represents a service message about a user boosting a chat.
+type ChatBoostAdded struct {
+	BoostCount int `json:"boost_count"` // Number of boosts added by the user
 }
 
 // ForumTopicCreated Represents a service message about a new forum topic created in the chat.
