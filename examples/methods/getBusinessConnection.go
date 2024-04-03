@@ -12,12 +12,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	message := tg.NewSetStickerSetThumbnail()
-	message.UserID = 1234
-	message.Name = "name"
-	message.Format = "static" // “static”, “animated”, “video”
+	msg := tg.NewGetBusinessConnection()
+	msg.BusinessConnectionId = "1234"
 
-	_, err = tg.SetStickerSetThumbnail(message)
+	_, err = tg.GetBusinessConnection(msg)
 	if err != nil {
 		log.Fatal(err)
 	}

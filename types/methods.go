@@ -117,23 +117,25 @@ func (s *DeleteWebhook) EndPoint() string {
 
 // SendMessage Send text messages. On success, the sent Message is returned.
 type SendMessage struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Text                string // required
-	ParseMode           string
-	Entities            []MessageEntity
-	LinkPreviewOptions  *LinkPreviewOptions
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Text                 string // required
+	ParseMode            string
+	Entities             []MessageEntity
+	LinkPreviewOptions   *LinkPreviewOptions
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
 }
 
 func (s *SendMessage) Params() (Params, error) {
-	params := make(Params, 10)
+	params := make(Params, 11)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -365,25 +367,27 @@ func (s CopyMessages) EndPoint() string {
 
 // SendPhoto Send photos. On success, the sent Message is returned.
 type SendPhoto struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Photo               RequestFileData // required
-	Caption             string
-	ParseMode           string
-	CaptionEntities     []MessageEntity
-	HasSpoiler          bool
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Photo                RequestFileData // required
+	Caption              string
+	ParseMode            string
+	CaptionEntities      []MessageEntity
+	HasSpoiler           bool
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
 }
 
 func (s *SendPhoto) Params() (Params, error) {
-	params := make(Params, 10)
+	params := make(Params, 11)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -426,29 +430,31 @@ func (s *SendPhoto) EndPoint() string {
 // Bots can currently send audio files of up to 50 MB in size, this limit may be changed in the future.
 // For sending voice messages, use the sendVoice method instead.
 type SendAudio struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Audio               RequestFileData // required
-	Caption             string
-	ParseMode           string
-	CaptionEntities     []MessageEntity
-	Duration            int
-	Performer           string
-	Title               string
-	Thumbnail           RequestFileData
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
-	ThumbCustomFileName string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Audio                RequestFileData // required
+	Caption              string
+	ParseMode            string
+	CaptionEntities      []MessageEntity
+	Duration             int
+	Performer            string
+	Title                string
+	Thumbnail            RequestFileData
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
+	ThumbCustomFileName  string
 }
 
 func (s *SendAudio) Params() (Params, error) {
-	params := make(Params, 12)
+	params := make(Params, 13)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -505,12 +511,13 @@ func (s *SendAudio) EndPoint() string {
 // On success, the sent Message is returned.
 // Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
 type SendDocument struct {
-	ChatID          int64  // required. use for user|channel as int
-	ChatIDStr       string // required. use for user|channel as string
-	Username        string // required. use for channel
-	MessageThreadID int64
-	Document        RequestFileData // required
-	Thumbnail       RequestFileData
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Document             RequestFileData // required
+	Thumbnail            RequestFileData
 
 	Caption                     string
 	ParseMode                   string
@@ -525,8 +532,9 @@ type SendDocument struct {
 }
 
 func (s *SendDocument) Params() (Params, error) {
-	params := make(Params, 10)
+	params := make(Params, 11)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -581,31 +589,33 @@ func (s *SendDocument) EndPoint() string {
 // On success, the sent Message is returned.
 // Bots can currently send video files of up to 50 MB in size, this limit may be changed in the future.
 type SendVideo struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Video               RequestFileData // required
-	Duration            int
-	Width               int
-	Height              int
-	Thumbnail           RequestFileData
-	Caption             string
-	ParseMode           string
-	CaptionEntities     []MessageEntity
-	HasSpoiler          bool
-	SupportsStreaming   bool
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
-	ThumbCustomFileName string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Video                RequestFileData // required
+	Duration             int
+	Width                int
+	Height               int
+	Thumbnail            RequestFileData
+	Caption              string
+	ParseMode            string
+	CaptionEntities      []MessageEntity
+	HasSpoiler           bool
+	SupportsStreaming    bool
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
+	ThumbCustomFileName  string
 }
 
 func (s *SendVideo) Params() (Params, error) {
-	params := make(Params, 14)
+	params := make(Params, 15)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -664,30 +674,32 @@ func (s *SendVideo) EndPoint() string {
 // On success, the sent Message is returned.
 // Bots can currently send animation files of up to 50 MB in size, this limit may be changed in the future.
 type SendAnimation struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Animation           RequestFileData // required
-	Duration            int
-	Width               int
-	Height              int
-	Thumbnail           RequestFileData
-	Caption             string
-	ParseMode           string
-	CaptionEntities     []MessageEntity
-	HasSpoiler          bool
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
-	ThumbCustomFileName string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Animation            RequestFileData // required
+	Duration             int
+	Width                int
+	Height               int
+	Thumbnail            RequestFileData
+	Caption              string
+	ParseMode            string
+	CaptionEntities      []MessageEntity
+	HasSpoiler           bool
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
+	ThumbCustomFileName  string
 }
 
 func (s *SendAnimation) Params() (Params, error) {
-	params := make(Params, 13)
+	params := make(Params, 14)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -747,25 +759,27 @@ func (s *SendAnimation) EndPoint() string {
 // On success, the sent Message is returned.
 // Bots can currently send voice messages of up to 50 MB in size, this limit may be changed in the future.
 type SendVoice struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Voice               RequestFileData // required
-	Caption             string
-	ParseMode           string
-	CaptionEntities     []MessageEntity
-	Duration            int
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Voice                RequestFileData // required
+	Caption              string
+	ParseMode            string
+	CaptionEntities      []MessageEntity
+	Duration             int
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
 }
 
 func (s *SendVoice) Params() (Params, error) {
-	params := make(Params, 11)
+	params := make(Params, 12)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -806,25 +820,27 @@ func (s *SendVoice) EndPoint() string {
 // Use this method to send video messages.
 // On success, the sent Message is returned.
 type SendVideoNote struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	VideoNote           RequestFileData // required.
-	Duration            int
-	Length              int
-	Thumbnail           RequestFileData
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
-	ThumbCustomFileName string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	VideoNote            RequestFileData // required.
+	Duration             int
+	Length               int
+	Thumbnail            RequestFileData
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
+	ThumbCustomFileName  string
 }
 
 func (s *SendVideoNote) Params() (Params, error) {
-	params := make(Params, 8)
+	params := make(Params, 9)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -874,19 +890,21 @@ func (s *SendVideoNote) EndPoint() string {
 // Documents and audio files can be only grouped on an album with messages of the same type.
 // On success, an array of Messages that were sent is returned.
 type SendMediaGroup struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Media               []any // required
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Media                []any // required
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
 }
 
 func (s *SendMediaGroup) Params() (Params, error) {
-	params := make(Params, 5)
+	params := make(Params, 6)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1057,6 +1075,7 @@ func prepareInputMediaForFiles(inputMedia []any) []RequestFile {
 
 // SendLocation Send point on the map. On success, the sent Message is returned.
 type SendLocation struct {
+	BusinessConnectionId string //
 	ChatID               int64  // required. use for user|channel as int
 	ChatIDStr            string // required. use for user|channel as string
 	Username             string // required. use for channel
@@ -1074,8 +1093,9 @@ type SendLocation struct {
 }
 
 func (s *SendLocation) Params() (Params, error) {
-	params := make(Params, 12)
+	params := make(Params, 13)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1188,27 +1208,29 @@ func (s *StopMessageLiveLocation) EndPoint() string {
 
 // SendVenue Send information about a venue. On success, the sent Message is returned.
 type SendVenue struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Latitude            float64 // required
-	Longitude           float64 // required
-	Title               string  // required
-	Address             string  // required
-	FoursquareID        string
-	FoursquareType      string
-	GooglePlaceID       string
-	GooglePlaceType     string
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Latitude             float64 // required
+	Longitude            float64 // required
+	Title                string  // required
+	Address              string  // required
+	FoursquareID         string
+	FoursquareType       string
+	GooglePlaceID        string
+	GooglePlaceType      string
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
 }
 
 func (s *SendVenue) Params() (Params, error) {
-	params := make(Params, 14)
+	params := make(Params, 15)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1239,23 +1261,25 @@ func (s *SendVenue) EndPoint() string {
 
 // SendContact Send phone contacts. On success, the sent Message is returned.
 type SendContact struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	PhoneNumber         string // required
-	FirstName           string // required
-	LastName            string
-	VCard               string
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	PhoneNumber          string // required
+	FirstName            string // required
+	LastName             string
+	VCard                string
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
 }
 
 func (s *SendContact) Params() (Params, error) {
-	params := make(Params, 10)
+	params := make(Params, 11)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1282,6 +1306,7 @@ func (s *SendContact) EndPoint() string {
 
 // SendPoll Send a native poll. On success, the sent Message is returned.
 type SendPoll struct {
+	BusinessConnectionId  string //
 	ChatID                int64  // required. use for user|channel as int
 	ChatIDStr             string // required. use for user|channel as string
 	Username              string // required. use for channel
@@ -1305,8 +1330,9 @@ type SendPoll struct {
 }
 
 func (s *SendPoll) Params() (Params, error) {
-	params := make(Params, 18)
+	params := make(Params, 19)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1347,20 +1373,22 @@ func (s *SendPoll) EndPoint() string {
 
 // SendDice Send an animated emoji that will display a random value. On success, the sent Message is returned.
 type SendDice struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Emoji               string // Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Emoji                string // Emoji on which the dice throw animation is based. Currently, must be one of “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, or “🎰”. Dice can have values 1-6 for “🎲”, “🎯” and “🎳”, values 1-5 for “🏀” and “⚽”, and values 1-64 for “🎰”. Defaults to “🎲
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
 }
 
 func (s *SendDice) Params() (Params, error) {
-	params := make(Params, 7)
+	params := make(Params, 8)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -1385,16 +1413,18 @@ func (s *SendDice) EndPoint() string {
 // SendChatAction Send an animated emoji that will display a random value.
 // On success, the sent Message is returned.
 type SendChatAction struct {
-	ChatID          int64  // required. use for user|channel as int
-	ChatIDStr       string // required. use for user|channel as string
-	Username        string // required. use for channel
-	MessageThreadID int64
-	Action          string // required. `typing` for text messages, `upload_photo` for photos, `record_video` or `upload_video` for videos, `record_voice` or `upload_voice` for voice notes, `upload_document` for general files, `choose_sticker` for stickers, `find_location` for location data, `record_video_note` or `upload_video_note` for video notes.
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Action               string // required. `typing` for text messages, `upload_photo` for photos, `record_video` or `upload_video` for videos, `record_voice` or `upload_voice` for voice notes, `upload_document` for general files, `choose_sticker` for stickers, `find_location` for location data, `record_video_note` or `upload_video_note` for video notes.
 }
 
 func (s *SendChatAction) Params() (Params, error) {
-	params := make(Params, 2)
+	params := make(Params, 3)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params.AddAt(s.Username)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
@@ -2653,6 +2683,22 @@ func (s GetUserChatBoosts) EndPoint() string {
 	return config.EndpointGetUserChatBoosts
 }
 
+// GetBusinessConnection Get the list of boosts added to a chat by a user. Requires administrator rights in the chat. Returns a UserChatBoosts object.
+type GetBusinessConnection struct {
+	BusinessConnectionId string // required. unique identifier of the business connection
+}
+
+func (s GetBusinessConnection) Params() (Params, error) {
+	params := make(Params, 1)
+
+	params["business_connection_id"] = s.BusinessConnectionId
+
+	return params, nil
+}
+func (s GetBusinessConnection) EndPoint() string {
+	return config.EndpointGetBusinessConnection
+}
+
 // SetMyCommands Change the list of the bot's commands.
 // See https://core.telegram.org/bots#commands for more details about bot commands.
 // Returns True to success.
@@ -3174,22 +3220,24 @@ func (s DeleteMessages) EndPoint() string {
 // SendSticker Send static .WEBP, animated .TGS, or video .WEBM stickers.
 // On success, the sent Message is returned.
 type SendSticker struct {
-	ChatID              int64  // required. use for user|channel as int
-	ChatIDStr           string // required. use for user|channel as string
-	Username            string // required. use for channel
-	MessageThreadID     int64
-	Sticker             RequestFileData //required.
-	Emoji               string
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         any
-	CustomFileName      string
+	BusinessConnectionId string //
+	ChatID               int64  // required. use for user|channel as int
+	ChatIDStr            string // required. use for user|channel as string
+	Username             string // required. use for channel
+	MessageThreadID      int64
+	Sticker              RequestFileData //required.
+	Emoji                string
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          any
+	CustomFileName       string
 }
 
 func (s *SendSticker) Params() (Params, error) {
-	params := make(Params, 7)
+	params := make(Params, 8)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
 		return params, err
@@ -3289,13 +3337,12 @@ type CreateNewStickerSet struct {
 	Name            string // required
 	Title           string // required
 	Stickers        []any  // required
-	StickerFormat   string // required
 	StickerType     string
 	NeedsRepainting bool
 }
 
 func (s *CreateNewStickerSet) Params() (Params, error) {
-	params := make(Params, 7)
+	params := make(Params, 6)
 
 	params["user_id"] = strconv.FormatInt(s.UserID, 10)
 	params["name"] = s.Name
@@ -3304,7 +3351,6 @@ func (s *CreateNewStickerSet) Params() (Params, error) {
 	if err != nil {
 		return nil, err
 	}
-	params["sticker_format"] = s.StickerFormat
 	params.AddNonEmpty("sticker_type", s.StickerType)
 	params.AddBool("needs_repainting", s.NeedsRepainting)
 
@@ -3453,6 +3499,32 @@ func (s *DeleteStickerFromSet) EndPoint() string {
 	return config.EndpointDeleteStickerFromSet
 }
 
+// ReplaceStickerInSet Replace an existing sticker in a sticker set with a new one. The method is equivalent to calling deleteStickerFromSet, then addStickerToSet, then setStickerPositionInSet.
+// Returns True to success.
+type ReplaceStickerInSet struct {
+	UserID     int64        // required
+	Name       string       // required
+	OldSticker string       // required
+	Sticker    InputSticker // required
+}
+
+func (s *ReplaceStickerInSet) Params() (Params, error) {
+	params := make(Params, 4)
+
+	params["user_id"] = strconv.FormatInt(s.UserID, 10)
+	params["name"] = s.Name
+	params["old_sticker"] = s.OldSticker
+	err := params.AddAny("stickers", prepareInputStickerParam(s.Sticker, 0))
+
+	return params, err
+}
+func (s *ReplaceStickerInSet) Files() []RequestFile {
+	return prepareInputStickerFile(s.Sticker, 0)
+}
+func (s *ReplaceStickerInSet) EndPoint() string {
+	return config.EndpointReplaceStickerInSet
+}
+
 // SetStickerEmojiList Change the list of emoji assigned to a regular or custom emoji sticker.
 // The sticker must belong to a sticker set created by the bot.
 // Returns True to success.
@@ -3539,13 +3611,15 @@ type SetStickerSetThumbnail struct {
 	UserID                  int64  // required
 	Thumbnail               RequestFileData
 	ThumbnailCustomFileName string
+	Format                  string // required
 }
 
 func (s *SetStickerSetThumbnail) Params() (Params, error) {
-	params := make(Params, 2)
+	params := make(Params, 3)
 
 	params["name"] = s.Name
 	params["user_id"] = strconv.FormatInt(s.UserID, 10)
+	params["format"] = s.Format
 
 	return params, nil
 }
@@ -3877,18 +3951,20 @@ func (s *SetPassportDataErrors) EndPoint() string {
 
 // SendGame Send a game. On success, the sent Message is returned.
 type SendGame struct {
-	ChatID              int64 // required
-	MessageThreadID     int64
-	GameShortName       string // required
-	DisableNotification bool
-	ProtectContent      bool
-	ReplyParameters     *ReplyParameters
-	ReplyMarkup         *InlineKeyboardMarkup
+	BusinessConnectionId string //
+	ChatID               int64  // required
+	MessageThreadID      int64
+	GameShortName        string // required
+	DisableNotification  bool
+	ProtectContent       bool
+	ReplyParameters      *ReplyParameters
+	ReplyMarkup          *InlineKeyboardMarkup
 }
 
 func (s *SendGame) Params() (Params, error) {
-	params := make(Params, 7)
+	params := make(Params, 8)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	params["chat_id"] = strconv.FormatInt(s.ChatID, 10)
 	params.AddNonZero64("message_thread_id", s.MessageThreadID)
 	params["game_short_name"] = s.GameShortName

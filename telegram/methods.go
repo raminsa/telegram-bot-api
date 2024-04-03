@@ -1655,6 +1655,24 @@ func (t *Api) GetUserChatBoosts(c *types.GetUserChatBoosts) (*types.UserChatBoos
 	return &chatBoosts, err
 }
 
+// GetBusinessConnection Use this method to get information about the connection of the bot with a business account.
+// Returns a BusinessConnection object on success.
+func (t *Api) GetBusinessConnection(c *types.GetBusinessConnection) (*types.BusinessConnection, error) {
+	if c.BusinessConnectionId == "" {
+		return nil, errors.New("BusinessConnectionId Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var businessConnection types.BusinessConnection
+	err = json.Unmarshal(resp.Result, &businessConnection)
+
+	return &businessConnection, err
+}
+
 // SetMyCommands Use this method to change the list of the bot commands.
 // See https://core.telegram.org/bots#commands for more details about bot commands.
 // Returns True to success.
@@ -2228,9 +2246,6 @@ func (t *Api) CreateNewStickerSet(c *types.CreateNewStickerSet) (bool, error) {
 	if len(c.Stickers) < 1 {
 		return false, errors.New("stickers Required")
 	}
-	if c.StickerFormat == "" {
-		return false, errors.New("stickerFormat Required")
-	}
 
 	resp, err := t.Request(c)
 	if err != nil {
@@ -2301,10 +2316,38 @@ func (t *Api) SetStickerPositionInSet(c *types.SetStickerPositionInSet) (bool, e
 	return result, err
 }
 
-// DeleteStickerFromSet Use this method to delete a sticker from a set created by the bot. Returns True to success.
+// DeleteStickerFromSet Use this method to delete a sticker from a set created by the bot.
+// Returns True to success.
 func (t *Api) DeleteStickerFromSet(c *types.DeleteStickerFromSet) (bool, error) {
 	if c.Sticker == "" {
 		return false, errors.New("sticker Required")
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// ReplaceStickerInSet Use this method to replace an existing sticker in a sticker set with a new one. The method is equivalent to calling deleteStickerFromSet, then addStickerToSet, then setStickerPositionInSet.
+// Returns True on success
+func (t *Api) ReplaceStickerInSet(c *types.ReplaceStickerInSet) (bool, error) {
+	if c.UserID == 0 {
+		return false, errors.New("UserID Required")
+	}
+	if c.Name == "" {
+		return false, errors.New("name Required")
+	}
+	if c.OldSticker == "" {
+		return false, errors.New("OldSticker Required")
 	}
 
 	resp, err := t.Request(c)
@@ -2423,6 +2466,9 @@ func (t *Api) SetStickerSetThumbnail(c *types.SetStickerSetThumbnail) (bool, err
 	}
 	if c.UserID == 0 {
 		return false, errors.New("userID Required")
+	}
+	if c.Format == "" {
+		return false, errors.New("format Required")
 	}
 
 	resp, err := t.Request(c)

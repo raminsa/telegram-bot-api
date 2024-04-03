@@ -15,25 +15,29 @@ type APIResponse struct {
 
 // Update is an update response, from GetUpdates.
 type Update struct {
-	UpdateID             int                          `json:"update_id"`                        // The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then the identifier of the next update will be chosen randomly instead of sequentially.
-	Message              *Message                     `json:"message,omitempty"`                // Optional. New incoming message of any kind - text, photo, sticker, etc.
-	EditedMessage        *Message                     `json:"edited_message,omitempty"`         // Optional. New version of a message that is known to the bot and was edited
-	ChannelPost          *Message                     `json:"channel_post,omitempty"`           // Optional. New incoming channel post of any kind - text, photo, sticker, etc.
-	EditedChannelPost    *Message                     `json:"edited_channel_post,omitempty"`    // Optional. New version of a channel post that is known to the bot and was edited
-	MessageReaction      *MessageReactionUpdated      `json:"message_reaction,omitempty"`       // Optional. A reaction to a message was changed by a user. The bot must be an administrator in the chat and must explicitly specify "message_reaction" in the list of allowed_updates to receive these updates. The update isn't received for reactions set by bots.
-	MessageReactionCount *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"` // Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify "message_reaction_count" in the list of allowed_updates to receive these updates.
-	InlineQuery          *InlineQuery                 `json:"inline_query,omitempty"`           // Optional. New incoming inline query
-	ChosenInlineResult   *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`   // Optional. The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot.
-	CallbackQuery        *CallbackQuery               `json:"callback_query,omitempty"`         // Optional. New incoming callback query
-	ShippingQuery        *ShippingQuery               `json:"shipping_query,omitempty"`         // Optional. New incoming shipping query. Only for invoices with flexible price
-	PreCheckoutQuery     *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`     // Optional. New incoming pre-checkout query. Contains full information about checkout
-	Poll                 *Poll                        `json:"poll,omitempty"`                   // Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
-	PollAnswer           *PollAnswer                  `json:"poll_answer,omitempty"`            // Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
-	MyChatMember         *ChatMemberUpdated           `json:"my_chat_member,omitempty"`         // Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
-	ChatMember           *ChatMemberUpdated           `json:"chat_member,omitempty"`            // Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
-	ChatJoinRequest      *ChatJoinRequest             `json:"chat_join_request,omitempty"`      // Optional. A request to join the chat has been sent. The bot must have the can_invite_users administrator right in the chat to receive these updates.
-	ChatBoost            *ChatBoostUpdated            `json:"chat_boost,omitempty"`             // Optional. A chat boost was added or changed. The bot must be an administrator in the chat to receive these updates.
-	RemovedChatBoost     *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`     // Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
+	UpdateID                int                          `json:"update_id"`                           // The update's unique identifier. Update identifiers start from a certain positive number and increase sequentially. This ID becomes especially handy if you're using webhooks, since it allows you to ignore repeated updates or to restore the correct update sequence, should they get out of order. If there are no new updates for at least a week, then the identifier of the next update will be chosen randomly instead of sequentially.
+	Message                 *Message                     `json:"message,omitempty"`                   // Optional. New incoming message of any kind - text, photo, sticker, etc.
+	EditedMessage           *Message                     `json:"edited_message,omitempty"`            // Optional. New version of a message that is known to the bot and was edited
+	ChannelPost             *Message                     `json:"channel_post,omitempty"`              // Optional. New incoming channel post of any kind - text, photo, sticker, etc.
+	EditedChannelPost       *Message                     `json:"edited_channel_post,omitempty"`       // Optional. New version of a channel post that is known to the bot and was edited
+	BusinessConnection      *BusinessConnection          `json:"business_connection,omitempty"`       // Optional. The bot was connected to or disconnected from a business account, or a user edited an existing connection with the bot
+	BusinessMessage         *Message                     `json:"business_message,omitempty"`          // Optional. New non-service message from a connected business account
+	EditedBusinessMessage   *Message                     `json:"edited_business_message,omitempty"`   // Optional. New version of a message from a connected business account
+	DeletedBusinessMessages *BusinessMessagesDeleted     `json:"deleted_business_messages,omitempty"` // Optional. Messages were deleted from a connected business account
+	MessageReaction         *MessageReactionUpdated      `json:"message_reaction,omitempty"`          // Optional. A reaction to a message was changed by a user. The bot must be an administrator in the chat and must explicitly specify "message_reaction" in the list of allowed_updates to receive these updates. The update isn't received for reactions set by bots.
+	MessageReactionCount    *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`    // Optional. Reactions to a message with anonymous reactions were changed. The bot must be an administrator in the chat and must explicitly specify "message_reaction_count" in the list of allowed_updates to receive these updates.
+	InlineQuery             *InlineQuery                 `json:"inline_query,omitempty"`              // Optional. New incoming inline query
+	ChosenInlineResult      *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`      // Optional. The result of an inline query that was chosen by a user and sent to their chat partner. Please see our documentation on the feedback collecting for details on how to enable these updates for your bot.
+	CallbackQuery           *CallbackQuery               `json:"callback_query,omitempty"`            // Optional. New incoming callback query
+	ShippingQuery           *ShippingQuery               `json:"shipping_query,omitempty"`            // Optional. New incoming shipping query. Only for invoices with flexible price
+	PreCheckoutQuery        *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`        // Optional. New incoming pre-checkout query. Contains full information about checkout
+	Poll                    *Poll                        `json:"poll,omitempty"`                      // Optional. New poll state. Bots receive only updates about stopped polls and polls, which are sent by the bot
+	PollAnswer              *PollAnswer                  `json:"poll_answer,omitempty"`               // Optional. A user changed their answer in a non-anonymous poll. Bots receive new votes only in polls that were sent by the bot itself.
+	MyChatMember            *ChatMemberUpdated           `json:"my_chat_member,omitempty"`            // Optional. The bot's chat member status was updated in a chat. For private chats, this update is received only when the bot is blocked or unblocked by the user.
+	ChatMember              *ChatMemberUpdated           `json:"chat_member,omitempty"`               // Optional. A chat member's status was updated in a chat. The bot must be an administrator in the chat and must explicitly specify “chat_member” in the list of allowed_updates to receive these updates.
+	ChatJoinRequest         *ChatJoinRequest             `json:"chat_join_request,omitempty"`         // Optional. A request to join the chat has been sent. The bot must have the can_invite_users administrator right in the chat to receive these updates.
+	ChatBoost               *ChatBoostUpdated            `json:"chat_boost,omitempty"`                // Optional. A chat boost was added or changed. The bot must be an administrator in the chat to receive these updates.
+	RemovedChatBoost        *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`        // Optional. A boost was removed from a chat. The bot must be an administrator in the chat to receive these updates.
 }
 
 // WebhookInfo Describes the current status of a webhook.
@@ -63,48 +67,54 @@ type User struct {
 	CanJoinGroups           bool   `json:"can_join_groups,omitempty"`             // Optional. Is true if the bot can be invited to groups. Returned only in getMe.
 	CanReadAllGroupMessages bool   `json:"can_read_all_group_messages,omitempty"` // Optional. is true if privacy mode is disabled for the bot. Returned only in getMe.
 	SupportsInlineQueries   bool   `json:"supports_inline_queries,omitempty"`     // Optional. Is true if the bot supports inline queries. Returned only in getMe.
+	CanConnectToBusiness    bool   `json:"can_connect_to_business,omitempty"`     // Optional. True, if the bot can be connected to a Telegram Business account to receive its messages. Returned only in getMe.
 }
 
 // Chat Represents a chat.
 type Chat struct {
-	ID                                 int64            `json:"id"`                                                // Unique identifier for this chat. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
-	IDString                           string           `json:"-"`                                                 // String ID
-	Type                               string           `json:"type"`                                              // Type of chat can be either “private,” “group,” “supergroup” or “channel”
-	Title                              string           `json:"title,omitempty"`                                   // Optional. Title, for supergroups, channels and group chats
-	UserName                           string           `json:"username,omitempty"`                                // Optional. Username, for private chats, supergroups and channels if available
-	FirstName                          string           `json:"first_name,omitempty"`                              // Optional. First name of the other party in a private chat
-	LastName                           string           `json:"last_name,omitempty"`                               // Optional. Last name of the other party in a private chat
-	IsForum                            bool             `json:"is_forum,omitempty"`                                // Optional. True, if the supergroup chat is a forum (has topics enabled)
-	Photo                              *ChatPhoto       `json:"photo,omitempty"`                                   // Optional. Chat photo. Returned only in getChat.
-	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`                        // Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
-	AvailableReactions                 []ReactionType   `json:"available_reactions,omitempty"`                     // Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
-	AccentColorId                      int              `json:"accent_color_id,omitempty"`                         // Optional. Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details. Returned only in getChat. Always returned in getChat.
-	BackgroundCustomEmojiId            string           `json:"background_custom_emoji_id,omitempty"`              // Optional. Custom emoji identifier of emoji chosen by the chat for the reply header and link preview background. Returned only in getChat.
-	ProfileAccentColorId               int              `json:"profile_accent_color_id,omitempty"`                 // Optional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details. Returned only in getChat.
-	ProfileBackgroundCustomEmojiId     string           `json:"profile_background_custom_emoji_id,omitempty"`      // Optional. Custom emoji identifier of the emoji chosen by the chat for its profile background. Returned only in getChat.
-	EmojiStatusCustomEmojiId           string           `json:"emoji_status_custom_emoji_id,omitempty"`            // Optional. Custom emoji identifier of the emoji status of the chat or the other party in a private chat. Returned only in getChat.
-	EmojiStatusExpirationDate          int64            `json:"emoji_status_expiration_date,omitempty"`            // Optional. Expiration date of the emoji status of the chat or the other party in a private chat, in Unix time, if any. Returned only in getChat.
-	Bio                                string           `json:"bio,omitempty"`                                     // Optional. Bio of the other party in a private chat. Returned only in getChat.
-	HasPrivateForwards                 bool             `json:"has_private_forwards,omitempty"`                    // Optional. True, if privacy settings of the other party in the private chat allow to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
-	HasRestrictedVoiceAndVideoMessages bool             `json:"has_restricted_voice_and_video_messages,omitempty"` // Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
-	JoinToSendMessages                 bool             `json:"join_to_send_messages,omitempty"`                   // Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
-	JoinByRequest                      bool             `json:"join_by_request,omitempty"`                         // Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
-	Description                        string           `json:"description,omitempty"`                             // Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
-	InviteLink                         string           `json:"invite_link,omitempty"`                             // Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
-	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`                          // Optional. The most recent pinned message (by sending date). Returned only in getChat.
-	Permissions                        *ChatPermissions `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
-	SlowModeDelay                      int              `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in getChat.
-	UnRestrictBoostCount               int              `json:"unrestrict_boost_count,omitempty"`                  // Optional. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in getChat.
-	MessageAutoDeleteTime              int              `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted in seconds. Returned only in getChat.
-	HasAggressiveAntiSpamEnabled       bool             `json:"has_aggressive_anti_spam_enabled,omitempty"`        // Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
-	HasHiddenMembers                   bool             `json:"has_hidden_members,omitempty"`                      // Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
-	HasProtectedContent                bool             `json:"has_protected_content,omitempty"`                   // Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
-	HasVisibleHistory                  bool             `json:"has_visible_history,omitempty"`                     // Optional. True, if new chat members will have access to old messages; available only to chat administrators. Returned only in getChat.
-	StickerSetName                     string           `json:"sticker_set_name,omitempty"`                        // Optional. For supergroups, the name of a group sticker set. Returned only in getChat.
-	CanSetStickerSet                   bool             `json:"can_set_sticker_set,omitempty"`                     // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
-	CustomEmojiStickerSetName          string           `json:"custom_emoji_sticker_set_name,omitempty"`           // Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group. Returned only in getChat.
-	LinkedChatID                       int64            `json:"linked_chat_id,omitempty"`                          // Optional. Unique identifier for the linked chat, i.e., the discussion group identifier for a channel and vice versa, for supergroups and channel chats. This identifier may be greater than 32 bits, and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier. Returned only in getChat.
-	Location                           *ChatLocation    `json:"location,omitempty"`                                // Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
+	ID                                 int64                 `json:"id"`                                                // Unique identifier for this chat. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
+	IDString                           string                `json:"-"`                                                 // String ID
+	Type                               string                `json:"type"`                                              // Type of chat can be either “private,” “group,” “supergroup” or “channel”
+	Title                              string                `json:"title,omitempty"`                                   // Optional. Title, for supergroups, channels and group chats
+	UserName                           string                `json:"username,omitempty"`                                // Optional. Username, for private chats, supergroups and channels if available
+	FirstName                          string                `json:"first_name,omitempty"`                              // Optional. First name of the other party in a private chat
+	LastName                           string                `json:"last_name,omitempty"`                               // Optional. Last name of the other party in a private chat
+	IsForum                            bool                  `json:"is_forum,omitempty"`                                // Optional. True, if the supergroup chat is a forum (has topics enabled)
+	Photo                              *ChatPhoto            `json:"photo,omitempty"`                                   // Optional. Chat photo. Returned only in getChat.
+	ActiveUsernames                    []string              `json:"active_usernames,omitempty"`                        // Optional. If non-empty, the list of all active chat usernames; for private chats, supergroups and channels. Returned only in getChat.
+	Birthdate                          *Birthdate            `json:"birthdate,omitempty"`                               // Optional. For private chats, the date of birth of the user. Returned only in getChat.
+	BusinessIntro                      *BusinessIntro        `json:"business_intro,omitempty"`                          // Optional. For private chats with business accounts, the intro of the business. Returned only in getChat.
+	BusinessLocation                   *BusinessLocation     `json:"business_location,omitempty"`                       // Optional. For private chats with business accounts, the location of the business. Returned only in getChat.
+	BusinessOpeningHours               *BusinessOpeningHours `json:"business_opening_hours,omitempty"`                  // Optional. For private chats with business accounts, the opening hours of the business. Returned only in getChat.
+	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`                           // Optional. For private chats, the personal channel of the user. Returned only in getChat.
+	AvailableReactions                 []ReactionType        `json:"available_reactions,omitempty"`                     // Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
+	AccentColorId                      int                   `json:"accent_color_id,omitempty"`                         // Optional. Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details. Returned only in getChat. Always returned in getChat.
+	BackgroundCustomEmojiId            string                `json:"background_custom_emoji_id,omitempty"`              // Optional. Custom emoji identifier of emoji chosen by the chat for the reply header and link preview background. Returned only in getChat.
+	ProfileAccentColorId               int                   `json:"profile_accent_color_id,omitempty"`                 // Optional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details. Returned only in getChat.
+	ProfileBackgroundCustomEmojiId     string                `json:"profile_background_custom_emoji_id,omitempty"`      // Optional. Custom emoji identifier of the emoji chosen by the chat for its profile background. Returned only in getChat.
+	EmojiStatusCustomEmojiId           string                `json:"emoji_status_custom_emoji_id,omitempty"`            // Optional. Custom emoji identifier of the emoji status of the chat or the other party in a private chat. Returned only in getChat.
+	EmojiStatusExpirationDate          int64                 `json:"emoji_status_expiration_date,omitempty"`            // Optional. Expiration date of the emoji status of the chat or the other party in a private chat, in Unix time, if any. Returned only in getChat.
+	Bio                                string                `json:"bio,omitempty"`                                     // Optional. Bio of the other party in a private chat. Returned only in getChat.
+	HasPrivateForwards                 bool                  `json:"has_private_forwards,omitempty"`                    // Optional. True, if privacy settings of the other party in the private chat allow to use tg://user?id=<user_id> links only in chats with the user. Returned only in getChat.
+	HasRestrictedVoiceAndVideoMessages bool                  `json:"has_restricted_voice_and_video_messages,omitempty"` // Optional. True, if the privacy settings of the other party restrict sending voice and video note messages in the private chat. Returned only in getChat.
+	JoinToSendMessages                 bool                  `json:"join_to_send_messages,omitempty"`                   // Optional. True, if users need to join the supergroup before they can send messages. Returned only in getChat.
+	JoinByRequest                      bool                  `json:"join_by_request,omitempty"`                         // Optional. True, if all users directly joining the supergroup need to be approved by supergroup administrators. Returned only in getChat.
+	Description                        string                `json:"description,omitempty"`                             // Optional. Description, for groups, supergroups and channel chats. Returned only in getChat.
+	InviteLink                         string                `json:"invite_link,omitempty"`                             // Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
+	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`                          // Optional. The most recent pinned message (by sending date). Returned only in getChat.
+	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
+	SlowModeDelay                      int                   `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in getChat.
+	UnRestrictBoostCount               int                   `json:"unrestrict_boost_count,omitempty"`                  // Optional. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in getChat.
+	MessageAutoDeleteTime              int                   `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted in seconds. Returned only in getChat.
+	HasAggressiveAntiSpamEnabled       bool                  `json:"has_aggressive_anti_spam_enabled,omitempty"`        // Optional. True, if aggressive anti-spam checks are enabled in the supergroup. The field is only available to chat administrators. Returned only in getChat.
+	HasHiddenMembers                   bool                  `json:"has_hidden_members,omitempty"`                      // Optional. True, if non-administrators can only get the list of bots and administrators in the chat. Returned only in getChat.
+	HasProtectedContent                bool                  `json:"has_protected_content,omitempty"`                   // Optional. True, if messages from the chat can't be forwarded to other chats. Returned only in getChat.
+	HasVisibleHistory                  bool                  `json:"has_visible_history,omitempty"`                     // Optional. True, if new chat members will have access to old messages; available only to chat administrators. Returned only in getChat.
+	StickerSetName                     string                `json:"sticker_set_name,omitempty"`                        // Optional. For supergroups, the name of a group sticker set. Returned only in getChat.
+	CanSetStickerSet                   bool                  `json:"can_set_sticker_set,omitempty"`                     // Optional. True, if the bot can change the group sticker set. Returned only in getChat.
+	CustomEmojiStickerSetName          string                `json:"custom_emoji_sticker_set_name,omitempty"`           // Optional. For supergroups, the name of the group's custom emoji sticker set. Custom emoji from this set can be used by all users and bots in the group. Returned only in getChat.
+	LinkedChatID                       int64                 `json:"linked_chat_id,omitempty"`                          // Optional. Unique identifier for the linked chat, i.e., the discussion group identifier for a channel and vice versa, for supergroups and channel chats. This identifier may be greater than 32 bits, and some programming languages may have difficulty/silent defects in interpreting it. But it is smaller than 52 bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier. Returned only in getChat.
+	Location                           *ChatLocation         `json:"location,omitempty"`                                // Optional. For supergroups, the location to which the supergroup is connected. Returned only in getChat.
 }
 
 // Message Represents a message.
@@ -114,7 +124,9 @@ type Message struct {
 	From                          *User                          `json:"from,omitempty"`                              // Optional. Sender of the message; empty for messages sent to channels. For backward compatibility, the field contains a fake sender user in non-channel chats if the message was sent on behalf of a chat.
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`                       // Optional. Sender of the message, sent on behalf of a chat. For example, the channel itself for channel posts, the supergroup itself for messages from anonymous group administrators, the linked channel for messages automatically forwarded to the discussion group. For backward compatibility, the field contains a fake sender user in non-channel chats if the message was sent on behalf of a chat.
 	SenderBoostCount              int                            `json:"sender_boost_count,omitempty"`                // Optional. If the sender of the message boosted the chat, the number of boosts added by the user
+	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`               // Optional. The bot that actually sent the message on behalf of the business account. Available only for outgoing messages sent on behalf of the connected business account.
 	Date                          int64                          `json:"date"`                                        // date the message was sent in Unix time
+	BusinessConnectionId          string                         `json:"business_connection_id,omitempty"`            // Optional. Unique identifier of the business connection from which the message was received. If non-empty, the message belongs to a chat of the corresponding business account that is independent from any potential bot chat which might share the same identifier.
 	Chat                          Chat                           `json:"chat"`                                        // The Conversation the message belongs to
 	ForwardOrigin                 *MessageOrigin                 `json:"forward_origin,omitempty"`                    // Optional. Information about the original message for forwarded messages
 	IsTopicMessage                bool                           `json:"is_topic_message,omitempty"`                  // Optional. True, if the message is sent to a forum topic
@@ -126,6 +138,7 @@ type Message struct {
 	ViaBot                        *User                          `json:"via_bot,omitempty"`                           // Optional. Bot through which the message was sent
 	EditDate                      int64                          `json:"edit_date,omitempty"`                         // Optional. Date the message was last edited in Unix time
 	HasProtectedContent           bool                           `json:"has_protected_content,omitempty"`             // Optional. True, if the message can't be forwarded
+	IsFromOffline                 bool                           `json:"is_from_offline,omitempty"`                   // Optional. True, if the message was sent by an implicit action, for example, as an away or a greeting business message, or as a scheduled message
 	MediaGroupID                  string                         `json:"media_group_id,omitempty"`                    // Optional. The unique identifier of a media message group this message belongs to
 	AuthorSignature               string                         `json:"author_signature,omitempty"`                  // Optional. Signature of the post-author for messages in channels, or the custom title of an anonymous group administrator
 	Text                          string                         `json:"text,omitempty"`                              // Optional. For text messages, the actual UTF-8 text of the message
@@ -504,16 +517,28 @@ type GeneralForumTopicHidden struct {
 type GeneralForumTopicUnhidden struct {
 }
 
+// SharedUser Contains information about a user that was shared with the bot using a KeyboardButtonRequestUser button.
+type SharedUser struct {
+	UserId    int64        `json:"user_id"`              // Identifier of the shared user. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the user and could be unable to use this identifier, unless the user is already known to the bot by some other means.
+	FirstName string       `json:"first_name,omitempty"` // Optional. First name of the user, if the name was requested by the bot
+	LastName  string       `json:"last_name,omitempty"`  // Optional. Last name of the user, if the name was requested by the bot
+	Username  string       `json:"username,omitempty"`   // Optional. Username of the user, if the username was requested by the bot
+	Photo     []*PhotoSize `json:"photo,omitempty"`      // Optional. Available sizes of the chat photo, if the photo was requested by the bot
+}
+
 // UsersShared Contains information about the users whose identifiers were shared with the bot using a KeyboardButtonRequestUsers button.
 type UsersShared struct {
-	RequestID int     `json:"request_id"` // Identifier of the request
-	UserIds   []int64 `json:"user_ids"`   // Identifiers of the shared users. These numbers may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting them. But they have at most 52 significant bits, so 64-bit integers or double-precision float types are safe for storing these identifiers. The bot may not have access to the users and could be unable to use these identifiers, unless the users are already known to the bot by some other means.
+	RequestID int           `json:"request_id"` // Identifier of the request
+	Users     []*SharedUser `json:"users"`      // Information about users shared with the bot.
 }
 
 // ChatShared Contains information about the chat whose identifier was shared with the bot using a KeyboardButtonRequestChat button.
 type ChatShared struct {
-	RequestID int   `json:"request_id"` // Identifier of the request
-	ChatID    int64 `json:"chat_id"`    // Identifier of the shared chat. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
+	RequestID int          `json:"request_id"`         // Identifier of the request
+	ChatID    int64        `json:"chat_id"`            // Identifier of the shared chat. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type is safe for storing this identifier. The bot may not have access to the chat and could be unable to use this identifier, unless the chat is already known to the bot by some other means.
+	Title     string       `json:"title,omitempty"`    // Optional. Title of the chat, if the title was requested by the bot.
+	Username  string       `json:"username,omitempty"` // Optional. Username of the chat, if the username was requested by the bot and available.
+	Photo     []*PhotoSize `json:"photo,omitempty"`    // Optional. Available sizes of the chat photo, if the photo was requested by the bot
 }
 
 // WriteAccessAllowed Represents a service message about a user allowing a bot to write messages
@@ -644,10 +669,13 @@ type KeyboardButton struct {
 // KeyboardButtonRequestUsers Defines the criteria used to request suitable users.
 // The identifiers of the selected users will be shared with the bot when the corresponding button is pressed.
 type KeyboardButtonRequestUsers struct {
-	RequestId     int  `json:"request_id"`                // Signed 32-bit identifier of the request that will be received back in the UsersShared object. Must be unique within the message.
-	UserIsBot     bool `json:"user_is_bot,omitempty"`     // Optional. Pass True to request bots, pass False to request regular users. If not specified, no additional restrictions are applied.
-	UserIsPremium bool `json:"user_is_premium,omitempty"` // Optional. Pass True to request premium users, pass False to request non-premium users. If not specified, no additional restrictions are applied.
-	MaxQuantity   int  `json:"max_quantity,omitempty"`    // Optional. The maximum number of users to be selected; 1-10. Defaults to 1.
+	RequestId       int  `json:"request_id"`                 // Signed 32-bit identifier of the request that will be received back in the UsersShared object. Must be unique within the message.
+	UserIsBot       bool `json:"user_is_bot,omitempty"`      // Optional. Pass True to request bots, pass False to request regular users. If not specified, no additional restrictions are applied.
+	UserIsPremium   bool `json:"user_is_premium,omitempty"`  // Optional. Pass True to request premium users, pass False to request non-premium users. If not specified, no additional restrictions are applied.
+	MaxQuantity     int  `json:"max_quantity,omitempty"`     // Optional. The maximum number of users to be selected; 1-10. Defaults to 1.
+	RequestName     bool `json:"request_name,omitempty"`     // Optional. Pass True to request the users' first and last name
+	RequestUsername bool `json:"request_username,omitempty"` // Optional. Pass True to request the users' username
+	RequestPhoto    bool `json:"request_photo,omitempty"`    // Optional. Pass True to request the users' photo
 }
 
 // KeyboardButtonRequestChat Defines the criteria used to request a suitable chat.
@@ -661,6 +689,9 @@ type KeyboardButtonRequestChat struct {
 	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"` // Optional. A JSON-serialized object lists the required administrator rights of the user in the chat. The rights must be a superset of bot_administrator_rights. If not specified, no additional restrictions are applied.
 	BotAdministratorRights  *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`  // Optional. A JSON-serialized object listing the required administrator rights of the bot in the chat. The rights must be a subset of user_administrator_rights. If not specified, no additional restrictions are applied.
 	BotIsMember             bool                     `json:"bot_is_member,omitempty"`             // Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
+	RequestTitle            bool                     `json:"request_title,omitempty"`             // Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
+	RequestUsername         bool                     `json:"request_username,omitempty"`          // Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
+	RequestPhoto            bool                     `json:"request_photo,omitempty"`             // Optional. Pass True to request a chat with the bot as a member. Otherwise, no additional restrictions are applied.
 }
 
 // KeyboardButtonPollType Represents a type of poll, which is allowed to be created and sent when the corresponding button is pressed.
@@ -876,6 +907,38 @@ type ChatPermissions struct {
 	CanInviteUsers        bool `json:"can_invite_users,omitempty"`          // Optional. True, if the user is allowed to invite new users to the chat
 	CanPinMessages        bool `json:"can_pin_messages,omitempty"`          // Optional. True, if the user is allowed to pin messages. Ignored in public supergroups
 	CanManageTopics       bool `json:"can_manage_topics,omitempty"`         // Optional. True, if the user is allowed to create forum topics. If omitted, defaults to the value of can_pin_messages
+}
+
+// Birthdate //
+type Birthdate struct {
+	Day   int `json:"day"`            // Day of the user's birth; 1-31
+	Month int `json:"month"`          // Month of the user's birth; 1-12
+	Year  int `json:"year,omitempty"` // Optional. Year of the user's birth
+}
+
+// BusinessIntro //
+type BusinessIntro struct {
+	Title   string   `json:"title,omitempty"`   // Optional. Title text of the business intro
+	Message string   `json:"message,omitempty"` // Optional. Message text of the business intro
+	Sticker *Sticker `json:"sticker,omitempty"` // Optional. Sticker of the business intro
+}
+
+// BusinessLocation //
+type BusinessLocation struct {
+	Address  string    `json:"address"`            // Address of the business
+	Location *Location `json:"location,omitempty"` // Optional. Location of the business
+}
+
+// BusinessOpeningHoursInterval //
+type BusinessOpeningHoursInterval struct {
+	OpeningMinute int `json:"opening_minute"` // The minute's sequence number in a week, starting on Monday, marking the start of the time interval during which the business is open; 0 - 7 * 24 * 60
+	ClosingMinute int `json:"closing_minute"` // The minute's sequence number in a week, starting on Monday, marking the end of the time interval during which the business is open; 0 - 8 * 24 * 60
+}
+
+// BusinessOpeningHours //
+type BusinessOpeningHours struct {
+	TimeZoneName string                          `json:"time_zone_name"` // Unique name of the time zone for which the opening hours are defined
+	OpeningHours []*BusinessOpeningHoursInterval `json:"opening_hours"`  // List of time intervals describing business opening hours
 }
 
 // ChatLocation Represents a location to which a chat is connected.
@@ -1094,6 +1157,23 @@ type UserChatBoosts struct {
 	Boosts []ChatBoost `json:"boosts"` // The list of boosts added to the chat by the user
 }
 
+// BusinessConnection Describes the connection of the bot with a business account.
+type BusinessConnection struct {
+	ID         string `json:"id"`           // Unique identifier of the business connection
+	User       User   `json:"user"`         // Business account user that created the business connection
+	UserChatId int64  `json:"user_chat_id"` // Identifier of a private chat with the user who created the business connection. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a 64-bit integer or double-precision float type are safe for storing this identifier.
+	Date       int64  `json:"date"`         // Date the connection was established in Unix time
+	CanReply   bool   `json:"can_reply"`    // True, if the bot can act on behalf of the business account in chats that were active in the last 24 hours
+	IsEnabled  bool   `json:"is_enabled"`   // True, if the connection is active
+}
+
+// BusinessMessagesDeleted Received when messages are deleted from a connected business account.
+type BusinessMessagesDeleted struct {
+	BusinessConnectionId string `json:"business_connection_id"` // Unique identifier of the business connection
+	Chat                 Chat   `json:"chat"`                   // Information about a chat in the business account. The bot may not have access to the chat or the corresponding user.
+	MessageIds           []int  `json:"message_ids"`            // A JSON-serialized list of identifiers of deleted messages in the chat of the business account
+}
+
 // ResponseParameters are various errors that can be returned in APIResponse.
 type ResponseParameters struct {
 	MigrateToChatID int64 `json:"migrate_to_chat_id,omitempty"` // Optional. The group has been migrated to a supergroup with the specified identifier. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
@@ -1196,8 +1276,6 @@ type StickerSet struct {
 	Name        string     `json:"name"`                      // Sticker set name
 	Title       string     `json:"title"`                     // Sticker set title
 	StickerType string     `json:"sticker_type"`              // Type of stickers in the set, currently one of “regular,” “masks,” “custom_emoji”
-	IsAnimated  bool       `json:"is_animated"`               // True, if the sticker set contains animated stickers
-	IsVideo     bool       `json:"is_video"`                  // True, if the sticker set contains video stickers
 	Stickers    []Sticker  `json:"stickers"`                  // List of all set stickers
 	Thumbnail   *PhotoSize `json:"thumb,thumbnail,omitempty"` // Optional. Sticker set thumbnail in the .WEBP, .TGS, or .WEBM format
 }
@@ -1213,6 +1291,7 @@ type MaskPosition struct {
 // InputSticker Describes a sticker to be added to a sticker set.
 type InputSticker struct {
 	Sticker      RequestFileData `json:"sticker"`       // The added sticker. Pass a file_id as a String to send a file that already exists on the Telegram servers, pass an HTTP URL as a String for Telegram to get a file from the Internet, or upload a new one using multipart/form-data. Animated and video stickers can't be uploaded via HTTP URL.
+	Format       string          `json:"format"`        // Format of the added sticker, must be one of “static” for a .WEBP or .PNG image, “animated” for a .TGS animation, “video” for a WEBM video
 	EmojiList    []string        `json:"emoji_list"`    // List of 1-20 emoji associated with the sticker
 	MaskPosition *MaskPosition   `json:"mask_position"` // Optional. Position where the mask should be placed on faces. For “mask” stickers only.
 	Keywords     []string        `json:"keywords"`      // Optional. List of 0-20 search keywords for the sticker with total length of up to 64 characters. For “regular” and “custom_emoji” stickers only.

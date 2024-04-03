@@ -27,7 +27,6 @@ func main() {
 	stickers2 := tg.NewInputSticker()
 
 	msg.Stickers = []any{stickers1, stickers2}
-	msg.StickerFormat = "static" // “static”, “animated”, “video”
 
 	_, err = tg.CreateNewStickerSet(msg)
 	if err != nil {

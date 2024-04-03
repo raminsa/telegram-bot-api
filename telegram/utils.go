@@ -700,6 +700,11 @@ func (t *Api) NewGetUserChatBoosts() *types.GetUserChatBoosts {
 	return &types.GetUserChatBoosts{}
 }
 
+// NewGetBusinessConnection creates a new get business connection.
+func (t *Api) NewGetBusinessConnection() *types.GetBusinessConnection {
+	return &types.GetBusinessConnection{}
+}
+
 // NewSetMyCommands creates a new set my commands message.
 func (t *Api) NewSetMyCommands(commands ...types.BotCommand) *types.SetMyCommands {
 	return &types.SetMyCommands{Commands: commands}
@@ -954,6 +959,11 @@ func (t *Api) NewSetStickerPositionInSet() *types.SetStickerPositionInSet {
 // NewDeleteStickerFromSet creates a new delete sticker from set message.
 func (t *Api) NewDeleteStickerFromSet() *types.DeleteStickerFromSet {
 	return &types.DeleteStickerFromSet{}
+}
+
+// NewReplaceStickerInSet creates a new replace sticker in set.
+func (t *Api) NewReplaceStickerInSet() *types.ReplaceStickerInSet {
+	return &types.ReplaceStickerInSet{}
 }
 
 // NewSetStickerEmojiList creates a new set sticker emoji list message.
