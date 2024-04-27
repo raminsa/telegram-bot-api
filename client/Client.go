@@ -8,8 +8,8 @@ import (
 	"net/url"
 )
 
-type Client struct {
-	Client            *http.Client
+type Config struct {
+	HttpC             *http.Client
 	Proxy             string
 	ForceV4           bool
 	DisableSSLVerify  bool
@@ -17,8 +17,8 @@ type Client struct {
 	BaseUrl           string
 }
 
-// MakeClient make a new client to use telegram api
-func (c Client) MakeClient() (*http.Client, error) {
+// Setup setup a new client to use telegram api
+func (c *Config) Setup() error {
 	var proxy func(*http.Request) (*url.URL, error)
 	var myDC func(ctx context.Context, network, addr string) (net.Conn, error)
 	var TLSClientConfig *tls.Config
@@ -27,7 +27,7 @@ func (c Client) MakeClient() (*http.Client, error) {
 	if c.Proxy != "" {
 		proxyUrl, err := url.Parse(c.Proxy)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		if proxyUrl != nil {
 			proxy = http.ProxyURL(proxyUrl)
@@ -56,7 +56,7 @@ func (c Client) MakeClient() (*http.Client, error) {
 		forceAttemptHTTP2 = true
 	}
 
-	c.Client = &http.Client{
+	c.HttpC = &http.Client{
 		Transport: &http.Transport{
 			Proxy:             proxy,
 			ForceAttemptHTTP2: forceAttemptHTTP2,
@@ -65,5 +65,5 @@ func (c Client) MakeClient() (*http.Client, error) {
 		},
 	}
 
-	return c.Client, nil
+	return nil
 }

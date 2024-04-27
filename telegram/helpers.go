@@ -53,7 +53,7 @@ func (t *Api) MakeRequest(endpoint string, params types.Params) (*types.APIRespo
 
 	var timeout time.Duration
 	if t.Bot.RequestTimeout == 0 {
-		timeout = 2 * time.Minute
+		timeout = 90 * time.Second
 	} else {
 		timeout = t.Bot.RequestTimeout
 	}

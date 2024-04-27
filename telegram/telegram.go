@@ -11,11 +11,11 @@ import (
 	"github.com/raminsa/telegram-bot-api/types"
 )
 
-type Api struct {
-	Bot types.BotApi
-}
-
 var Core Api
+
+type Api struct {
+	Bot *types.BotApi
+}
 
 // BaseUrl set custom api base url.
 func (t *Api) BaseUrl(baseUrl string) {
@@ -23,83 +23,73 @@ func (t *Api) BaseUrl(baseUrl string) {
 }
 
 // Client make new telegram client.
-func Client() *client.Client {
-	return &client.Client{}
+func Client() *client.Config {
+	return &client.Config{}
 }
 
 // New make new telegram bot api response.
-func New(token string) (Core Api, err error) {
+func New(token string) (*Api, error) {
 	if token == "" {
-		err = errors.New("bot token missed")
-		return
+		return nil, errors.New("bot token missed")
 	}
 
 	c := Client()
 	c.BaseUrl = config.DefaultBaseUrl
 
-	var makeClient *http.Client
-	makeClient, err = c.MakeClient()
+	err := c.Setup()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
-
-	return
+	Core.Bot = &types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: c.HttpC}
+	return &Core, nil
 }
 
 // NewWithBaseUrl make new telegram bot api response with custom base url.
-func NewWithBaseUrl(token, baseUrl string) (Core Api, err error) {
+func NewWithBaseUrl(token, baseUrl string) (*Api, error) {
 	if token == "" {
-		err = errors.New("bot token missed")
-		return
+		return nil, errors.New("bot token missed")
 	}
 	if baseUrl == "" {
-		err = errors.New("base url missed")
-		return
+		return nil, errors.New("base url missed")
 	}
 
 	c := Client()
 	c.BaseUrl = baseUrl
 
-	var makeClient *http.Client
-	makeClient, err = c.MakeClient()
+	err := c.Setup()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	Core.Bot = types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: makeClient}
-
-	return
+	Core.Bot = &types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: c.HttpC}
+	return &Core, nil
 }
 
 // NewWithCustomClient make new telegram bot api response with a custom client.
-func NewWithCustomClient(token string, Client *client.Client) (Core Api, err error) {
+func NewWithCustomClient(token string, c *client.Config) (*Api, error) {
 	if token == "" {
-		err = errors.New("bot token missed")
-		return
+		return nil, errors.New("bot token missed")
 	}
-	if Client.BaseUrl == "" {
-		Client.BaseUrl = config.DefaultBaseUrl
+	if c.BaseUrl == "" {
+		c.BaseUrl = config.DefaultBaseUrl
 	}
 
-	var makeClient *http.Client
-	makeClient, err = Client.MakeClient()
+	err := c.Setup()
 	if err != nil {
-		return
+		return nil, err
 	}
 
-	Core.Bot = types.BotApi{Token: token, BaseUrl: Client.BaseUrl, Client: makeClient}
-
-	return
+	Core.Bot = &types.BotApi{Token: token, BaseUrl: c.BaseUrl, Client: c.HttpC}
+	return &Core, nil
 }
 
 // HandleUpdate parses and return update received via webhook
-func HandleUpdate(r *http.Request) (types.Update, error) {
+func HandleUpdate(r *http.Request) (*types.Update, error) {
 	var update types.Update
 
 	if r.Method != http.MethodPost {
-		return update, errors.New("wrong HTTP method required POST")
+		return nil, errors.New("wrong HTTP method required POST")
 	}
 	defer func(Body io.ReadCloser) {
 		_ = Body.Close()
@@ -107,10 +97,10 @@ func HandleUpdate(r *http.Request) (types.Update, error) {
 
 	err := json.NewDecoder(r.Body).Decode(&update)
 	if err != nil {
-		return update, err
+		return nil, err
 	}
 
-	return update, nil
+	return &update, nil
 }
 
 // HandleUpdateError response writer error to requested server
