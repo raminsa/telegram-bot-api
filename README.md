@@ -57,10 +57,6 @@ func main() {
 	getUpdates.Timeout = 60
 	getUpdates.Limit = 100
 	updates := tg.GetUpdatesChan(getUpdates)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	for update := range updates {
 		fmt.Println(update.UpdateID, getUpdates.Offset)
 		if update.UpdateID >= getUpdates.Offset {
@@ -96,7 +92,10 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err = telegram.HandleUpdateError(w, err)
+		if err != nil {
+			//handle err
+		}
 		return
 	}
 
@@ -129,7 +128,10 @@ func main() {
 func handleWebhook(w http.ResponseWriter, r *http.Request) {
 	update, err := telegram.HandleUpdate(r)
 	if err != nil {
-		telegram.HandleUpdateError(w, err)
+		err := telegram.HandleUpdateError(w, err)
+		if err != nil {
+			//handle err
+		}
 		return
 	}
 
@@ -173,7 +175,7 @@ func listenForWebhook(maxWebhookConnections int) types.UpdatesChannel {
 		if update, err := telegram.HandleUpdate(r); err != nil {
 			return
 		} else {
-			ch <- update
+			ch <- *update
 		}
 	})
 
@@ -201,7 +203,7 @@ func main() {
 	client.ForceV4 = true
 	client.DisableSSLVerify = true
 	client.ForceAttemptHTTP2 = true
-	tg, err := telegram.NewWithCustomClient("BotToken", &client)
+	tg, err := telegram.NewWithCustomClient("BotToken", client)
 	if err != nil {
 		log.Fatal(err)
 	}
