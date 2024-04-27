@@ -19,10 +19,6 @@ func main() {
 	getUpdates.Limit = 100
 
 	updates := tg.GetUpdatesChan(getUpdates)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	for update := range updates {
 		fmt.Println(update.UpdateID, getUpdates.Offset)
 		if update.UpdateID >= getUpdates.Offset {
