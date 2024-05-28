@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/raminsa/telegram-bot-api/types"
 	"log"
 
 	"github.com/raminsa/telegram-bot-api/telegram"
@@ -15,7 +16,16 @@ func main() {
 	msg := tg.NewSendPoll()
 	msg.ChatID = 1234
 	msg.Question = "question"
-	msg.Options = []string{"option1", "option2"}
+
+	var inputPollOptions []types.InputPollOption
+	inputPollOptions = append(inputPollOptions, types.InputPollOption{
+		Text: "text1",
+	})
+	inputPollOptions = append(inputPollOptions, types.InputPollOption{
+		Text: "text2",
+	})
+
+	msg.Options = inputPollOptions
 
 	_, err = tg.SendPoll(msg)
 	if err != nil {
