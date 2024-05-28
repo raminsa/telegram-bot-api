@@ -1273,6 +1273,11 @@ func (t *Api) NewAnswerPreCheckoutQuery() *types.AnswerPreCheckoutQuery {
 	return &types.AnswerPreCheckoutQuery{}
 }
 
+// NewRefundStarPayment creates a new refund star payment.
+func (t *Api) NewRefundStarPayment() *types.RefundStarPayment {
+	return &types.RefundStarPayment{}
+}
+
 // NewSetPassportDataErrors creates a new set passport data errors.
 func (t *Api) NewSetPassportDataErrors() *types.SetPassportDataErrors {
 	return &types.SetPassportDataErrors{}

@@ -1156,7 +1156,7 @@ func (t *Api) LeaveChat(c *types.LeaveChat) (bool, error) {
 // GetChat Use this method to get up-to-date information about the chat
 // (current name of the user for one-on-one conversations, current username of a user, group or channel, etc.).
 // Returns a Chat object on success.
-func (t *Api) GetChat(c *types.GetChat) (*types.Chat, error) {
+func (t *Api) GetChat(c *types.GetChat) (*types.ChatFullInfo, error) {
 	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
 		return nil, errors.New("ChatID or Username Required")
 	}
@@ -1166,7 +1166,7 @@ func (t *Api) GetChat(c *types.GetChat) (*types.Chat, error) {
 		return nil, err
 	}
 
-	var chat types.Chat
+	var chat types.ChatFullInfo
 	err = json.Unmarshal(resp.Result, &chat)
 
 	if err == nil {
@@ -2685,6 +2685,30 @@ func (t *Api) AnswerPreCheckoutQuery(c *types.AnswerPreCheckoutQuery) (bool, err
 		if c.ErrorMessage == "" {
 			return false, errors.New("ErrorMessage Required")
 		}
+	}
+
+	resp, err := t.Request(c)
+	if err != nil {
+		return false, err
+	}
+
+	var result bool
+	err = json.Unmarshal(resp.Result, &result)
+	if err != nil {
+		return false, err
+	}
+
+	return result, err
+}
+
+// RefundStarPayment Refunds a successful payment in Telegram Stars.
+// Returns True on success.
+func (t *Api) RefundStarPayment(c *types.RefundStarPayment) (bool, error) {
+	if c.UserId == "" {
+		return false, errors.New("UserId Required")
+	}
+	if c.TelegramPaymentChargeId == "" {
+		return false, errors.New("TelegramPaymentChargeId Required")
 	}
 
 	resp, err := t.Request(c)

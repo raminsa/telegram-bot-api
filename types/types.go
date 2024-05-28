@@ -72,6 +72,18 @@ type User struct {
 
 // Chat Represents a chat.
 type Chat struct {
+	ID        int64  `json:"id"`                   // Unique identifier for this chat. This number may have more than 32 significant bits and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type are safe for storing this identifier.
+	IDString  string `json:"-"`                    // String ID
+	Type      string `json:"type"`                 // Type of the chat, can be either “private”, “group”, “supergroup” or “channel”
+	Title     string `json:"title,omitempty"`      // Optional. Title, for supergroups, channels and group chats
+	UserName  string `json:"username,omitempty"`   // Optional. Username, for private chats, supergroups and channels if available
+	FirstName string `json:"first_name,omitempty"` // Optional. First name of the other party in a private chat
+	LastName  string `json:"last_name,omitempty"`  // Optional. Last name of the other party in a private chat
+	IsForum   bool   `json:"is_forum,omitempty"`   // Optional. True, if the supergroup chat is a forum (has topics enabled)
+}
+
+// ChatFullInfo Contains full information about a chat.
+type ChatFullInfo struct {
 	ID                                 int64                 `json:"id"`                                                // Unique identifier for this chat. This number may have more than 32 significant bits, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this identifier.
 	IDString                           string                `json:"-"`                                                 // String ID
 	Type                               string                `json:"type"`                                              // Type of chat can be either “private,” “group,” “supergroup” or “channel”
@@ -88,7 +100,8 @@ type Chat struct {
 	BusinessOpeningHours               *BusinessOpeningHours `json:"business_opening_hours,omitempty"`                  // Optional. For private chats with business accounts, the opening hours of the business. Returned only in getChat.
 	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`                           // Optional. For private chats, the personal channel of the user. Returned only in getChat.
 	AvailableReactions                 []ReactionType        `json:"available_reactions,omitempty"`                     // Optional. List of available reactions allowed in the chat. If omitted, then all emoji reactions are allowed. Returned only in getChat.
-	AccentColorId                      int                   `json:"accent_color_id,omitempty"`                         // Optional. Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details. Returned only in getChat. Always returned in getChat.
+	AccentColorId                      int                   `json:"accent_color_id,omitempty"`                         // Identifier of the accent color for the chat name and backgrounds of the chat photo, reply header, and link preview. See accent colors for more details. Returned only in getChat. Always returned in getChat.
+	MaxReactionCount                   int                   `json:"max_reaction_count,omitempty"`                      // The maximum number of reactions that can be set on a message in the chat
 	BackgroundCustomEmojiId            string                `json:"background_custom_emoji_id,omitempty"`              // Optional. Custom emoji identifier of emoji chosen by the chat for the reply header and link preview background. Returned only in getChat.
 	ProfileAccentColorId               int                   `json:"profile_accent_color_id,omitempty"`                 // Optional. Identifier of the accent color for the chat's profile background. See profile accent colors for more details. Returned only in getChat.
 	ProfileBackgroundCustomEmojiId     string                `json:"profile_background_custom_emoji_id,omitempty"`      // Optional. Custom emoji identifier of the emoji chosen by the chat for its profile background. Returned only in getChat.
@@ -144,6 +157,7 @@ type Message struct {
 	Text                          string                         `json:"text,omitempty"`                              // Optional. For text messages, the actual UTF-8 text of the message
 	Entities                      []*MessageEntity               `json:"entities,omitempty"`                          // Optional. For text messages, special entities like usernames, URLs, bot commands, etc. that appear in the text
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`              // Optional. Options used for link preview generation for the message, if it is a text message and link preview options were changed
+	EffectId                      string                         `json:"effect_id,omitempty"`                         // Optional. Unique identifier of the message effect added to the message
 	Animation                     *Animation                     `json:"animation,omitempty"`                         // Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
 	Audio                         *Audio                         `json:"audio,omitempty"`                             // Optional. Message is an audio file, information about the file
 	Document                      *Document                      `json:"document,omitempty"`                          // Optional. Message is a general file, information about the file
@@ -155,6 +169,7 @@ type Message struct {
 	Voice                         *Voice                         `json:"voice,omitempty"`                             // Optional. Message is a voice message, information about the file
 	Caption                       string                         `json:"caption,omitempty"`                           // Optional. Caption for the animation, audio, document, photo, video or voice
 	CaptionEntities               []*MessageEntity               `json:"caption_entities,omitempty"`                  // Optional. For messages with a caption, special entities like usernames, URLs, bot commands, etc. that appear in the caption
+	ShowCaptionAboveMedia         bool                           `json:"show_caption_above_media,omitempty"`          // Optional. True, if the caption must be shown above the message media
 	HasMediaSpoiler               bool                           `json:"has_media_spoiler,omitempty"`                 // Optional. True, if the message media is covered by a spoiler animation
 	Contact                       *Contact                       `json:"contact,omitempty"`                           // Optional. Message is a shared contact, information about the contact
 	Dice                          *Dice                          `json:"dice,omitempty"`                              // Optional. Message is a dice with random value
@@ -183,6 +198,7 @@ type Message struct {
 	PassportData                  *PassportData                  `json:"passport_data,omitempty"`                     // Optional. Telegram Passport data
 	ProximityAlertTriggered       *ProximityAlertTriggered       `json:"proximity_alert_triggered,omitempty"`         // Optional. Service message. A user in the chat triggered another user's proximity alert while sharing a Live Location.
 	BoostAdded                    *ChatBoostAdded                `json:"boost_added,omitempty"`                       // Optional. Service message: user boosted the chat
+	ChatBackgroundSet             *ChatBackground                `json:"chat_background_set,omitempty"`               // Optional. Service message: chat background set
 	ForumTopicCreated             *ForumTopicCreated             `json:"forum_topic_created,omitempty"`               // Optional. Service message: forum topic created
 	ForumTopicEdited              *ForumTopicEdited              `json:"forum_topic_edited,omitempty"`                // Optional. Service message: forum topic edited
 	ForumTopicClosed              *ForumTopicClosed              `json:"forum_topic_closed,omitempty"`                // Optional. Service message: a forum topic closed
@@ -415,8 +431,16 @@ type Dice struct {
 
 // PollOption Contains information about one answer option in a poll.
 type PollOption struct {
-	Text       string `json:"text"`        // Option text, 1-100 characters
-	VoterCount int    `json:"voter_count"` // Number of users that voted for this option
+	Text         string           `json:"text"`          // Option text, 1-100 characters
+	TextEntities []*MessageEntity `json:"text_entities"` // Optional. Special entities that appear in the option text. Currently, only custom emoji entities are allowed in poll option texts
+	VoterCount   int              `json:"voter_count"`   // Number of users that voted for this option
+}
+
+// InputPollOption Contains information about one answer option in a poll to send.
+type InputPollOption struct {
+	Text          string           `json:"text"`            // Option text, 1-100 characters
+	TextParseMode string           `json:"text_parse_mode"` // Optional. Mode for parsing entities in the text. See formatting options for more details. Currently, only custom emoji entities are allowed
+	TextEntities  []*MessageEntity `json:"text_entities"`   // Optional. A JSON-serialized list of special entities that appear in the poll option text. It can be specified instead of text_parse_mode
 }
 
 // PollAnswer Represents an answer of a user in a non-anonymous poll.
@@ -431,6 +455,7 @@ type PollAnswer struct {
 type Poll struct {
 	ID                    string           `json:"id"`                             // Unique poll identifier
 	Question              string           `json:"question"`                       // Poll question, 1-300 characters
+	QuestionEntities      []*MessageEntity `json:"question_entities"`              // Optional. Special entities that appear in the question. Currently, only custom emoji entities are allowed in poll questions
 	Options               []PollOption     `json:"options"`                        // List of poll options
 	TotalVoterCount       int              `json:"total_voter_count"`              // Total number of users that voted in the poll
 	IsClosed              bool             `json:"is_closed"`                      // True, if the poll is closed
@@ -486,6 +511,78 @@ type MessageAutoDeleteTimerChanged struct {
 // ChatBoostAdded Represents a service message about a user boosting a chat.
 type ChatBoostAdded struct {
 	BoostCount int `json:"boost_count"` // Number of boosts added by the user
+}
+
+// BackgroundFill Describes the way a background is filled based on the selected colors. Currently, it can be one of
+type BackgroundFill struct {
+	BackgroundFillSolid
+	BackgroundFillGradient
+	BackgroundFillFreeformGradient
+}
+
+// BackgroundFillSolid Filled using the selected color.
+type BackgroundFillSolid struct {
+	Type  string `json:"type"`  // Type of the background fill, always “solid”
+	Color int    `json:"color"` // The color of the background fill in the RGB24 format
+}
+
+// BackgroundFillGradient Automatically filled based on the selected colors.
+type BackgroundFillGradient struct {
+	Type          string `json:"type"`           // Type of the background fill, always “gradient”
+	TopColor      int    `json:"top_color"`      // Top color of the gradient in the RGB24 format
+	BottomColor   int    `json:"bottom_color"`   // Bottom color of the gradient in the RGB24 format
+	RotationAngle int    `json:"rotation_angle"` // Clockwise rotation angle of the background fill in degrees; 0-359
+}
+
+// BackgroundFillFreeformGradient Automatically filled based on the selected colors.
+type BackgroundFillFreeformGradient struct {
+	Type   string `json:"type"`   // Type of the background fill, always “freeform_gradient”
+	Colors []int  `json:"colors"` // A list of the 3 or 4 base colors that are used to generate the freeform gradient in the RGB24 format
+}
+
+// BackgroundType Describes the type of a background. Currently, it can be one of
+type BackgroundType struct {
+	BackgroundTypeFill
+	BackgroundTypeWallpaper
+	BackgroundTypePattern
+	BackgroundTypeChatTheme
+}
+
+// BackgroundTypeFill Automatically filled based on the selected colors.
+type BackgroundTypeFill struct {
+	Type             string         `json:"type"`               // Type of the background, always “fill”
+	Fill             BackgroundFill `json:"fill"`               // The background fill
+	DarkThemeDimming int            `json:"dark_theme_dimming"` // Dimming of the background in dark themes, as a percentage; 0-100
+}
+
+// BackgroundTypeWallpaper Wallpaper in the JPEG format.
+type BackgroundTypeWallpaper struct {
+	Type             string   `json:"type"`               // Type of the background, always “wallpaper”
+	Document         Document `json:"document"`           // Document with the wallpaper
+	DarkThemeDimming int      `json:"dark_theme_dimming"` // Dimming of the background in dark themes, as a percentage; 0-100
+	IsBlurred        bool     `json:"is_blurred"`         // Optional. True, if the wallpaper is downscaled to fit in a 450x450 square and then box-blurred with radius 12
+	IsMoving         bool     `json:"is_moving"`          // Optional. True, if the background moves slightly when the device is tilted
+}
+
+// BackgroundTypePattern PNG or TGV (gzipped subset of SVG with MIME type “application/x-tgwallpattern”) pattern to be combined with the background fill chosen by the user.
+type BackgroundTypePattern struct {
+	Type       string         `json:"type"`        // Type of the background, always “pattern”
+	Document   Document       `json:"document"`    // Document with the pattern
+	Fill       BackgroundFill `json:"fill"`        // The background fill that is combined with the pattern
+	Intensity  int            `json:"intensity"`   // Intensity of the pattern when it is shown above the filled background; 0-100
+	IsInverted bool           `json:"is_inverted"` // Optional. True, if the background fill must be applied only to the pattern itself. All other pixels are black in this case. For dark themes only
+	IsMoving   bool           `json:"is_moving"`   // Optional. True, if the background moves slightly when the device is tilted
+}
+
+// BackgroundTypeChatTheme Taken directly from a built-in chat theme.
+type BackgroundTypeChatTheme struct {
+	Type      string `json:"type"`       // Type of the background, always “chat_theme”
+	ThemeName string `json:"theme_name"` // Name of the chat theme, which is usually an emoji
+}
+
+// ChatBackground Represents a chat background.
+type ChatBackground struct {
+	Type BackgroundType `json:"type"` // Number of boosts added by the user
 }
 
 // ForumTopicCreated Represents a service message about a new forum topic created in the chat.
@@ -843,6 +940,7 @@ type ChatMemberUpdated struct {
 	OldChatMember           ChatMember      `json:"old_chat_member"`                       // Previous information about the chat member
 	NewChatMember           ChatMember      `json:"new_chat_member"`                       // New information about the chat member
 	InviteLink              *ChatInviteLink `json:"invite_link,omitempty"`                 // Optional. Chat invite link, which was used by the user to join the chat; for joining by invite link events only.
+	ViaJoinRequest          bool            `json:"via_join_request,omitempty"`            // Optional. True, if the user joined the chat after sending a direct join request without using an invite link and being approved by an administrator
 	ViaChatFolderInviteLink bool            `json:"via_chat_folder_invite_link,omitempty"` // Optional. True, if the user joined the chat via a chat folder invite link
 }
 
@@ -1191,41 +1289,44 @@ type InputMedia struct {
 
 // InputMediaPhoto Represents a photo to be sent.
 type InputMediaPhoto struct {
-	Type            string           `json:"type"`                       // Type of the result must be photoed
-	Media           RequestFileData  `json:"media"`                      // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
-	Caption         string           `json:"caption,omitempty"`          // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
-	ParseMode       string           `json:"parse_mode,omitempty"`       // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"` // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	HasSpoiler      bool             `json:"has_spoiler,omitempty"`      // Optional. Pass True if the photo needs to be covered with a spoiler animation
+	Type                  string           `json:"type"`                               // Type of the result must be photoed
+	Media                 RequestFileData  `json:"media"`                              // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
+	Caption               string           `json:"caption,omitempty"`                  // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
+	ParseMode             string           `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool             `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	HasSpoiler            bool             `json:"has_spoiler,omitempty"`              // Optional. Pass True if the photo needs to be covered with a spoiler animation
 }
 
 // InputMediaVideo Represents a video to be sent.
 type InputMediaVideo struct {
-	Type              string           `json:"type"`                         // Type of the result must be video
-	Media             RequestFileData  `json:"media"`                        // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
-	Thumbnail         RequestFileData  `json:"thumb,thumbnail,omitempty"`    // Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
-	Caption           string           `json:"caption,omitempty"`            // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
-	ParseMode         string           `json:"parse_mode,omitempty"`         // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities   []*MessageEntity `json:"caption_entities,omitempty"`   // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	Width             int              `json:"width,omitempty"`              // Optional. Video width
-	Height            int              `json:"height,omitempty"`             // Optional. Video height
-	Duration          int              `json:"duration,omitempty"`           // Optional. Video duration in seconds
-	SupportsStreaming bool             `json:"supports_streaming,omitempty"` // Optional. Pass True, if the uploaded video is suitable for streaming
-	HasSpoiler        bool             `json:"has_spoiler,omitempty"`        // Optional. Pass True if the video needs to be covered with a spoiler animation
+	Type                  string           `json:"type"`                               // Type of the result must be video
+	Media                 RequestFileData  `json:"media"`                              // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
+	Thumbnail             RequestFileData  `json:"thumb,thumbnail,omitempty"`          // Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+	Caption               string           `json:"caption,omitempty"`                  // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
+	ParseMode             string           `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool             `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	Width                 int              `json:"width,omitempty"`                    // Optional. Video width
+	Height                int              `json:"height,omitempty"`                   // Optional. Video height
+	Duration              int              `json:"duration,omitempty"`                 // Optional. Video duration in seconds
+	SupportsStreaming     bool             `json:"supports_streaming,omitempty"`       // Optional. Pass True, if the uploaded video is suitable for streaming
+	HasSpoiler            bool             `json:"has_spoiler,omitempty"`              // Optional. Pass True if the video needs to be covered with a spoiler animation
 }
 
 // InputMediaAnimation Represents an animation file (GIF or H.264/MPEG-4 AVC video without a sound) to be sent.
 type InputMediaAnimation struct {
-	Type            string           `json:"type"`                       // The Type of the result must be animation
-	Media           RequestFileData  `json:"media"`                      // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
-	Thumbnail       RequestFileData  `json:"thumb,thumbnail,omitempty"`  // Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
-	Caption         string           `json:"caption,omitempty"`          // Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
-	ParseMode       string           `json:"parse_mode,omitempty"`       // Optional. Mode for parsing entities in the animation caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities []*MessageEntity `json:"caption_entities,omitempty"` // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	Width           int              `json:"width,omitempty"`            // Optional. Animation width
-	Height          int              `json:"height,omitempty"`           // Optional. Animation height
-	Duration        int              `json:"duration,omitempty"`         // Optional. Animation duration in seconds
-	HasSpoiler      bool             `json:"has_spoiler,omitempty"`      // Optional. Pass True if the animation needs to be covered with a spoiler animation
+	Type                  string           `json:"type"`                               // The Type of the result must be animation
+	Media                 RequestFileData  `json:"media"`                              // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
+	Thumbnail             RequestFileData  `json:"thumb,thumbnail,omitempty"`          // Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+	Caption               string           `json:"caption,omitempty"`                  // Optional. Caption of the animation to be sent, 0-1024 characters after entities parsing
+	ParseMode             string           `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the animation caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool             `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	Width                 int              `json:"width,omitempty"`                    // Optional. Animation width
+	Height                int              `json:"height,omitempty"`                   // Optional. Animation height
+	Duration              int              `json:"duration,omitempty"`                 // Optional. Animation duration in seconds
+	HasSpoiler            bool             `json:"has_spoiler,omitempty"`              // Optional. Pass True if the animation needs to be covered with a spoiler animation
 }
 
 // InputMediaAudio Represents an audio file to be treated as music to be sent.
@@ -1358,19 +1459,20 @@ type InlineQueryResultArticle struct {
 // By default, this photo will be sent by the user with optional caption.
 // Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
 type InlineQueryResultPhoto struct {
-	Type                string                `json:"type"`                            // type of the result must be photoed
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	URL                 string                `json:"photo_url"`                       // A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB
-	ThumbnailURL        string                `json:"thumb_url,thumbnail_url"`         // url of the thumbnail for the photo
-	Width               int                   `json:"photo_width,omitempty"`           // Optional. Width of the photo
-	Height              int                   `json:"photo_height,omitempty"`          // Optional. Height of the photo
-	Title               string                `json:"title"`                           // title of the result
-	Description         string                `json:"description,omitempty"`           // Optional. Short description of the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
+	Type                  string                `json:"type"`                               // type of the result must be photoed
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	URL                   string                `json:"photo_url"`                          // A valid URL of the photo. Photo must be in JPEG format. Photo size must not exceed 5MB
+	ThumbnailURL          string                `json:"thumb_url,thumbnail_url"`            // url of the thumbnail for the photo
+	Width                 int                   `json:"photo_width,omitempty"`              // Optional. Width of the photo
+	Height                int                   `json:"photo_height,omitempty"`             // Optional. Height of the photo
+	Title                 string                `json:"title"`                              // title of the result
+	Description           string                `json:"description,omitempty"`              // Optional. Short description of the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the photo
 }
 
 // InlineQueryResultGIF Represents a link to an animated GIF file.
@@ -1378,20 +1480,21 @@ type InlineQueryResultPhoto struct {
 // Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the animation.
 type InlineQueryResultGIF struct {
-	Type                string                `json:"type"`                                          // the type of the result must be gif
-	ID                  string                `json:"id"`                                            // Unique identifier for this result, 1-64 bytes
-	URL                 string                `json:"gif_url"`                                       // A valid URL for the GIF file. File size must not exceed 1MB
-	Width               int                   `json:"gif_width,omitempty"`                           // Optional. Width of the GIF
-	Height              int                   `json:"gif_height,omitempty"`                          // Optional. Height of the GIF
-	Duration            int                   `json:"gif_duration,omitempty"`                        // Optional. Duration of the GIF in seconds
-	ThumbnailURL        string                `json:"thumb_url,thumbnail_url"`                       // url of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
-	ThumbnailMimeType   string                `json:"thumb_mime_type,thumbnail_mime_type,omitempty"` // Optional. MIME type of the thumbnail must be one of “image/jpeg,” “image/gif,” or “video/mp4.” Defaults to “image/jpeg”
-	Title               string                `json:"title,omitempty"`                               // Optional. Title for the result
-	Caption             string                `json:"caption,omitempty"`                             // Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the GIF animation
+	Type                  string                `json:"type"`                                          // the type of the result must be gif
+	ID                    string                `json:"id"`                                            // Unique identifier for this result, 1-64 bytes
+	URL                   string                `json:"gif_url"`                                       // A valid URL for the GIF file. File size must not exceed 1MB
+	Width                 int                   `json:"gif_width,omitempty"`                           // Optional. Width of the GIF
+	Height                int                   `json:"gif_height,omitempty"`                          // Optional. Height of the GIF
+	Duration              int                   `json:"gif_duration,omitempty"`                        // Optional. Duration of the GIF in seconds
+	ThumbnailURL          string                `json:"thumb_url,thumbnail_url"`                       // url of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
+	ThumbnailMimeType     string                `json:"thumb_mime_type,thumbnail_mime_type,omitempty"` // Optional. MIME type of the thumbnail must be one of “image/jpeg,” “image/gif,” or “video/mp4.” Defaults to “image/jpeg”
+	Title                 string                `json:"title,omitempty"`                               // Optional. Title for the result
+	Caption               string                `json:"caption,omitempty"`                             // Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"`            // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the GIF animation
 }
 
 // InlineQueryResultMPEG4GIF Represents a link to a video animation (H.264/MPEG-4 AVC video without a sound).
@@ -1399,20 +1502,21 @@ type InlineQueryResultGIF struct {
 // Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the animation.
 type InlineQueryResultMPEG4GIF struct {
-	Type                string                `json:"type"`                                          // type of the result must be mpeg4_gif
-	ID                  string                `json:"id"`                                            // Unique identifier for this result, 1-64 bytes
-	URL                 string                `json:"mpeg4_url"`                                     // A valid URL for the MPEG4 file. File size must not exceed 1MB
-	Width               int                   `json:"mpeg4_width,omitempty"`                         // Optional. Video width
-	Height              int                   `json:"mpeg4_height,omitempty"`                        // Optional. Video height
-	Duration            int                   `json:"mpeg4_duration,omitempty"`                      // Optional. Video duration in seconds
-	ThumbnailURL        string                `json:"thumb_url,thumbnail_url"`                       // url of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
-	ThumbnailMimeType   string                `json:"thumb_mime_type,thumbnail_mime_type,omitempty"` // Optional. MIME type of the thumbnail must be one of “image/jpeg,” “image/gif,” or “video/mp4.” Defaults to “image/jpeg”
-	Title               string                `json:"title,omitempty"`                               // Optional. Title for the result
-	Caption             string                `json:"caption,omitempty"`                             // Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the video animation
+	Type                  string                `json:"type"`                                          // type of the result must be mpeg4_gif
+	ID                    string                `json:"id"`                                            // Unique identifier for this result, 1-64 bytes
+	URL                   string                `json:"mpeg4_url"`                                     // A valid URL for the MPEG4 file. File size must not exceed 1MB
+	Width                 int                   `json:"mpeg4_width,omitempty"`                         // Optional. Video width
+	Height                int                   `json:"mpeg4_height,omitempty"`                        // Optional. Video height
+	Duration              int                   `json:"mpeg4_duration,omitempty"`                      // Optional. Video duration in seconds
+	ThumbnailURL          string                `json:"thumb_url,thumbnail_url"`                       // url of the static (JPEG or GIF) or animated (MPEG4) thumbnail for the result
+	ThumbnailMimeType     string                `json:"thumb_mime_type,thumbnail_mime_type,omitempty"` // Optional. MIME type of the thumbnail must be one of “image/jpeg,” “image/gif,” or “video/mp4.” Defaults to “image/jpeg”
+	Title                 string                `json:"title,omitempty"`                               // Optional. Title for the result
+	Caption               string                `json:"caption,omitempty"`                             // Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`                          // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`                    // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"`            // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`                        // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`               // Optional. Content of the message to be sent instead of the video animation
 }
 
 // InlineQueryResultVideo Represents a link to a page containing an embedded video player or a video file.
@@ -1421,21 +1525,22 @@ type InlineQueryResultMPEG4GIF struct {
 // If an InlineQueryResultVideo message contains an embedded video (e.g., YouTube),
 // you must replace its content using input_message_content.
 type InlineQueryResultVideo struct {
-	Type                string                `json:"type"`                            // type of the result must be video
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	URL                 string                `json:"video_url"`                       // A valid URL for the embedded video player or video file
-	MimeType            string                `json:"mime_type"`                       // MIME type of the content of the video URL, “text/html” or “video/mp4”
-	ThumbnailURL        string                `json:"thumb_url,thumbnail_url"`         // url of the thumbnail (JPEG only) for the video
-	Title               string                `json:"title"`                           // title for the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	Width               int                   `json:"video_width,omitempty"`           // Optional. Video width
-	Height              int                   `json:"video_height,omitempty"`          // Optional. Video height
-	Duration            int                   `json:"video_duration,omitempty"`        // Optional. Video duration in seconds
-	Description         string                `json:"description,omitempty"`           // Optional. Short description of the result
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
+	Type                  string                `json:"type"`                               // type of the result must be video
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	URL                   string                `json:"video_url"`                          // A valid URL for the embedded video player or video file
+	MimeType              string                `json:"mime_type"`                          // MIME type of the content of the video URL, “text/html” or “video/mp4”
+	ThumbnailURL          string                `json:"thumb_url,thumbnail_url"`            // url of the thumbnail (JPEG only) for the video
+	Title                 string                `json:"title"`                              // title for the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	Width                 int                   `json:"video_width,omitempty"`              // Optional. Video width
+	Height                int                   `json:"video_height,omitempty"`             // Optional. Video height
+	Duration              int                   `json:"video_duration,omitempty"`           // Optional. Video duration in seconds
+	Description           string                `json:"description,omitempty"`              // Optional. Short description of the result
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the video. This field is required if InlineQueryResultVideo is used to send an HTML-page as a result (e.g., a YouTube video).
 }
 
 // InlineQueryResultAudio Represents a link to an MP3 audio file.
@@ -1578,31 +1683,33 @@ type InlineQueryResultGame struct {
 // By default, this photo will be sent by the user with an optional caption.
 // Alternatively, you can use input_message_content to send a message with the specified content instead of the photo.
 type InlineQueryResultCachedPhoto struct {
-	Type                string                `json:"type"`                            // type of the result must be photoed
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	PhotoID             string                `json:"photo_file_id"`                   // A valid file identifier of the photo
-	Title               string                `json:"title,omitempty"`                 // Optional. Title for the result
-	Description         string                `json:"description,omitempty"`           // Optional. Short description of the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the photo
+	Type                  string                `json:"type"`                               // type of the result must be photoed
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	PhotoID               string                `json:"photo_file_id"`                      // A valid file identifier of the photo
+	Title                 string                `json:"title,omitempty"`                    // Optional. Title for the result
+	Description           string                `json:"description,omitempty"`              // Optional. Short description of the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the photo to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the photo caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the photo
 }
 
 // InlineQueryResultCachedGIF Represents a link to an animated GIF file stored on the Telegram servers.
 // By default, this animated GIF file will be sent by the user with an optional caption.
 // Alternatively, you can use input_message_content to send a message with specified content instead of the animation.
 type InlineQueryResultCachedGIF struct {
-	Type                string                `json:"type"`                            // the type of the result must be gif
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	GifID               string                `json:"gif_file_id"`                     // A valid file identifier for the GIF file
-	Title               string                `json:"title,omitempty"`                 // Optional. Title for the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the GIF animation
+	Type                  string                `json:"type"`                               // the type of the result must be gif
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	GifID                 string                `json:"gif_file_id"`                        // A valid file identifier for the GIF file
+	Title                 string                `json:"title,omitempty"`                    // Optional. Title for the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the GIF file to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the GIF animation
 }
 
 // InlineQueryResultCachedMPEG4GIF Represents a link to a video animation
@@ -1611,15 +1718,16 @@ type InlineQueryResultCachedGIF struct {
 // Alternatively,
 // you can use input_message_content to send a message with the specified content instead of the animation.
 type InlineQueryResultCachedMPEG4GIF struct {
-	Type                string                `json:"type"`                            // type of the result must be mpeg4_gif
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	MPEG4FileID         string                `json:"mpeg4_file_id"`                   // A valid file identifier for the MPEG4 file
-	Title               string                `json:"title,omitempty"`                 // Optional. Title for the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video animation
+	Type                  string                `json:"type"`                               // type of the result must be mpeg4_gif
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	MPEG4FileID           string                `json:"mpeg4_file_id"`                      // A valid file identifier for the MPEG4 file
+	Title                 string                `json:"title,omitempty"`                    // Optional. Title for the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the MPEG-4 file to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the video animation
 }
 
 // InlineQueryResultCachedSticker Represents a link to a sticker stored on the Telegram servers.
@@ -1659,16 +1767,17 @@ type InlineQueryResultCachedDocument struct {
 // By default, this video file will be sent by the user with an optional caption.
 // Alternatively, you can use input_message_content to send a message with the specified content instead of the video.
 type InlineQueryResultCachedVideo struct {
-	Type                string                `json:"type"`                            // type of the result must be video
-	ID                  string                `json:"id"`                              // Unique identifier for this result, 1-64 bytes
-	VideoID             string                `json:"video_file_id"`                   // A valid file identifier for the video file
-	Title               string                `json:"title"`                           // title for the result
-	Description         string                `json:"description,omitempty"`           // Optional. Short description of the result
-	Caption             string                `json:"caption,omitempty"`               // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
-	ParseMode           string                `json:"parse_mode,omitempty"`            // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
-	CaptionEntities     []*MessageEntity      `json:"caption_entities,omitempty"`      // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
-	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`          // Optional. Inline keyboard attached to the message
-	InputMessageContent any                   `json:"input_message_content,omitempty"` // Optional. Content of the message to be sent instead of the video
+	Type                  string                `json:"type"`                               // type of the result must be video
+	ID                    string                `json:"id"`                                 // Unique identifier for this result, 1-64 bytes
+	VideoID               string                `json:"video_file_id"`                      // A valid file identifier for the video file
+	Title                 string                `json:"title"`                              // title for the result
+	Description           string                `json:"description,omitempty"`              // Optional. Short description of the result
+	Caption               string                `json:"caption,omitempty"`                  // Optional. Caption of the video to be sent, 0-1024 characters after entities parsing
+	ParseMode             string                `json:"parse_mode,omitempty"`               // Optional. Mode for parsing entities in the video caption. See [formatting options](https://core.telegram.org/bots/api#formatting-options) for more details.
+	CaptionEntities       []*MessageEntity      `json:"caption_entities,omitempty"`         // Optional. List of special entities that appear in the caption, which can be specified instead of parse_mode
+	ShowCaptionAboveMedia bool                  `json:"show_caption_above_media,omitempty"` // Optional. Pass True, if the caption must be shown above the message media
+	ReplyMarkup           *InlineKeyboardMarkup `json:"reply_markup,omitempty"`             // Optional. Inline keyboard attached to the message
+	InputMessageContent   any                   `json:"input_message_content,omitempty"`    // Optional. Content of the message to be sent instead of the video
 }
 
 // InlineQueryResultCachedVoice Represents a link to a voice message stored on the Telegram servers.

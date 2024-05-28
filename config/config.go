@@ -126,6 +126,7 @@ const (
 	EndpointCreateInvoiceLink                 = "createInvoiceLink"
 	EndpointAnswerShippingQuery               = "answerShippingQuery"
 	EndpointAnswerPreCheckoutQuery            = "answerPreCheckoutQuery"
+	EndpointRefundStarPayment                 = "refundStarPayment"
 	EndpointSetPassportDataErrors             = "setPassportDataErrors"
 	EndpointSendGame                          = "sendGame"
 	EndpointSetGameScore                      = "setGameScore"
