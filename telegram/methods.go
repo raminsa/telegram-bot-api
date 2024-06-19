@@ -2701,6 +2701,20 @@ func (t *Api) AnswerPreCheckoutQuery(c *types.AnswerPreCheckoutQuery) (bool, err
 	return result, err
 }
 
+// GetStarTransactions Returns the bot's Telegram Star transactions in chronological order.
+// On success, returns a StarTransactions object.
+func (t *Api) GetStarTransactions(c *types.GetStarTransactions) (*types.StarTransactions, error) {
+	resp, err := t.Request(c)
+	if err != nil {
+		return nil, err
+	}
+
+	var starTransactions types.StarTransactions
+	err = json.Unmarshal(resp.Result, &starTransactions)
+
+	return &starTransactions, err
+}
+
 // RefundStarPayment Refunds a successful payment in Telegram Stars.
 // Returns True on success.
 func (t *Api) RefundStarPayment(c *types.RefundStarPayment) (bool, error) {

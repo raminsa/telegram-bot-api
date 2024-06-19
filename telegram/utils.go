@@ -1273,6 +1273,11 @@ func (t *Api) NewAnswerPreCheckoutQuery() *types.AnswerPreCheckoutQuery {
 	return &types.AnswerPreCheckoutQuery{}
 }
 
+// NewGetStarTransactions creates a new get star transactions query.
+func (t *Api) NewGetStarTransactions() *types.GetStarTransactions {
+	return &types.GetStarTransactions{}
+}
+
 // NewRefundStarPayment creates a new refund star payment.
 func (t *Api) NewRefundStarPayment() *types.RefundStarPayment {
 	return &types.RefundStarPayment{}

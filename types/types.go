@@ -1959,15 +1959,72 @@ type ShippingQuery struct {
 	ShippingAddress ShippingAddress `json:"shipping_address"` // User specified shipping address
 }
 
-// PreCheckoutQuery Contains information about an incoming pre-checkout query.
+// PreCheckoutQuery Contains a list of Telegram Star transactions.
 type PreCheckoutQuery struct {
-	ID               string     `json:"id"`                           // Unique query identifier
-	From             User       `json:"from"`                         // User who sent the query
-	Currency         string     `json:"currency"`                     // Three-letter ISO 4217 currency code
-	TotalAmount      int        `json:"total_amount"`                 // Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
-	InvoicePayload   string     `json:"invoice_payload"`              // Bot specified invoice payload
-	ShippingOptionID string     `json:"shipping_option_id,omitempty"` // Optional. Identifier of the shipping option chosen by the user
-	OrderInfo        *OrderInfo `json:"order_info,omitempty"`         // Optional. Order information provided by the user
+	Transactions []StarTransaction `json:"transactions"` // The list of transactions
+}
+
+// RevenueWithdrawalState Describes the state of a revenue withdrawal operation. Currently, it can be one of
+type RevenueWithdrawalState struct {
+	RevenueWithdrawalStatePending
+	RevenueWithdrawalStateSucceeded
+	RevenueWithdrawalStateFailed
+}
+
+// RevenueWithdrawalStatePending The withdrawal is in progress.
+type RevenueWithdrawalStatePending struct {
+	Type string `json:"type"` // Type of the state, always “pending”
+}
+
+// RevenueWithdrawalStateSucceeded The withdrawal succeeded.
+type RevenueWithdrawalStateSucceeded struct {
+	Type string `json:"type"` // 	Type of the state, always “succeeded”
+	Date int64  `json:"date"` // 	Date the withdrawal was completed in Unix time
+	Url  string `json:"url"`  // 	An HTTPS URL that can be used to see transaction details
+}
+
+// RevenueWithdrawalStateFailed The withdrawal failed and the transaction was refunded.
+type RevenueWithdrawalStateFailed struct {
+	Type string `json:"type"` // Type of the state, always “failed”
+}
+
+// TransactionPartner Describes the source of a transaction, or its recipient for outgoing transactions. Currently, it can be one of.
+type TransactionPartner struct {
+	TransactionPartnerFragment
+	TransactionPartnerUser
+	TransactionPartnerOther
+}
+
+// TransactionPartnerFragment Describes a withdrawal transaction with Fragment.
+type TransactionPartnerFragment struct {
+	Type            string                 `json:"type"`                       // Type of the transaction partner, always “fragment”
+	WithdrawalState RevenueWithdrawalState `json:"withdrawal_state,omitempty"` // Optional. State of the transaction if the transaction is outgoing
+}
+
+// TransactionPartnerUser Describes a transaction with a user.
+type TransactionPartnerUser struct {
+	Type string `json:"type"` // Type of the transaction partner, always “user”
+	User User   `json:"user"` // Information about the user
+}
+
+// TransactionPartnerOther Describes a transaction with an unknown source or recipient.
+type TransactionPartnerOther struct {
+	Type string `json:"type"` // 	Type of the transaction partner, always “other”
+}
+
+// StarTransaction Describes a Telegram Star transaction.
+type StarTransaction struct {
+	ID       string             `json:"id"`       // Unique identifier of the transaction. Coincides with the identifer of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.
+	Amount   int                `json:"amount"`   // Number of Telegram Stars transferred by the transaction
+	Date     int                `json:"date"`     // Date the transaction was created in Unix time
+	Source   TransactionPartner `json:"source"`   // Optional. Source of an incoming transaction (e.g., a user purchasing goods or services, Fragment refunding a failed withdrawal). Only for incoming transactions
+	Receiver TransactionPartner `json:"receiver"` // Optional. Receiver of an outgoing transaction (e.g., a user for a purchase refund, Fragment for a withdrawal). Only for outgoing transactions
+}
+
+// StarTransactions Describes Telegram Passport data shared with the bot by the user.
+type StarTransactions struct {
+	Data        []EncryptedPassportElement `json:"data"`        // Array with information about documents and other Telegram Passport elements that was shared with the bot
+	Credentials EncryptedCredentials       `json:"credentials"` // Encrypted credentials required to decrypt the data
 }
 
 // PassportData Describes Telegram Passport data shared with the bot by the user.

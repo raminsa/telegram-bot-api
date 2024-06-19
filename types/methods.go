@@ -1155,6 +1155,7 @@ func (s *SendLocation) EndPoint() string {
 // On success, if the edited message is not an inline message, the edited Message is returned;
 // otherwise True is returned.
 type EditMessageLiveLocation struct {
+	BusinessConnectionId string
 	ChatID               int64   // required if InlineMessageID is not specified. use for user|channel as int
 	ChatIDStr            string  // required if InlineMessageID is not specified. use for user|channel as string
 	Username             string  // required if InlineMessageID is not specified. use for a channel
@@ -1173,10 +1174,12 @@ func (s *EditMessageLiveLocation) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID != "" {
-		params = make(Params, 8)
+		params = make(Params, 9)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	} else {
-		params = make(Params, 9)
+		params = make(Params, 10)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params.AddAt(s.Username)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
@@ -1203,22 +1206,25 @@ func (s *EditMessageLiveLocation) EndPoint() string {
 // StopMessageLiveLocation Stop updating a live location message before live_period expires.
 // On success, if the message is not an inline message, the edited Message is returned, otherwise True is returned.
 type StopMessageLiveLocation struct {
-	ChatID          int64  // required if InlineMessageID is not specified. use for user|channel as int
-	ChatIDStr       string // required if InlineMessageID is not specified. use for user|channel as string
-	Username        string // required if InlineMessageID is not specified. use for a channel
-	MessageID       int    // required if InlineMessageID is not specified
-	InlineMessageID string // required if ChatID & Username & MessageID are not specified
-	ReplyMarkup     *InlineKeyboardMarkup
+	BusinessConnectionId string
+	ChatID               int64  // required if InlineMessageID is not specified. use for user|channel as int
+	ChatIDStr            string // required if InlineMessageID is not specified. use for user|channel as string
+	Username             string // required if InlineMessageID is not specified. use for a channel
+	MessageID            int    // required if InlineMessageID is not specified
+	InlineMessageID      string // required if ChatID & Username & MessageID are not specified
+	ReplyMarkup          *InlineKeyboardMarkup
 }
 
 func (s *StopMessageLiveLocation) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID != "" {
-		params = make(Params, 2)
+		params = make(Params, 3)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	} else {
-		params = make(Params, 3)
+		params = make(Params, 4)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params.AddAt(s.Username)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
@@ -3009,30 +3015,33 @@ func (s *GetMyDefaultAdministratorRights) EndPoint() string {
 // On success, if the edited message is not an inline message, the edited Message is returned;
 // otherwise True is returned.
 type EditMessageText struct {
-	ChatID             int64  // required if InlineMessageID is not specified. use for chat|channel as int
-	ChatIDStr          string // required if InlineMessageID is not specified. use for chat|channel as string
-	Username           string // required if InlineMessageID is not specified. use for chat|channel
-	MessageID          int    // required if InlineMessageID is not specified
-	InlineMessageID    string // required if ChatID|Username & MessageID are not specified
-	Text               string // required
-	ParseMode          string
-	Entities           []MessageEntity
-	LinkPreviewOptions *LinkPreviewOptions
-	ReplyMarkup        any // only InlineKeyboardMarkup
+	BusinessConnectionId string
+	ChatID               int64  // required if InlineMessageID is not specified. use for chat|channel as int
+	ChatIDStr            string // required if InlineMessageID is not specified. use for chat|channel as string
+	Username             string // required if InlineMessageID is not specified. use for chat|channel
+	MessageID            int    // required if InlineMessageID is not specified
+	InlineMessageID      string // required if ChatID|Username & MessageID are not specified
+	Text                 string // required
+	ParseMode            string
+	Entities             []MessageEntity
+	LinkPreviewOptions   *LinkPreviewOptions
+	ReplyMarkup          any // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageText) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID == "" {
-		params = make(Params, 7)
+		params = make(Params, 8)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
 			return params, err
 		}
 		params.AddNonZero("message_id", s.MessageID)
 	} else {
-		params = make(Params, 6)
+		params = make(Params, 7)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	}
 	params["text"] = s.Text
@@ -3057,6 +3066,7 @@ func (s *EditMessageText) EndPoint() string {
 // On success, if the edited message is not an inline message, the edited Message is returned;
 // otherwise True is returned.
 type EditMessageCaption struct {
+	BusinessConnectionId  string
 	ChatID                int64  // required if InlineMessageID is not specified. use for chat|channel as int
 	ChatIDStr             string // required if InlineMessageID is not specified. use for chat|channel as string
 	Username              string // required if InlineMessageID is not specified. use for chat|channel
@@ -3073,14 +3083,16 @@ func (s *EditMessageCaption) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID == "" {
-		params = make(Params, 7)
+		params = make(Params, 8)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
 			return params, err
 		}
 		params.AddNonZero("message_id", s.MessageID)
 	} else {
-		params = make(Params, 6)
+		params = make(Params, 7)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	}
 	params.AddNonEmpty("caption", s.Caption)
@@ -3106,27 +3118,30 @@ func (s *EditMessageCaption) EndPoint() string {
 // On success, if the edited message is not an inline message, the edited Message is returned;
 // otherwise True is returned.
 type EditMessageMedia struct {
-	ChatID          int64  // required if InlineMessageID is not specified. use for chat|channel as int
-	ChatIDStr       string // required if InlineMessageID is not specified. use for chat|channel as string
-	Username        string // required if InlineMessageID is not specified. use for chat|channel
-	MessageID       int    // required if InlineMessageID is not specified
-	InlineMessageID string // required if ChatID|Username & MessageID are not specified
-	Media           any    // required
-	ReplyMarkup     any    // only InlineKeyboardMarkup
+	BusinessConnectionId string
+	ChatID               int64  // required if InlineMessageID is not specified. use for chat|channel as int
+	ChatIDStr            string // required if InlineMessageID is not specified. use for chat|channel as string
+	Username             string // required if InlineMessageID is not specified. use for chat|channel
+	MessageID            int    // required if InlineMessageID is not specified
+	InlineMessageID      string // required if ChatID|Username & MessageID are not specified
+	Media                any    // required
+	ReplyMarkup          any    // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageMedia) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID == "" {
-		params = make(Params, 4)
+		params = make(Params, 5)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
 			return params, err
 		}
 		params.AddNonZero("message_id", s.MessageID)
 	} else {
-		params = make(Params, 3)
+		params = make(Params, 4)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	}
 	err := params.AddAny("media", prepareInputMediaParam(s.Media, 0))
@@ -3148,26 +3163,29 @@ func (s *EditMessageMedia) EndPoint() string {
 // On success, if the edited message is not an inline message, the edited Message is returned;
 // otherwise True is returned.
 type EditMessageReplyMarkup struct {
-	ChatID          int64  // required if InlineMessageID is not specified. use for chat|channel as int
-	ChatIDStr       string // required if InlineMessageID is not specified. use for chat|channel as string
-	Username        string // required if InlineMessageID is not specified. use for chat|channel
-	MessageID       int    // required if InlineMessageID is not specified
-	InlineMessageID string // required if ChatID|Username & MessageID are not specified
-	ReplyMarkup     any    // only InlineKeyboardMarkup
+	BusinessConnectionId string
+	ChatID               int64  // required if InlineMessageID is not specified. use for chat|channel as int
+	ChatIDStr            string // required if InlineMessageID is not specified. use for chat|channel as string
+	Username             string // required if InlineMessageID is not specified. use for chat|channel
+	MessageID            int    // required if InlineMessageID is not specified
+	InlineMessageID      string // required if ChatID|Username & MessageID are not specified
+	ReplyMarkup          any    // only InlineKeyboardMarkup
 }
 
 func (s *EditMessageReplyMarkup) Params() (Params, error) {
 	var params Params
 
 	if s.InlineMessageID == "" {
-		params = make(Params, 3)
+		params = make(Params, 4)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 		if err != nil {
 			return params, err
 		}
 		params.AddNonZero("message_id", s.MessageID)
 	} else {
-		params = make(Params, 2)
+		params = make(Params, 3)
+		params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 		params["inline_message_id"] = s.InlineMessageID
 	}
 	err := params.AddAny("reply_markup", s.ReplyMarkup)
@@ -3180,16 +3198,18 @@ func (s *EditMessageReplyMarkup) EndPoint() string {
 
 // StopPoll Stop a poll which was sent by the bot. On success, the stopped Poll is returned
 type StopPoll struct {
-	ChatID      int64  // required. use for chat|channel as int
-	ChatIDStr   string // required. use for chat|channel as string
-	Username    string // required. use for chat|channel
-	MessageID   int    // required
-	ReplyMarkup any    // only InlineKeyboardMarkup
+	BusinessConnectionId string
+	ChatID               int64  // required. use for chat|channel as int
+	ChatIDStr            string // required. use for chat|channel as string
+	Username             string // required. use for chat|channel
+	MessageID            int    // required
+	ReplyMarkup          any    // only InlineKeyboardMarkup
 }
 
 func (s *StopPoll) Params() (Params, error) {
-	params := make(Params, 3)
+	params := make(Params, 4)
 
+	params.AddNonEmpty("business_connection_id", s.BusinessConnectionId)
 	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
 	if err != nil {
 		return params, err
@@ -3971,6 +3991,25 @@ func (s *AnswerPreCheckoutQuery) Params() (Params, error) {
 }
 func (s *AnswerPreCheckoutQuery) EndPoint() string {
 	return config.EndpointAnswerPreCheckoutQuery
+}
+
+// GetStarTransactions Returns the bot's Telegram Star transactions in chronological order.
+// On success, returns a StarTransactions object.
+type GetStarTransactions struct {
+	Offset int
+	Limit  int
+}
+
+func (s *GetStarTransactions) Params() (Params, error) {
+	params := make(Params, 2)
+
+	params.AddNonZero("offset", s.Offset)
+	params.AddNonZero("limit", s.Offset)
+
+	return params, nil
+}
+func (s *GetStarTransactions) EndPoint() string {
+	return config.EndpointGetStarTransactions
 }
 
 // RefundStarPayment Refunds a successful payment in Telegram Stars.
