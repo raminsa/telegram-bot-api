@@ -3808,10 +3808,10 @@ type SendInvoice struct {
 	ChatIDStr                 string // required. use for user|channel as string
 	Username                  string // required. use for channel
 	MessageThreadID           int64
-	Title                     string         // required
-	Description               string         // required
-	Payload                   string         // required
-	ProviderToken             string         // required
+	Title                     string // required
+	Description               string // required
+	Payload                   string // required
+	ProviderToken             string
 	Currency                  string         // required
 	Prices                    []LabeledPrice // required
 	MaxTipAmount              int
@@ -3847,7 +3847,7 @@ func (s *SendInvoice) Params() (Params, error) {
 	params["title"] = s.Title
 	params["description"] = s.Description
 	params["payload"] = s.Payload
-	params["provider_token"] = s.ProviderToken
+	params.AddNonEmpty("provider_token", s.ProviderToken)
 	params["currency"] = s.Currency
 	err = params.AddAny("prices", s.Prices)
 	if err != nil {
@@ -3888,10 +3888,10 @@ func (s *SendInvoice) EndPoint() string {
 // CreateInvoiceLink Create a link for an invoice.
 // Returns the created invoice link as String on success.
 type CreateInvoiceLink struct {
-	Title                     string         // required
-	Description               string         // required
-	Payload                   string         // required
-	ProviderToken             string         // required
+	Title                     string // required
+	Description               string // required
+	Payload                   string // required
+	ProviderToken             string
 	Currency                  string         // required
 	Prices                    []LabeledPrice // required
 	MaxTipAmount              int
@@ -3916,7 +3916,7 @@ func (s *CreateInvoiceLink) Params() (Params, error) {
 	params["title"] = s.Title
 	params["description"] = s.Description
 	params["payload"] = s.Payload
-	params["provider_token"] = s.ProviderToken
+	params.AddNonEmpty("provider_token", s.ProviderToken)
 	params["currency"] = s.Currency
 	err := params.AddAny("prices", s.Prices)
 	if err != nil {

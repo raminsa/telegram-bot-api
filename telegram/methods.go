@@ -2590,9 +2590,6 @@ func (t *Api) SendInvoice(c *types.SendInvoice) (*types.Message, error) {
 	if c.Payload == "" {
 		return nil, errors.New("payload Required")
 	}
-	if c.ProviderToken == "" {
-		return nil, errors.New("provideToken Required")
-	}
 	if c.Currency == "" {
 		return nil, errors.New("currency Required")
 	}
@@ -2613,9 +2610,6 @@ func (t *Api) CreateInvoiceLink(c *types.CreateInvoiceLink) (string, error) {
 	}
 	if c.Payload == "" {
 		return "", errors.New("payload Required")
-	}
-	if c.ProviderToken == "" {
-		return "", errors.New("provideToken Required")
 	}
 	if c.Currency == "" {
 		return "", errors.New("currency Required")

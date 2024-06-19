@@ -16,7 +16,6 @@ func main() {
 	message.Title = "title"
 	message.Description = "description"
 	message.Payload = "payload"
-	message.ProviderToken = "provider token"
 	message.Currency = "currency"
 	message.Prices = tg.NewLabeledPrices(
 		tg.NewLabeledPrice("title1", 1234),

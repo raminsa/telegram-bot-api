@@ -1866,7 +1866,7 @@ type InputInvoiceMessageContent struct {
 	Title                     string         `json:"title"`                                   // Product name, 1-32 characters
 	Description               string         `json:"description"`                             // Product description, 1-255 characters
 	Payload                   string         `json:"payload"`                                 // Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user, use it for your internal processes.
-	ProviderToken             string         `json:"provider_token"`                          // Payment provider token, obtained via @BotFather
+	ProviderToken             string         `json:"provider_token,omitempty"`                // Payment provider token, obtained via @BotFather
 	Currency                  string         `json:"currency"`                                // Three-letter ISO 4217 currency code
 	Prices                    []LabeledPrice `json:"prices"`                                  // Price breakdown, a JSON-serialized list of components (e.g., product price, tax, discount, delivery cost, delivery tax, bonus, etc.)
 	MaxTipAmount              int            `json:"max_tip_amount,omitempty"`                // Optional. The maximum accepted amount for tips in the smallest units of the currency (integer, not float/double). For example, for a maximum tip of US$ 1.45 pass max_tip_amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies). Default to 0
