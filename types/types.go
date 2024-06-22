@@ -1961,7 +1961,13 @@ type ShippingQuery struct {
 
 // PreCheckoutQuery Contains a list of Telegram Star transactions.
 type PreCheckoutQuery struct {
-	Transactions []StarTransaction `json:"transactions"` // The list of transactions
+	Id               string     `json:"id"`                           // Unique query identifier
+	From             User       `json:"from"`                         // User who sent the query
+	Currency         string     `json:"currency"`                     // Three-letter ISO 4217 currency code, or “XTR” for payments in Telegram Stars
+	TotalAmount      int        `json:"total_amount"`                 // Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
+	InvoicePayload   string     `json:"invoice_payload"`              // Bot specified invoice payload
+	ShippingOptionId string     `json:"shipping_option_id,omitempty"` // Optional. Identifier of the shipping option chosen by the user
+	OrderInfo        *OrderInfo `json:"order_info,omitempty"`         // Optional. Order information provided by the user
 }
 
 // RevenueWithdrawalState Describes the state of a revenue withdrawal operation. Currently, it can be one of
@@ -1997,8 +2003,8 @@ type TransactionPartner struct {
 
 // TransactionPartnerFragment Describes a withdrawal transaction with Fragment.
 type TransactionPartnerFragment struct {
-	Type            string                 `json:"type"`                       // Type of the transaction partner, always “fragment”
-	WithdrawalState RevenueWithdrawalState `json:"withdrawal_state,omitempty"` // Optional. State of the transaction if the transaction is outgoing
+	Type            string                  `json:"type"`                       // Type of the transaction partner, always “fragment”
+	WithdrawalState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"` // Optional. State of the transaction if the transaction is outgoing
 }
 
 // TransactionPartnerUser Describes a transaction with a user.
@@ -2014,17 +2020,16 @@ type TransactionPartnerOther struct {
 
 // StarTransaction Describes a Telegram Star transaction.
 type StarTransaction struct {
-	ID       string             `json:"id"`       // Unique identifier of the transaction. Coincides with the identifer of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.
-	Amount   int                `json:"amount"`   // Number of Telegram Stars transferred by the transaction
-	Date     int                `json:"date"`     // Date the transaction was created in Unix time
-	Source   TransactionPartner `json:"source"`   // Optional. Source of an incoming transaction (e.g., a user purchasing goods or services, Fragment refunding a failed withdrawal). Only for incoming transactions
-	Receiver TransactionPartner `json:"receiver"` // Optional. Receiver of an outgoing transaction (e.g., a user for a purchase refund, Fragment for a withdrawal). Only for outgoing transactions
+	ID       string              `json:"id"`       // Unique identifier of the transaction. Coincides with the identifer of the original transaction for refund transactions. Coincides with SuccessfulPayment.telegram_payment_charge_id for successful incoming payments from users.
+	Amount   int                 `json:"amount"`   // Number of Telegram Stars transferred by the transaction
+	Date     int                 `json:"date"`     // Date the transaction was created in Unix time
+	Source   *TransactionPartner `json:"source"`   // Optional. Source of an incoming transaction (e.g., a user purchasing goods or services, Fragment refunding a failed withdrawal). Only for incoming transactions
+	Receiver *TransactionPartner `json:"receiver"` // Optional. Receiver of an outgoing transaction (e.g., a user for a purchase refund, Fragment for a withdrawal). Only for outgoing transactions
 }
 
 // StarTransactions Describes Telegram Passport data shared with the bot by the user.
 type StarTransactions struct {
-	Data        []EncryptedPassportElement `json:"data"`        // Array with information about documents and other Telegram Passport elements that was shared with the bot
-	Credentials EncryptedCredentials       `json:"credentials"` // Encrypted credentials required to decrypt the data
+	Transactions []StarTransaction `json:"transactions"` // The list of transactions
 }
 
 // PassportData Describes Telegram Passport data shared with the bot by the user.
