@@ -259,6 +259,9 @@ func (t *Api) Send(c types.Chattable) (*types.Message, error) {
 
 	var message types.Message
 	err = json.Unmarshal(resp.Result, &message)
+	if err != nil {
+		return nil, err
+	}
 
 	return &message, err
 }

@@ -116,6 +116,7 @@ type ChatFullInfo struct {
 	InviteLink                         string                `json:"invite_link,omitempty"`                             // Optional. Primary invite link, for groups, supergroups and channel chats. Returned only in getChat.
 	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`                          // Optional. The most recent pinned message (by sending date). Returned only in getChat.
 	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`                             // Optional. Default chat member permissions, for groups and supergroups. Returned only in getChat.
+	CanSendPaidMedia                   bool                  `json:"can_send_paid_media,omitempty"`                     // Optional. True, if paid media messages can be sent or forwarded to the channel chat. The field is available only for channel chats.
 	SlowModeDelay                      int                   `json:"slow_mode_delay,omitempty"`                         // Optional. For supergroups, the minimum allowed delay between consecutive messages sent by each unprivileged user; in seconds. Returned only in getChat.
 	UnRestrictBoostCount               int                   `json:"unrestrict_boost_count,omitempty"`                  // Optional. For supergroups, the minimum number of boosts that a non-administrator user needs to add in order to ignore slow mode and chat permissions. Returned only in getChat.
 	MessageAutoDeleteTime              int                   `json:"message_auto_delete_time,omitempty"`                // Optional. The time after which all messages sent to the chat will be automatically deleted in seconds. Returned only in getChat.
@@ -161,6 +162,7 @@ type Message struct {
 	Animation                     *Animation                     `json:"animation,omitempty"`                         // Optional. Message is an animation, information about the animation. For backward compatibility, when this field is set, the document field will also be set
 	Audio                         *Audio                         `json:"audio,omitempty"`                             // Optional. Message is an audio file, information about the file
 	Document                      *Document                      `json:"document,omitempty"`                          // Optional. Message is a general file, information about the file
+	PaidMedia                     *PaidMediaInfo                 `json:"paid_media,omitempty"`                        // Optional. Message contains paid media; information about the paid media
 	Photo                         []*PhotoSize                   `json:"photo,omitempty"`                             // Optional. Message is a photo, available sizes of the photo
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`                           // Optional. Message is a sticker, information about the sticker
 	Story                         *Story                         `json:"story,omitempty"`                             // Optional. Message is a forwarded story
@@ -263,6 +265,7 @@ type ExternalReplyInfo struct {
 	Animation          *Animation          `json:"animation,omitempty"`            // Optional. Message is an animation, information about the animation
 	Audio              *Audio              `json:"audio,omitempty"`                // Optional. Message is an audio file, information about the file
 	Document           *Document           `json:"document,omitempty"`             // Optional. Message is a general file, information about the file
+	PaidMedia          *PaidMediaInfo      `json:"paid_media,omitempty"`           // Optional. Message contains paid media; information about the paid media
 	Photo              []PhotoSize         `json:"photo,omitempty"`                // Optional. Message is a photo, available sizes of the photo
 	Sticker            *Sticker            `json:"sticker,omitempty"`              // Optional. Message is a sticker, information about the sticker
 	Story              *Story              `json:"story,omitempty"`                // Optional. Message is a forwarded story
@@ -412,6 +415,38 @@ type Voice struct {
 	Duration     int    `json:"duration"`            //	Duration of the audio in seconds as defined by sender
 	MimeType     string `json:"mime_type,omitempty"` //	Optional. MIME type of the file as defined by sender
 	FileSize     int64  `json:"file_size,omitempty"` //	Optional. File size in bytes. It can be bigger than 2^31, and some programming languages may have difficulty/silent defects in interpreting it. But it has at most 52 significant bits, so a signed 64-bit integer or double-precision float type is safe for storing this value.
+}
+
+// PaidMediaInfo Describes the paid media added to a message.
+type PaidMediaInfo struct {
+	StarCount int         `json:"star_count"` // The number of Telegram Stars that must be paid to buy access to the media
+	PaidMedia []PaidMedia `json:"paid_media"` // Information about the paid media
+}
+
+type PaidMedia struct {
+	PaidMediaPreview
+	PaidMediaPhoto
+	PaidMediaVideo
+}
+
+// PaidMediaPreview The paid media isn't available before the payment.
+type PaidMediaPreview struct {
+	Type     int   `json:"type"`     // Type of the paid media, always “preview”
+	Width    int   `json:"width"`    // Optional. Media width as defined by the sender
+	Height   int   `json:"height"`   // Optional. Media height as defined by the sender
+	Duration int64 `json:"duration"` // Optional. Duration of the media in seconds as defined by the sender
+}
+
+// PaidMediaPhoto The paid media is a photo.
+type PaidMediaPhoto struct {
+	Type  int         `json:"type"`  // Type of the paid media, always “photo”
+	Photo []PhotoSize `json:"photo"` // The photo
+}
+
+// PaidMediaVideo The paid media is a video.
+type PaidMediaVideo struct {
+	Type  int   `json:"type"`  // Type of the paid media, always “video”
+	Video Video `json:"video"` // The video
 }
 
 // Contact Represents a phone contact.
@@ -1353,6 +1388,29 @@ type InputMediaDocument struct {
 	DisableContentTypeDetection bool             `json:"disable_content_type_detection,omitempty"` // Optional. Disables automatic server-side content type detection for files uploaded using multipart/form-data. Always True, if the document is sent as part of an album.
 }
 
+// InputPaidMedia Describes the paid media to be sent. Currently, it can be one of
+type InputPaidMedia struct {
+	InputPaidMediaPhoto InputPaidMediaPhoto
+	InputPaidMediaVideo InputPaidMediaVideo
+}
+
+// InputPaidMediaPhoto The paid media to send is a photo.
+type InputPaidMediaPhoto struct {
+	Type  string          `json:"type"`  // Type of the media, must be photo
+	Media RequestFileData `json:"media"` // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
+}
+
+// InputPaidMediaVideo The paid media to send is a video.
+type InputPaidMediaVideo struct {
+	Type              string          `json:"type"`                         // Type of the result must be photoed
+	Media             RequestFileData `json:"media"`                        // File to send. Pass a file_id to send a file that exists on the Telegram servers (recommended), pass an HTTP URL for Telegram to get a file from the Internet, or pass “attach://<file_attach_name>” to upload a new one using multipart/form-data under <file_attach_name> name.
+	Thumbnail         RequestFileData `json:"thumb,thumbnail,omitempty"`    // Optional. Thumbnail of the file sent; can be ignored if thumbnail generation for the file is supported server-side. The thumbnail should be in JPEG format and less than 200 kB in size. A thumbnail's width and height should not exceed 320. Ignored if the file is not uploaded using multipart/form-data. Thumbnails can't be reused and can be only uploaded as a new file, so you can pass “attach://<file_attach_name>” if the thumbnail was uploaded using multipart/form-data under <file_attach_name>.
+	Width             int             `json:"width,omitempty"`              // Optional. Video width
+	Height            int             `json:"height,omitempty"`             // Optional. Video height
+	Duration          int             `json:"duration,omitempty"`           // Optional. Video duration in seconds
+	SupportsStreaming bool            `json:"supports_streaming,omitempty"` // Optional. Pass True, if the uploaded video is suitable for streaming
+}
+
 // Sticker Represents a sticker.
 type Sticker struct {
 	FileID           string        `json:"file_id"`                     // Identifier for this file, which can be used to download or reuse the file
@@ -1996,9 +2054,17 @@ type RevenueWithdrawalStateFailed struct {
 
 // TransactionPartner Describes the source of a transaction, or its recipient for outgoing transactions. Currently, it can be one of.
 type TransactionPartner struct {
-	TransactionPartnerFragment
 	TransactionPartnerUser
+	TransactionPartnerFragment
+	TransactionPartnerTelegramAds
 	TransactionPartnerOther
+}
+
+// TransactionPartnerUser Describes a transaction with a user.
+type TransactionPartnerUser struct {
+	Type           string `json:"type"`            // Type of the transaction partner, always “user”
+	User           User   `json:"user"`            // Information about the user
+	InvoicePayload string `json:"invoice_payload"` // Optional. Bot-specified invoice payload
 }
 
 // TransactionPartnerFragment Describes a withdrawal transaction with Fragment.
@@ -2007,15 +2073,14 @@ type TransactionPartnerFragment struct {
 	WithdrawalState *RevenueWithdrawalState `json:"withdrawal_state,omitempty"` // Optional. State of the transaction if the transaction is outgoing
 }
 
-// TransactionPartnerUser Describes a transaction with a user.
-type TransactionPartnerUser struct {
-	Type string `json:"type"` // Type of the transaction partner, always “user”
-	User User   `json:"user"` // Information about the user
+// TransactionPartnerTelegramAds Describes a withdrawal transaction to the Telegram Ads platform.
+type TransactionPartnerTelegramAds struct {
+	Type string `json:"type"` // Type of the transaction partner, always “telegram_ads”
 }
 
 // TransactionPartnerOther Describes a transaction with an unknown source or recipient.
 type TransactionPartnerOther struct {
-	Type string `json:"type"` // 	Type of the transaction partner, always “other”
+	Type string `json:"type"` // Type of the transaction partner, always “other”
 }
 
 // StarTransaction Describes a Telegram Star transaction.

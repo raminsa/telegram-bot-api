@@ -28,6 +28,7 @@ const (
 	EndpointSendAnimation                     = "sendAnimation"
 	EndpointSendVoice                         = "sendVoice"
 	EndpointSendVideoNote                     = "sendVideoNote"
+	EndpointSendPaidMedia                     = "sendPaidMedia"
 	EndpointSendMediaGroup                    = "sendMediaGroup"
 	EndpointSendLocation                      = "sendLocation"
 	EndpointEditMessageLiveLocation           = "editMessageLiveLocation"

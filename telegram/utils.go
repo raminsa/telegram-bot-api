@@ -340,6 +340,11 @@ func (t *Api) NewSendVideoNote() *types.SendVideoNote {
 	return &types.SendVideoNote{}
 }
 
+// NewSendPaidMedia create a new paidMedia message.
+func (t *Api) NewSendPaidMedia() *types.SendPaidMedia {
+	return &types.SendPaidMedia{}
+}
+
 // NewSendMediaGroup create a new mediaGroup message.
 func (t *Api) NewSendMediaGroup() *types.SendMediaGroup {
 	return &types.SendMediaGroup{}
@@ -368,6 +373,16 @@ func (t *Api) NewInputMediaAudio() types.InputMediaAudio {
 // NewInputMediaDocument creates a new inputMediaDocument.
 func (t *Api) NewInputMediaDocument() types.InputMediaDocument {
 	return types.InputMediaDocument{Type: "document"}
+}
+
+// NewInputPaidMediaPhoto creates a new inputPaidMediaPhoto.
+func (t *Api) NewInputPaidMediaPhoto() types.InputPaidMediaPhoto {
+	return types.InputPaidMediaPhoto{Type: "photo"}
+}
+
+// NewInputPaidMediaVideo creates a new inputPaidMediaVideo.
+func (t *Api) NewInputPaidMediaVideo() types.InputPaidMediaVideo {
+	return types.InputPaidMediaVideo{Type: "video"}
 }
 
 // NewSendLocation creates a new location message.

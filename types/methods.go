@@ -909,6 +909,61 @@ func (s *SendVideoNote) EndPoint() string {
 	return config.EndpointSendVideoNote
 }
 
+// SendPaidMedia Use this method to send paid media to channel chats.
+// On success, the sent Message is returned.
+type SendPaidMedia struct {
+	ChatID                int64  // required. use for user|channel as int
+	ChatIDStr             string // required. use for user|channel as string
+	Username              string // required. use for channel
+	StarCount             int    // required
+	Media                 []any  // required
+	Caption               string
+	ParseMode             string
+	CaptionEntities       []MessageEntity
+	ShowCaptionAboveMedia bool
+	DisableNotification   bool
+	ProtectContent        bool
+	ReplyParameters       *ReplyParameters
+	ReplyMarkup           any
+}
+
+func (s *SendPaidMedia) Params() (Params, error) {
+	params := make(Params, 11)
+
+	params.AddAt(s.Username)
+	err := params.AddFirstValid("chat_id", s.ChatID, s.ChatIDStr, s.Username)
+	if err != nil {
+		return params, err
+	}
+	params.AddNonZero("star_count", s.StarCount)
+	params.AddNonEmpty("caption", s.Caption)
+	params.AddNonEmpty("parse_mode", s.ParseMode)
+	err = params.AddAny("caption_entities", s.CaptionEntities)
+	if err != nil {
+		return params, err
+	}
+	params.AddBool("show_caption_above_media", s.ShowCaptionAboveMedia)
+	params.AddBool("disable_notification", s.DisableNotification)
+	params.AddBool("protect_content", s.ProtectContent)
+	err = params.AddAny("reply_parameters", s.ReplyParameters)
+	if err != nil {
+		return params, err
+	}
+	err = params.AddAny("reply_markup", s.ReplyMarkup)
+	if err != nil {
+		return params, err
+	}
+	err = params.AddAny("media", prepareInputPaidMediaForParams(s.Media))
+
+	return params, err
+}
+func (s *SendPaidMedia) Files() []RequestFile {
+	return prepareInputPaidMediaForFiles(s.Media)
+}
+func (s *SendPaidMedia) EndPoint() string {
+	return config.EndpointSendPaidMedia
+}
+
 // SendMediaGroup Use this method to send a group of photos, videos, documents or audios as an album.
 // Documents and audio files can be only grouped on an album with messages of the same type.
 // On success, an array of Messages that were sent is returned.
@@ -1091,6 +1146,103 @@ func prepareInputMediaForFiles(inputMedia []any) []RequestFile {
 
 	for idx, media := range inputMedia {
 		if file := prepareInputMediaFile(media, idx); file != nil {
+			files = append(files, file...)
+		}
+	}
+
+	return files
+}
+
+// prepareInputPaidMediaParam evaluates a single InputPaidMedia
+// and determines if it needs to be modified for a successful upload.
+// If it returns nil, then the value does not need to be included in the params.
+// Otherwise, it will return the same type as was originally provided.
+// The idx is used to calculate the file field name.
+// If you only have a single file, 0 may be used.
+// It is formatted into "attach://file-%d" for the primary media and "attach://file-%d-thumbnail" for thumbnails.
+// It is expected to be used in conjunction with prepareInputPaidMediaFile.
+func prepareInputPaidMediaParam(InputPaidMedia any, idx int) any {
+	switch m := InputPaidMedia.(type) {
+	case InputPaidMediaPhoto:
+		if m.Media.NeedsUpload() {
+			m.Media = FileAttach(fmt.Sprintf("attach://file-%d", idx))
+		}
+
+		return m
+	case InputPaidMediaVideo:
+		if m.Media.NeedsUpload() {
+			m.Media = FileAttach(fmt.Sprintf("attach://file-%d", idx))
+		}
+
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
+			m.Thumbnail = FileAttach(fmt.Sprintf("attach://file-%d-thumb", idx))
+		}
+
+		return m
+	}
+
+	return nil
+}
+
+// prepareInputPaidMediaFile generates an array of RequestFile to provide for Fileable files method.
+// It returns an array as a single InputPaidMedia may have multiple files for the primary media and a thumbnail.
+// The idx parameter is used to generate file field names.
+// It uses the names "file-%d" for the main file and "file-%d-thumbnail" for the thumbnail.
+// It is expected to be used in conjunction with prepareInputPaidMediaParam.
+func prepareInputPaidMediaFile(InputPaidMedia any, idx int) []RequestFile {
+	var files []RequestFile
+
+	switch m := InputPaidMedia.(type) {
+	case InputPaidMediaPhoto:
+		if m.Media.NeedsUpload() {
+			files = append(files, RequestFile{
+				Name: fmt.Sprintf("file-%d", idx),
+				Data: m.Media,
+			})
+		}
+	case InputPaidMediaVideo:
+		if m.Media.NeedsUpload() {
+			files = append(files, RequestFile{
+				Name: fmt.Sprintf("file-%d", idx),
+				Data: m.Media,
+			})
+		}
+
+		if m.Thumbnail != nil && m.Thumbnail.NeedsUpload() {
+			files = append(files, RequestFile{
+				Name: fmt.Sprintf("file-%d", idx),
+				Data: m.Thumbnail,
+			})
+		}
+	}
+
+	return files
+}
+
+// prepareInputPaidMediaForParams calls prepareInputPaidMediaParam for each item provided
+// and returns a new array with the correct params for a request.
+// It is expected that files will get data from the associated function, prepareInputPaidMediaForFiles.
+func prepareInputPaidMediaForParams(InputPaidMedia []any) []any {
+	newMedia := make([]any, len(InputPaidMedia))
+	copy(newMedia, InputPaidMedia)
+
+	for idx, media := range InputPaidMedia {
+		if param := prepareInputPaidMediaParam(media, idx); param != nil {
+			newMedia[idx] = param
+		}
+	}
+
+	return newMedia
+}
+
+// prepareInputPaidMediaForFiles calls prepareInputPaidMediaFile,
+// for each item provided and returns a new array with the correct files for a request.
+// It is expected that params will get data from the associated function, prepareInputPaidMediaForParams.
+func prepareInputPaidMediaForFiles(InputPaidMedia []any) []RequestFile {
+	var files []RequestFile
+
+	for idx, media := range InputPaidMedia {
+		if file := prepareInputPaidMediaFile(media, idx); file != nil {
 			files = append(files, file...)
 		}
 	}

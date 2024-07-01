@@ -388,6 +388,22 @@ func (t *Api) SendVideoNote(c *types.SendVideoNote) (*types.Message, error) {
 	return t.Send(c)
 }
 
+// SendPaidMedia send paid media to channel chats.
+// On success, the sent Message is returned.
+func (t *Api) SendPaidMedia(c *types.SendPaidMedia) (*types.Message, error) {
+	if c.ChatID == 0 && c.ChatIDStr == "" && c.Username == "" {
+		return nil, errors.New("ChatID or Username Required")
+	}
+	if c.StarCount < 1 {
+		return nil, errors.New("StarCount Required")
+	}
+	if c.Media == nil {
+		return nil, errors.New("media Required")
+	}
+
+	return t.Send(c)
+}
+
 // SendMediaGroup Use this method to send a group of photos, videos, documents or audios as an album.
 // Documents and audio files can be only grouped on an album with messages of the same type.
 // On success, an array of Messages that were sent is returned.
